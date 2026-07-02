@@ -1,7 +1,8 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col,Breadcrumb } from "react-bootstrap";
 import { useFormik, Form, Formik, Field } from "formik";
 import * as Yup from "yup";
+import Sidebar from "./Sidebar";
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -52,9 +53,22 @@ const SignupSchema = Yup.object().shape({
 const AddProduct = () => {
   return (
     <Container>
+     
       <Row>
+          <Row>
+            <Col md={1}>
+            <Sidebar/>
+            </Col>
+            <Col md={11}>
+              <h1>Add products</h1></Col>
+               <Breadcrumb>
+            <Breadcrumb.Item href="#">Dashboard</Breadcrumb.Item>
+
+            <Breadcrumb.Item active>Add Products</Breadcrumb.Item>
+          </Breadcrumb>
+          </Row>
         <Col>
-          <h1>Add products</h1>
+        
           <div className="add_restro">
             <Formik
               initialValues={{

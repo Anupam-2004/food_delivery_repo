@@ -11,7 +11,7 @@ import {
   Navbar,
   Offcanvas,
 } from "react-bootstrap";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import Landing from "./Components/Landing";
 import Restaurent from "./Components/Restaurent";
 import AddRestaurent from "./Components/AddRestaurent";
@@ -27,11 +27,15 @@ import AddProduct from "./Components/AddProduct";
 import Dashboard from "./Components/Dashboard";
 import Order from "./Components/Order";
 import AdminOrders from "./Components/AdminOrders";
+import AddOrders from "./Components/AddOrders";
+import AdminProducts from "./Components/AdminProducts";
+
 
 function App() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const path =useLocation()
   return (
     <div>
       <Row>
@@ -88,6 +92,7 @@ function App() {
           </Container>
         </Navbar>
       </Row>
+    
       <Routes>
         <Route path="" element={<Landing />} />
         <Route path="/landing" element={<Landing />} />
@@ -105,6 +110,9 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard/>}/>
         <Route path="/Order" element={<Order />} />
         <Route path="/AdminOrders" element={<AdminOrders />} />
+        <Route path="/AddOrders" element={<AddOrders/>} />
+        <Route path="/AdminProducts" element={<AdminProducts/>} />
+
 
       </Routes>
     </div>

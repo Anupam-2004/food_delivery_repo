@@ -1,15 +1,18 @@
 import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
+import Sidebar from './Sidebar';
 
 const Order = () => {
   return (
    <Container>
-    <Row>
-        <Col>
-        <h1>Orders</h1>
-        
-        </Col>
-    </Row>
+   <Row>
+           <Col md={1}>
+             <Sidebar/>
+           </Col>
+           <Col md={11}>
+             <h1>Orders</h1>
+           </Col>
+         </Row>
    </Container>
   )
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import Sidebar from "./Sidebar";
 
 
 const breads = [

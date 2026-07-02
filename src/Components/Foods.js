@@ -1,10 +1,15 @@
 import React from 'react'
+import { Col, Container, Row } from 'react-bootstrap'
 
 const foods = () => {
   return (
-    <div>
+   <Container>
+    <Row>
+      <Col>
       
-    </div>
+      </Col>
+    </Row>
+   </Container>
   )
 }
 

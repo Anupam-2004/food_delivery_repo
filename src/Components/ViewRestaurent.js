@@ -19,6 +19,7 @@ import {
   FaMapMarkerAlt,
   FaRegHeart,
 } from "react-icons/fa";
+import Sidebar from "./Sidebar";
 import "./ViewRestaurent.css";
 import { MdTipsAndUpdates } from "react-icons/md";
 import { MdQuestionAnswer } from "react-icons/md";
@@ -139,7 +140,11 @@ const ViewRestaurent = () => {
           <hr />
         </Col>
       </Row>
-
+<Row>
+  <Col>
+    <Sidebar/>
+  </Col>
+</Row>
       <Row>
         <Col>
           <div className="restro_name">

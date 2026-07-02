@@ -360,3 +360,14 @@ font-weight: 700;
   text-decoration: none;
 
 }
+.admin_restaurent{
+  text-align: center;
+  color: orange;
+  font-weight: 900;
+}
+.admin_restaurent_btn{
+  padding: 10px 50px;
+}
+a{
+  text-decoration: none !important;
+}

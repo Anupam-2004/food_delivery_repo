@@ -1,35 +1,37 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col,Breadcrumb } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import Sidebar from "./Sidebar";
 const SignupSchema = Yup.object().shape({
   restaurentName: Yup.string()
     .min(2, "restaurent name must be at least minimum 2 characters")
     .max(50, "restaurent name must not exceed 50 characters")
-     .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
+    .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
     .required(" restaurent name is Required"),
   address: Yup.string()
     .min(2, "adress  must be at least minimum 2 characters")
     .max(50, "adress must not exceed 50 characters")
     .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
     .required("adress  is Mandatory"),
-  mobileNumber: Yup.string()
-     .matches(
-       /^[6-9]\d{9}$/,
-       "enter valid 10 digit numbers",
-     ),
-  email: Yup.string()
-   .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address"),
+  mobileNumber: Yup.string().matches(
+    /^[6-9]\d{9}$/,
+    "enter valid 10 digit numbers",
+  ),
+  email: Yup.string().matches(
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    "Enter a valid email address",
+  ),
   website: Yup.string().url("Enter a valid URL").required("Required"),
   ownerName: Yup.string()
-     .min(2, "  ownerName must be at least minimum 2 characters")
+    .min(2, "  ownerName must be at least minimum 2 characters")
     .max(50, " ownerName must not exceed 50 characters")
-     .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
+    .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
     .required(" ownerName is Required"),
   description: Yup.string()
     .min(20, "description must be atleast 20 characters")
     .max(2000, "description must not exceed 2000 characters")
-     .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
+    .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
     .required(" description is Required"),
   category: Yup.string(),
 });
@@ -37,8 +39,20 @@ const AddRestaurent = () => {
   return (
     <Container>
       <Row>
+        <Col md={1}>
+          <Sidebar />
+        </Col>
+        <Col md={11}>
+          <h1>Add Restaurent</h1>
+           <Breadcrumb>
+            <Breadcrumb.Item href="#">Dashboard</Breadcrumb.Item>
+
+            <Breadcrumb.Item active>Add Restaurent</Breadcrumb.Item>
+          </Breadcrumb>
+        </Col>
+      </Row>
+      <Row>
         <Col>
-          <h1>Add Restaurents</h1>
           <div className="add_restro">
             <Formik
               initialValues={{
@@ -135,7 +149,7 @@ const AddRestaurent = () => {
                       ) : null}
                     </Col>
                   </Row>
-                  <Row>
+                  {/* <Row>
                     <Col>
                       <label htmlFor="category">Category</label>
                     </Col>
@@ -152,7 +166,7 @@ const AddRestaurent = () => {
                         <div>{errors.category}</div>
                       ) : null}
                     </Col>
-                  </Row>
+                  </Row> */}
                   <Row>
                     <Col>
                       <button type="submit">Submit</button>

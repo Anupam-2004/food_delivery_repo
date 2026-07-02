@@ -1,6 +1,7 @@
 import React from 'react'
 import{Container,Row,Col,Card,Button} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Sidebar from './Sidebar';
 
 const restaurents=[
   {
@@ -44,6 +45,13 @@ const restaurents=[
 const Restaurent = () => {
   return (
    <Container>
+     <Row>
+      <Col md={1}>
+      <Sidebar/>
+      </Col>
+      <Col md={11}></Col>
+    </Row>
+
     <Row>
     
      {
@@ -71,6 +79,7 @@ const Restaurent = () => {
      }
     
     </Row>
+   
    </Container>
   )
 }
