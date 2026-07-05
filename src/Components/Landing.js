@@ -301,7 +301,8 @@ const Landing = () => {
                   Get fresh meals and groceries delivered straight to your door
                   anytime,anywhere.
                 </p>
-                <InputGroup className="location">
+               <div className="location_input">
+                 <InputGroup className="">
                   <InputGroup.Text>
                     <FaLocationDot />
                     <Form.Control
@@ -315,6 +316,7 @@ const Landing = () => {
                     </button>
                   </InputGroup.Text>
                 </InputGroup>
+               </div>
               </Carousel.Caption>
             </Carousel.Item>
           </Carousel>
@@ -340,7 +342,7 @@ const Landing = () => {
               <Col>
                 <Card className="border-0">
                   <Card.Img variant="top" src={food.image} />
-                  <Card.Body>
+                  <Card.Body className="food_name text-center">
                     <Card.Text>{food.name}</Card.Text>
                   </Card.Body>
                 </Card>
@@ -374,7 +376,7 @@ const Landing = () => {
               <Col>
                 <Card className="border-0">
                   <Card.Img variant="top" src={product.image} />
-                  <Card.Body>
+                  <Card.Body className="food_name text-center">
                     <Card.Text>{product.name}</Card.Text>
                   </Card.Body>
                 </Card>
@@ -468,7 +470,7 @@ const Landing = () => {
       </Row>
       <Row className="footer">
         <Col className="logo_list" md={3}>
-          <img src="/footer_images/foodiex_logo.png" />
+          <img src="logo_2.png" />
           <p>
             Delicious food delivered to your <br></br>doorstep. Fast ,Fresh and
             alwayes <br></br> Reliable
@@ -486,7 +488,7 @@ const Landing = () => {
             Easy Payment
           </h6>
           <h5>Follow Us</h5>
-          <ul>
+          <ul className="list-unstyled d-flex justify-content-between">
             <li>
               <img src="/footer_images/download-removebg-preview.png"></img>
             </li>
