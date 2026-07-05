@@ -1,3 +1,6 @@
+body {
+  overflow-x: hidden;
+}
 
 .Navbar {
   height: 60px;
@@ -56,8 +59,7 @@
 .location {
   max-width: 600px;
   margin-top: 30px;
-  text-align: center;
-  align-items: center;
+ 
 }
 
 .location .input-group {
@@ -66,6 +68,7 @@
   border-radius: 18px;
   padding: 6px;
   overflow: hidden;
+  align-items: center;
 }
 
 .location .input-group-text {
@@ -105,6 +108,11 @@
   height: 160px;
   font-weight: 700;
   color: #a50f1b;
+}
+.food_name{
+  color: #a50f1b;
+  font-weight: 700;
+  tecxt-align: center;
 }
 .learn_more img {
   margin: 20px 0;
@@ -207,7 +215,7 @@
   transition: 0.3s;
 }
 .footer li:hover{
-  color: orange;
+  color:rgb(7, 7, 135);
   padding-left: 5px;
 }
 .customer_support ul {
@@ -222,7 +230,7 @@
   margin-bottom: 15px;
 }
 .contact_us a:hover{
-  color: orange;
+  color:darkblue;
 }
 .download {
   /* margin-left: 5px; */
@@ -241,6 +249,12 @@
   gap: 5px;
   margin-top: 20px;
   margin-right: 40px;
+}
+.logo_list img{
+ height: 50px;
+  padding-top: 10px;
+  background-color: #fff4ed;
+
 }
 
 .logo_list ul li img{
