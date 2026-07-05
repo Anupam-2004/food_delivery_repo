@@ -301,7 +301,8 @@ const Landing = () => {
                   Get fresh meals and groceries delivered straight to your door
                   anytime,anywhere.
                 </p>
-                <InputGroup className="location">
+               <div className="location_input">
+                 <InputGroup className="">
                   <InputGroup.Text>
                     <FaLocationDot />
                     <Form.Control
@@ -315,6 +316,7 @@ const Landing = () => {
                     </button>
                   </InputGroup.Text>
                 </InputGroup>
+               </div>
               </Carousel.Caption>
             </Carousel.Item>
           </Carousel>

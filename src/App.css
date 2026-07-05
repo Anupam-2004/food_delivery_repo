@@ -21,9 +21,9 @@ body {
   width: 90px;
 }
 
-.img-fluid {
+/* .img-fluid {
   height: 500px;
-}
+} */
 .heading {
   margin-bottom: 240px;
   margin-right: 470px;
@@ -57,9 +57,14 @@ body {
 
 
 .location {
-  max-width: 600px;
-  margin-top: 30px;
+  /* max-width: 600px;
+  margin-top: 30px; */
  
+}
+.location_input{
+ width: 100%;
+  text-align: center !important;
+  background: #b11414;
 }
 
 .location .input-group {
@@ -68,22 +73,21 @@ body {
   border-radius: 18px;
   padding: 6px;
   overflow: hidden;
-  align-items: center;
 }
-
-.location .input-group-text {
+.location_input .input-group-text {
   background: white;
   border: none;
   color: #c1121f;
   font-size: 20px;
   padding-left: 10px;
+  width: 100%;
 }
 
 .location .form-control {
   border: none;
   box-shadow: none;
   font-size: 15px;
-  padding: 7px 5px;
+  /* padding: 7px 5px; */
 }
 
 .location .btn {
