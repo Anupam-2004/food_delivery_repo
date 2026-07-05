@@ -12,9 +12,9 @@ const Register = () => {
     <Container>
       <Row>
         <Col>
-          <Button variant="primary" onClick={handleShow} className="me-2">
+          {/* <Button variant="primary" onClick={handleShow} className="me-2">
             Test
-          </Button>
+          </Button> */}
           <Offcanvas show={show} onHide={handleClose} placement="end">
             <Offcanvas.Header closeButton>
               <Offcanvas.Title>Sign In</Offcanvas.Title>

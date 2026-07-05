@@ -31,7 +31,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { IoIosCall } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { CiStopwatch } from "react-icons/ci";
-import { TypeAnimation } from 'react-type-animation';
+import { TypeAnimation } from "react-type-animation";
 
 const foods = [
   {
@@ -274,26 +274,28 @@ const Landing = () => {
           <Carousel>
             <Carousel.Item>
               <img
-                className="img-fluid"
+                className="main_image"
                 src="/main_area.png"
                 alt="First slide"
               />
               <Carousel.Caption className="heading">
                 <h1>
-                  Find Restaurents That Deliver To<b>
-                  <TypeAnimation
-      sequence={[
-        // Same substring at the start will only be typed out once, initially
-        'Your Doorstep',
-        1000, // wait 1s before replacing "Doorsteps" with "Table"
-        'Your Table',
-        1000
-      ]}
-      wrapper="span"
-      speed={50}
-      style={{ display: 'inline-block' }}
-      repeat={Infinity}
-    /></b> 
+                  Find Restaurents That Deliver To
+                  <b>
+                    <TypeAnimation
+                      sequence={[
+                        // Same substring at the start will only be typed out once, initially
+                        "Your Doorstep",
+                        1000, // wait 1s before replacing "Doorsteps" with "Table"
+                        "Your Table",
+                        1000,
+                      ]}
+                      wrapper="span"
+                      speed={50}
+                      style={{ display: "inline-block" }}
+                      repeat={Infinity}
+                    />
+                  </b>
                 </h1>
                 <p>
                   Get fresh meals and groceries delivered straight to your door
@@ -339,9 +341,7 @@ const Landing = () => {
                 <Card className="border-0">
                   <Card.Img variant="top" src={food.image} />
                   <Card.Body>
-                    <Card.Text>
-                      {food.name}
-                    </Card.Text>
+                    <Card.Text>{food.name}</Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
@@ -375,9 +375,7 @@ const Landing = () => {
                 <Card className="border-0">
                   <Card.Img variant="top" src={product.image} />
                   <Card.Body>
-                    <Card.Text>
-                      {product.name}
-                    </Card.Text>
+                    <Card.Text>{product.name}</Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
@@ -386,31 +384,28 @@ const Landing = () => {
         </MultiCarousel>
       </Row>
       <Row className="service_card">
-          <div className="text-center">
-             <h6>OUR SERVICES</h6>
+        <div className="text-center">
+          <h6>OUR SERVICES</h6>
           <h2>Why Choose Us</h2>
           <p>
             We provide the est food experience with fast delivery,fresh meals
             and excellent customer support
           </p>
-
-          </div>
+        </div>
         {services.map((service, index) => {
-          
-            return(
-              <Col md={3} key={index}>
-            <Card className="service_info_card">
-              <div className="card_image">
-                <Card.Img className="serve_img" src={service.image} />
-              </div>
-              <Card.Body className="text-center">
-                <Card.Title>{service.title}</Card.Title>
-                <Card.Text>{service.desc}</Card.Text>
-              </Card.Body>
-            </Card>
-             </Col>
-            )
-         
+          return (
+            <Col md={3} key={index}>
+              <Card className="service_info_card">
+                <div className="card_image">
+                  <Card.Img className="serve_img" src={service.image} />
+                </div>
+                <Card.Body className="text-center">
+                  <Card.Title>{service.title}</Card.Title>
+                  <Card.Text>{service.desc}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          );
         })}
       </Row>
 
