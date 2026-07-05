@@ -35,10 +35,7 @@ export default function Sidebar() {
                       {" "}
                       Products
                     </Nav.Link>
-                    {/* <Nav.Link as={Link} to={"/Restaurent"}>
-                      {" "}
-                      Restaurents
-                    </Nav.Link> */}
+                  
                     <Nav.Link as={Link} to={"/AdminRestaurent"}>
                       {" "}
                        Restaurents
@@ -47,16 +44,21 @@ export default function Sidebar() {
                     <Nav.Link as={Link} to={"/AddProducts"}>
                       Add Products
                     </Nav.Link>
-                    {/* <Nav.Link as={Link} to={"/AddRestaurent"}>
-                      Add Restaurents
-                    </Nav.Link> */}
+                   
                     <Nav.Link as={Link} to={"/Order"}>
                       Orders
                     </Nav.Link>
-
-                    <Nav.Link as={Link} to={"/AddOrders"}>
-                      Add Orders
+                     <Nav.Link as={Link} to={"/Users"}>
+                      Users
                     </Nav.Link>
+
+                    <Nav.Link as={Link} to={"/AdminOrders"}>
+                       Orders(Admin)
+                    </Nav.Link>
+                     <Nav.Link as={Link} to={"/OwnerOrders"}>
+                       Orders(Owner)
+                    </Nav.Link>
+                    
 
                     <NavDropdown
                       title="Dropdown"
@@ -87,6 +89,12 @@ export default function Sidebar() {
               </Navbar.Offcanvas>
             </Container>
           </Navbar>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+       
+
         </Col>
       </Row>
     </Container>

@@ -4,6 +4,8 @@ import { Container, Row, Col, Table, Button,Breadcrumb } from "react-bootstrap";
 import { AiFillEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import Sidebar from "./Sidebar";
+import { Link } from "react-router";
+
 const AdminRestaurent = () => {
   const testButton = () => {
     console.log("Add Restaurent");
@@ -20,7 +22,7 @@ const AdminRestaurent = () => {
         
           <h1>Restaurent</h1>
            <Breadcrumb>
-            <Breadcrumb.Item href="#">Dashboard</Breadcrumb.Item>
+            <Breadcrumb.Item href="#"><Link to={'/Dashboard'}>Dashboard</Link></Breadcrumb.Item>
 
             <Breadcrumb.Item active>Admin Restaurents</Breadcrumb.Item>
           </Breadcrumb>

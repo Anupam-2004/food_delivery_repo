@@ -14,6 +14,7 @@ import Sidebar from "./Sidebar";
 import { Link } from "react-router";
 import { FaFilePdf } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+
 const Orders = [
   {
     restaurentName: "KFC",
@@ -82,11 +83,12 @@ const Orders = [
     totalPrice: 321.99,
   },
 ];
-const AdminOrders = () => {
+
+const OwnerOrders = () => {
   const [show, setShow] = useState(false);
-  
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   return (
     <Container>
       <Row>
@@ -94,7 +96,7 @@ const AdminOrders = () => {
           <Sidebar />
         </Col>
         <Col md={11}>
-          <h1>Orders(Admin)</h1>
+          <h1>Orders(Owner)</h1>
         </Col>
       </Row>
       <Row>
@@ -103,11 +105,10 @@ const AdminOrders = () => {
             <Breadcrumb.Item>
               <Link to={"/Dashboard"}>Dashboard</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item active>Order(Admin)</Breadcrumb.Item>
+            <Breadcrumb.Item active> Orders(Owner)</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
       </Row>
-      
       <Row>
         <Col>
           <Table striped bordered hover>
@@ -142,28 +143,30 @@ const AdminOrders = () => {
                       })}
                     </ul>
                   </td>
-                 <td>{order.totalPrice}</td>
+                  <td>{order.totalPrice}</td>
                   <td>
                     <Button variant="primary" onClick={handleShow}>
-        <FaEye />
-      </Button>
+                      <FaEye />
+                    </Button>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                    <Modal show={show} onHide={handleClose}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Modal heading</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        Woohoo, you are reading this text in a modal!
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                          Close
+                        </Button>
+                        <Button variant="primary" onClick={handleClose}>
+                          Save Changes
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
                   </td>
-                   <td>
+                  <td>
                     <FaFilePdf />
                   </td>
                 </tr>
@@ -176,4 +179,4 @@ const AdminOrders = () => {
   );
 };
 
-export default AdminOrders;
+export default OwnerOrders;

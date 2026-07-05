@@ -371,3 +371,41 @@ font-weight: 700;
 a{
   text-decoration: none !important;
 }
+input{
+  width: 60%;
+  height:40px;
+}
+select{
+  width:60%;
+  height:40px;
+}
+textarea{
+  width:60%;
+  height:100px;
+}
+label{
+  font-weight: 700;
+  color: #a50f1b;
+  /* padding: 5px; */
+}
+button{
+  background-color: #a50f1b;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+ .owner-order-table-header{
+  
+  text-align: center;
+ }
+ .owner-order-table-header th{
+  color: #a50f1b !important;
+  font-size: 20px;
+  font-weight: 700;
+ }
+.owner-order-table-body{
+  text-align: center;
+
+}

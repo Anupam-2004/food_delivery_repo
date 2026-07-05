@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
-
 const Register = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -21,9 +20,7 @@ const Register = () => {
               <Offcanvas.Title>Sign In</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <div className="add_restro">
-                
-              </div>
+              <div className="add_restro"></div>
             </Offcanvas.Body>
           </Offcanvas>
         </Col>

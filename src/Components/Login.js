@@ -163,10 +163,10 @@ const Login = () => {
                 {({ errors, touched }) => (
                   <Form>
                     <Row>
-                      <Col>
-                        <label htmlFor="email">Email</label>
+                      <Col md={3}>
+                        <label htmlFor="email">Email:</label>
                       </Col>
-                      <Col>
+                      <Col md={9}>
                         <Field name="email" type="email" />
                         {errors.email && touched.email ? (
                           <div>{errors.email}</div>
@@ -175,10 +175,10 @@ const Login = () => {
                     </Row>
 
                     <Row>
-                      <Col>
-                        <label htmlFor="password">Password</label>
+                      <Col md={3}>
+                        <label htmlFor="password">Password:</label>
                       </Col>
-                      <Col>
+                      <Col md={9}>
                         <Field name="password" />
                         {errors.password && touched.password ? (
                           <div>{errors.password}</div>
@@ -187,7 +187,7 @@ const Login = () => {
                     </Row>
 
                     <Row>
-                      <Col>
+                      <Col md={12}>
                         <button type="submit">Log In</button>
                       </Col>
                     </Row>

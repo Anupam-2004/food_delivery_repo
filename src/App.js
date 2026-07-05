@@ -19,7 +19,7 @@ import AdminRestaurent from "./Components/AdminRestaurent";
 import ViewRestaurent from "./Components/ViewRestaurent";
 import FoodCategory from "./Components/FoodCategory";
 import AddfoodCategory from "./Components/AddfoodCategory";
-import Addfood from "./Components/Addfood";
+// import Addfood from "./Components/Addfood";
 import Foods from "./Components/Foods";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
@@ -27,8 +27,10 @@ import AddProduct from "./Components/AddProduct";
 import Dashboard from "./Components/Dashboard";
 import Order from "./Components/Order";
 import AdminOrders from "./Components/AdminOrders";
-import AddOrders from "./Components/AddOrders";
+import Products from "./Components/Products";
 import AdminProducts from "./Components/AdminProducts";
+import OwnerOrders from "./Components/OwnerOrders";
+import Users from "./Components/Users";
 
 
 function App() {
@@ -102,7 +104,7 @@ function App() {
         <Route path="/ViewRestaurent" element={<ViewRestaurent />} />
         <Route path="/FoodCategory" element={<FoodCategory />} />
         <Route path="/AddfoodCategory" element={<AddfoodCategory />} />
-        <Route path="/Addfood" element={<Addfood />} />
+        {/* <Route path="/Addfood" element={<Addfood />} /> */}
         <Route path="/Foods" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/AddProduct" element={<AddProduct />} />
@@ -110,8 +112,11 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard/>}/>
         <Route path="/Order" element={<Order />} />
         <Route path="/AdminOrders" element={<AdminOrders />} />
-        <Route path="/AddOrders" element={<AddOrders/>} />
+        <Route path="/Products" element={<Products/>} />
         <Route path="/AdminProducts" element={<AdminProducts/>} />
+        <Route path="/OwnerOrders" element={<OwnerOrders />} />
+        <Route path="Users" element={<Users/>} />
+
 
 
       </Routes>
