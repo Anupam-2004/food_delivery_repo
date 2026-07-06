@@ -1,9 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Sidebar from "./Sidebar";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+// import { FaLocationDot } from "react-icons/fa6";
+
+const addresses = {
+  Aera: ["Jamshedpur", "Bokaro", "Dhanbad", "Ranchi", "Hazaribagh", "Giridih"],
+};
+const cities = {
+  Jamshedpur: ["Sakschi", "Bistupur", "Kadma", "Adityapur", "Ghamhriya"],
+  Bokaro: [
+    "Chas",
+    "Bokaro Steel City",
+    "Bokaro Thermal",
+    "Phusro",
+    "Chandrapura",
+  ],
+};
+const areas = {
+  Sakschi: ["Sakchi Main Road"],
+  Bistupur: ["Bistupur Main Road"],
+  Kadma: ["Kadma Main Road"],
+  Adityapur: ["Adityapur Main Road"],
+  Ghamhriya: ["Ghamhriya Main Road"],
+};
+
 const SignupSchema = Yup.object().shape({
   restaurentName: Yup.string()
     .min(2, "restaurent name must be at least minimum 2 characters")
@@ -36,6 +59,7 @@ const SignupSchema = Yup.object().shape({
     .required(" description is Required"),
   category: Yup.string(),
   files: Yup.array()
+    .min(1, "At least one image is required")
     .required("At least one image is required")
     .test(
       "fileSize",
@@ -55,6 +79,8 @@ const SignupSchema = Yup.object().shape({
     ),
 });
 const AddRestaurent = () => {
+  const [subCategories, setSubCategories] = useState(addresses["Jamshedpur"]);
+
   return (
     <Container>
       <Row>
@@ -64,9 +90,10 @@ const AddRestaurent = () => {
         <Col md={11}>
           <h1>Add Restaurent</h1>
           <Breadcrumb>
-            <Breadcrumb.Item href="#"><Link to={'/Dashboard'}>Dashboard</Link></Breadcrumb.Item>
-
-            <Breadcrumb.Item active>Add Restaurent</Breadcrumb.Item>
+            <Breadcrumb.Item href={'/dashboard'}>
+              Dashboard
+            </Breadcrumb.Item>
+            <Breadcrumb.Item active>Add Restaurant</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
       </Row>
@@ -83,34 +110,130 @@ const AddRestaurent = () => {
                 email: "",
                 description: "",
                 category: "",
+                files: [],
               }}
               validationSchema={SignupSchema}
               onSubmit={(values) => {
                 console.log(values);
+                alert("Form submitted successfully!");
               }}
             >
-              {({ errors, touched }) => (
+              {({ errors, touched, values, setFieldValue }) => (
                 <Form>
                   <Row>
                     <Col md={3}>
                       <label htmlFor="restaurentName">Restaurent Name:</label>
                     </Col>
-                    <Col md={9} >
+                    <Col md={9}>
                       <Field name="restaurentName" as="input" type="text" />
                       {errors.restaurentName && touched.restaurentName ? (
                         <div>{errors.restaurentName}</div>
                       ) : null}
                     </Col>
                   </Row>
+                   <Row>
+                    <Col md={3}>
+                      <label htmlFor="addressLine1">Address line 1:</label>
+                    </Col>
+                    <Col md={9}>
+                      <Field name="addressLine1" as="input" type="text" />
+                      {errors.addressLine1 && touched.addressLine1 ? (
+                        <div>{errors.addressLine1}</div>
+                      ) : null}
+                    </Col>
+                  </Row>
+                   <Row>
+                    <Col md={3}>
+                      <label htmlFor="addressLine2">Address line 2:</label>
+                    </Col>
+                    <Col md={9}>
+                      <Field name="addressLine2" as="input" type="text" />
+                      {errors.addressLine2 && touched.addressLine2 ? (
+                        <div>{errors.addressLine2}</div>
+                      ) : null}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={3}>
+                      <label htmlFor="restaurentName">Restaurent Name:</label>
+                    </Col>
+                     <Col md={9}>
+                      <Field name="restaurentName" as="input" type="text" />
+                      {errors.restaurentName && touched.restaurentName ? (
+                        <div>{errors.restaurentName}</div>
+                      ) : null}
+                    </Col> 
+                  </Row>
                   <Row>
                     <Col md={3}>
                       <label htmlFor="address">Address :</label>
                     </Col>
                     <Col md={9}>
-                      <Field name="address" as="textarea" />
-                      {errors.address && touched.address ? (
-                        <div>{errors.address}</div>
-                      ) : null}
+                      <Field
+                        as="select"
+                        name="city"
+                        className="form-control"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFieldValue("city", value);
+                        }}
+                      >
+                        <option value="selectcity">Select City</option>
+                        <option value="Jamshedpur">Jamshedpur</option>
+                        <option value="Bokaro">Bokaro</option>
+                        <option value="Ranchi">Ranchi</option>
+                        <option value="Dhanbad">Dhanbad</option>
+                      </Field>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={3}>
+                      <label htmlFor="city">City:</label>
+                    </Col>
+                    <Col md={9}>
+                      <Field
+                        as="select"
+                        name="city"
+                        className="form-control"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFieldValue("city", value);
+                          setFieldValue("city", cities[value][0]);
+                          setSubCategories(cities[value]);
+                        }}
+                      >
+                        <option value="selectarea">Select Area</option>
+
+                        <option value="Jamshedpur">Sakchi</option>
+                        <option value="bokaro">Bistupur</option>
+                        <option value="ranchi">Kadma</option>
+                        <option value="dhanbad">Adityapur</option>
+                        <option value="dhanbad">Ghamhriya</option>
+                      </Field>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={3}>
+                      <label htmlFor="city">Area:</label>
+                    </Col>
+                    <Col md={9}>
+                      <Field
+                        as="select"
+                        name="area"
+                        className="form-control"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFieldValue("area", value);
+                        }}
+                      >
+                        <option value="select address">Select Address</option>
+
+                        <option value="jamshedpur">Sakchi Main Road</option>
+                        <option value="bokaro">Road2</option>
+                        <option value="ranchi">Market</option>
+                        <option value="dhanbad">rasd 2</option>
+                        <option value="dhanbad">Road 3</option>
+                      </Field>
                     </Col>
                   </Row>
                   <Row>
@@ -177,14 +300,17 @@ const AddRestaurent = () => {
                         type="file"
                         multiple
                         name="files"
-                        onChange={(e) =>
-                          errors("files", Array.from(e.currentTarget.files))
-                        }
+                        onChange={(e) => {
+                          setFieldValue(
+                            "files",
+                            Array.from(e.currentTarget.files),
+                          );
+                        }}
                       />
 
-                      {/* {errors.touched.files && errors.errors.files && (
-                        <p>{errors.errors.files}</p>
-                      )} */}
+                      {touched.files && errors.files && (
+                        <div className="text-danger">{errors.files}</div>
+                      )}
                     </Col>
                   </Row>
                   <Row>

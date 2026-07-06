@@ -202,7 +202,9 @@ const Dashboard = () => {
             <Col>
               <h2>Dashboard</h2>
                <Breadcrumb>
-            <Breadcrumb.Item href="#"></Breadcrumb.Item>
+            <Breadcrumb.Item href="/Dashboard">
+              Dashboard
+            </Breadcrumb.Item>
 
             <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
           </Breadcrumb>

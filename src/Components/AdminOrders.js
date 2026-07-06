@@ -99,12 +99,16 @@ const AdminOrders = () => {
       </Row>
       <Row>
         <Col>
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <Link to={"/Dashboard"}>Dashboard</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item active>Order(Admin)</Breadcrumb.Item>
-          </Breadcrumb>
+            <Col md={11}>
+                    
+                    <Breadcrumb>
+                      <Breadcrumb.Item href="/Dashboard">
+                        Dashboard
+                      </Breadcrumb.Item>
+          
+                      <Breadcrumb.Item active>Orders(Admin)</Breadcrumb.Item>
+                    </Breadcrumb>
+                  </Col>
         </Col>
       </Row>
       

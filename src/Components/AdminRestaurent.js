@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 
-import { Container, Row, Col, Table, Button,Breadcrumb } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  Button,
+  Breadcrumb,
+} from "react-bootstrap";
 import { AiFillEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import Sidebar from "./Sidebar";
@@ -13,22 +20,22 @@ const AdminRestaurent = () => {
 
   return (
     <Container>
-
       <Row>
         <Col md={1}>
-          <Sidebar/>
+          <Sidebar />
         </Col>
         <Col className="admin_restaurent" md={11}>
-        
           <h1>Restaurent</h1>
-           <Breadcrumb>
-            <Breadcrumb.Item href="#"><Link to={'/Dashboard'}>Dashboard</Link></Breadcrumb.Item>
+          <Breadcrumb>
+            <Breadcrumb.Item href="/Dashboard">
+              Dashboard
+            </Breadcrumb.Item>
 
             <Breadcrumb.Item active>Admin Restaurents</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
       </Row>
-     
+
       <Row>
         <Col>
           <Button

@@ -31,6 +31,8 @@ import Products from "./Components/Products";
 import AdminProducts from "./Components/AdminProducts";
 import OwnerOrders from "./Components/OwnerOrders";
 import Users from "./Components/Users";
+import About from"./Components/About";
+
 
 
 function App() {
@@ -104,7 +106,7 @@ function App() {
         <Route path="/ViewRestaurent" element={<ViewRestaurent />} />
         <Route path="/FoodCategory" element={<FoodCategory />} />
         <Route path="/AddfoodCategory" element={<AddfoodCategory />} />
-        {/* <Route path="/Addfood" element={<Addfood />} /> */}
+        <Route path="/About" element={<About />} />
         <Route path="/Foods" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/AddProduct" element={<AddProduct />} />
