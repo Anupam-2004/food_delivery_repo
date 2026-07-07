@@ -26,6 +26,7 @@ const areas = {
   Adityapur: ["Adityapur Main Road"],
   Ghamhriya: ["Ghamhriya Main Road"],
 };
+const categories = {};
 
 const SignupSchema = Yup.object().shape({
   restaurentName: Yup.string()
@@ -33,11 +34,41 @@ const SignupSchema = Yup.object().shape({
     .max(50, "restaurent name must not exceed 50 characters")
     .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
     .required(" restaurent name is Required"),
-  address: Yup.string()
-    .min(2, "adress  must be at least minimum 2 characters")
-    .max(50, "adress must not exceed 50 characters")
+  foodType: Yup.string().required("Select food type"),
+  addressLine1: Yup.string()
+    .min(2, "adressLine1  must be at least minimum 2 characters")
+    .max(50, "addressLine1 must not exceed 50 characters")
     .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("adress  is Mandatory"),
+    .required("addressLine1  is Mandatory"),
+  addressLine2: Yup.string()
+    .min(2, "addressLine2  must be at least minimum 2 characters")
+    .max(50, "addressLine2 must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
+    .required("addressLine2  is Mandatory"),
+  location: Yup.string()
+    .min(2, "location  must be at least minimum 2 characters")
+    .max(50, "location must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
+    .required("location  is Mandatory"),
+  city: Yup.string()
+    .min(2, "city  must be at least minimum 2 characters")
+    .max(50, "city must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
+    .required("city  is Mandatory"),
+  state: Yup.string()
+    .min(2, "state  must be at least minimum 2 characters")
+    .max(50, "state must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
+    .required("state  is Mandatory"),
+  country: Yup.string()
+    .min(2, "country  must be at least minimum 2 characters")
+    .max(50, "country must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
+    .required("country  is Mandatory"),
+  pincode: Yup.string()
+    .required("PIN code is required")
+    .matches(/^[1-9][0-9]{5}$/, "Enter a valid 6-digit PIN code"),
+
   mobileNumber: Yup.string().matches(
     /^[6-9]\d{9}$/,
     "enter valid 10 digit numbers",
@@ -46,26 +77,30 @@ const SignupSchema = Yup.object().shape({
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     "Enter a valid email address",
   ),
-  website: Yup.string().url("Enter a valid URL").required("Required"),
   ownerName: Yup.string()
     .min(2, "  ownerName must be at least minimum 2 characters")
     .max(50, " ownerName must not exceed 50 characters")
     .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
     .required(" ownerName is Required"),
+
+  website: Yup.string().url("Enter a valid URL").required("Required"),
+
+  // category: Yup.string().required("Select category"),
+  // foodName: Yup.string()
+
+  //   .matches(/^[a-zA-Z\s]+$/, "Food name can contain only letters and spaces")
+  //   .min(2, "Minimum 2 characters")
+  //   .max(50, "Maximum 50 characters")
+  //   .required("Food name is required"),
   description: Yup.string()
     .min(20, "description must be atleast 20 characters")
     .max(2000, "description must not exceed 2000 characters")
     .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
     .required(" description is Required"),
-  category: Yup.string(),
-  files: Yup.array()
-    .min(1, "At least one image is required")
-    .required("At least one image is required")
-    .test(
-      "fileSize",
-      "Each image must be less than 2 MB",
-      (files) => !files || files.every((file) => file.size <= 2 * 1024 * 1024),
-    )
+  // categories: Yup.string(),
+  images: Yup.array()
+    .min(1, "Please select at least one image")
+    .max(5, "Maximum 5 images are allowed")
     .test(
       "fileType",
       "Only JPG, JPEG, PNG and WEBP images are allowed",
@@ -76,10 +111,16 @@ const SignupSchema = Yup.object().shape({
             file.type,
           ),
         ),
+    )
+    .test(
+      "fileSize",
+      "Each image must be less than 2 MB",
+      (files) => !files || files.every((file) => file.size <= 2 * 1024 * 1024),
     ),
 });
 const AddRestaurent = () => {
   const [subCategories, setSubCategories] = useState(addresses["Jamshedpur"]);
+  //  const [subCategories, setSubCategories] = useState(categories["Veg"]);
 
   return (
     <Container>
@@ -90,9 +131,7 @@ const AddRestaurent = () => {
         <Col md={11}>
           <h1>Add Restaurent</h1>
           <Breadcrumb>
-            <Breadcrumb.Item href={'/dashboard'}>
-              Dashboard
-            </Breadcrumb.Item>
+            <Breadcrumb.Item href={"/dashboard"}>Dashboard</Breadcrumb.Item>
             <Breadcrumb.Item active>Add Restaurant</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
@@ -103,14 +142,23 @@ const AddRestaurent = () => {
             <Formik
               initialValues={{
                 restaurentName: "",
-                address: "",
-                website: "",
+                foodType: "",
+                addressLine1: "",
+                addressLine2: "",
+                location: "",
+                city: "",
+                state: "",
+                country: "",
+                pincode: "",
                 mobileNumber: "",
-                ownerName: "",
                 email: "",
+                ownerName: "",
+                website: "",
+
+                // categories: "",
+
                 description: "",
-                category: "",
-                files: [],
+                images: [],
               }}
               validationSchema={SignupSchema}
               onSubmit={(values) => {
@@ -131,7 +179,35 @@ const AddRestaurent = () => {
                       ) : null}
                     </Col>
                   </Row>
-                   <Row>
+                  <Row>
+                    <Col md={3}>
+                      <label>Food Type</label>
+                    </Col>
+                    <Col md={9}>
+                      <Field
+                        as="select"
+                        name="foodType"
+                        className="form-control"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFieldValue("foodType", value);
+                          setFieldValue("category", categories[value][0]);
+                          setSubCategories(categories[value]);
+                        }}
+                      >
+                        <option value="Veg">Veg</option>
+                        <option value="Non-Veg">Non-Veg</option>
+                      </Field>
+
+                      {/* <ErrorMessage
+                        name="foodType"
+                        component="div"
+                        className="text-danger"
+                      /> */}
+                    </Col>
+                  </Row>
+
+                  <Row>
                     <Col md={3}>
                       <label htmlFor="addressLine1">Address line 1:</label>
                     </Col>
@@ -142,7 +218,7 @@ const AddRestaurent = () => {
                       ) : null}
                     </Col>
                   </Row>
-                   <Row>
+                  <Row>
                     <Col md={3}>
                       <label htmlFor="addressLine2">Address line 2:</label>
                     </Col>
@@ -155,30 +231,19 @@ const AddRestaurent = () => {
                   </Row>
                   <Row>
                     <Col md={3}>
-                      <label htmlFor="restaurentName">Restaurent Name:</label>
-                    </Col>
-                     <Col md={9}>
-                      <Field name="restaurentName" as="input" type="text" />
-                      {errors.restaurentName && touched.restaurentName ? (
-                        <div>{errors.restaurentName}</div>
-                      ) : null}
-                    </Col> 
-                  </Row>
-                  <Row>
-                    <Col md={3}>
-                      <label htmlFor="address">Address :</label>
+                      <label htmlFor="location">location :</label>
                     </Col>
                     <Col md={9}>
                       <Field
                         as="select"
-                        name="city"
+                        name="location"
                         className="form-control"
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue("city", value);
+                          setFieldValue("location", value);
                         }}
                       >
-                        <option value="selectcity">Select City</option>
+                        <option value="selectcity">Select Location</option>
                         <option value="Jamshedpur">Jamshedpur</option>
                         <option value="Bokaro">Bokaro</option>
                         <option value="Ranchi">Ranchi</option>
@@ -202,7 +267,7 @@ const AddRestaurent = () => {
                           setSubCategories(cities[value]);
                         }}
                       >
-                        <option value="selectarea">Select Area</option>
+                        <option value="selectarea">Select City</option>
 
                         <option value="Jamshedpur">Sakchi</option>
                         <option value="bokaro">Bistupur</option>
@@ -214,26 +279,58 @@ const AddRestaurent = () => {
                   </Row>
                   <Row>
                     <Col md={3}>
-                      <label htmlFor="city">Area:</label>
+                      <label htmlFor="state">State:</label>
                     </Col>
                     <Col md={9}>
                       <Field
                         as="select"
-                        name="area"
+                        name="state"
                         className="form-control"
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue("area", value);
+                          setFieldValue("state", value);
                         }}
                       >
-                        <option value="select address">Select Address</option>
+                        <option value="selectstate">Select State</option>
+                        <option value="jharkhand">Jharkhand</option>
+                        <option value="Bihar">Bihar</option>
 
-                        <option value="jamshedpur">Sakchi Main Road</option>
-                        <option value="bokaro">Road2</option>
-                        <option value="ranchi">Market</option>
-                        <option value="dhanbad">rasd 2</option>
-                        <option value="dhanbad">Road 3</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="UP">UP</option>
                       </Field>
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col md={3}>
+                      <label htmlFor="country">Country :</label>
+                    </Col>
+                    <Col md={9}>
+                      <Field
+                        as="select"
+                        name="country"
+                        className="form-control"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFieldValue("country", value);
+                        }}
+                      >
+                        <option value="selectcountry">Select Country</option>
+                        <option value="India">India</option>
+                        <option value="Nepal">Nepal</option>
+                      </Field>
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col md={3}>
+                      <label htmlFor="pincode">Pincode:</label>
+                    </Col>
+                    <Col md={9}>
+                      <Field name="pincode" as="input" type="text" />
+                      {errors.pincode && touched.pincode ? (
+                        <div>{errors.pincode}</div>
+                      ) : null}
                     </Col>
                   </Row>
                   <Row>
@@ -280,6 +377,7 @@ const AddRestaurent = () => {
                       ) : null}
                     </Col>
                   </Row>
+
                   <Row>
                     <Col md={3}>
                       <label htmlFor="description">Description :</label>
@@ -293,25 +391,43 @@ const AddRestaurent = () => {
                   </Row>
                   <Row>
                     <Col md={3}>
-                      <label htmlFor="image">Image :</label>
+                      <label>Images</label>
                     </Col>
                     <Col md={9}>
                       <input
                         type="file"
                         multiple
-                        name="files"
-                        onChange={(e) => {
+                        className="form-control"
+                        accept="image/jpeg, image/jpg, image/png, image/webp"
+                        onChange={(event) => {
                           setFieldValue(
                             "files",
-                            Array.from(e.currentTarget.files),
+                            Array.from(event.currentTarget.files),
                           );
                         }}
                       />
 
-                      {touched.files && errors.files && (
-                        <div className="text-danger">{errors.files}</div>
-                      )}
+                      <ErrorMessage
+                        name="files"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
+                  </Row>
+
+                  <Row>
+                    {values.images.map((image, index) => (
+                      <Col md={3} key={index}>
+                        <img
+                          key={index}
+                          src={URL.createObjectURL(image)}
+                          alt="preview"
+                          width="120"
+                          height="120"
+                          style={{ objectFit: "cover", borderRadius: "5px" }}
+                        />
+                      </Col>
+                    ))}
                   </Row>
                   <Row>
                     <Col>

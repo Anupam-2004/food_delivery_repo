@@ -1,233 +1,4 @@
-// import React from "react";
-// import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
-// import { useFormik, Form, Formik, Field } from "formik";
-// import * as Yup from "yup";
-// import Sidebar from "./Sidebar";
 
-// const SignupSchema = Yup.object().shape({
-//   name: Yup.string()
-//     .min(2, "first name must be at least minimum 2 characters")
-//     .max(50, "first name must not exceed 50 characters")
-//     .matches(/^[A-Za-z .]+$/, "Name can only contain letters")
-//     .required("First Name is Mandatory"),
-//   address: Yup.string()
-//     .min(2, "adress  must be at least minimum 2 characters")
-//     .max(50, "adress must not exceed 50 characters")
-//     .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-//     .required("adress  is Mandatory"),
-//   price: Yup.number().required("digit is required"),
-
-//   category: Yup.string()
-//     .min(2, "category name must be at least minimum 2 characters")
-//     .max(50, "category name must not exceed 50 characters")
-//     .matches(/^[A-Za-z]+$/, "Name can only contain letters")
-//     .required("category  is required"),
-//   subcategory: Yup.string()
-//     .min(2, "sub category name must be at least minimum 2 characters")
-//     .max(50, "sub category name must not exceed 50 characters")
-//     .matches(/^[A-Za-z]+$/, "Name can only contain letters")
-//     .required("category  is required"),
-//   option: Yup.string()
-//     .min(2, "option must be at least minimum 2 characters")
-//     .max(50, "option must not exceed 50 characters")
-//     .matches(/^[A-Za-z- ]+$/, "option can only contain letters")
-//     .required("option is required"),
-
-//   restaurent: Yup.string()
-//     .min(2, "Restaurent name must be at least minimum 2 characters")
-//     .max(50, "Restaurent name must not exceed 50 characters")
-//     .matches(/^[A-Za-z1-9_ .]+$/, " Restaurent name can only contain letters")
-//     .required("Restaurent Name is Mandatory"),
-//   files: Yup.array()
-//     .required("At least one image is required")
-//     .test(
-//       "fileSize",
-//       "Each image must be less than 2 MB",
-//       (files) => !files || files.every((file) => file.size <= 2 * 1024 * 1024),
-//     )
-//     .test(
-//       "fileType",
-//       "Only JPG, JPEG, PNG and WEBP images are allowed",
-//       (files) =>
-//         !files ||
-//         files.every((file) =>
-//           ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
-//             file.type,
-//           ),
-//         ),
-//     ),
-// });
-
-// const AddProduct = () => {
-//   return (
-//     <Container>
-//       <Row>
-//         <Row>
-//           <Col md={1}>
-//             <Sidebar />
-//           </Col>
-//           <Col md={11}>
-//             <h1>Add products</h1>
-//           </Col>
-//           <Breadcrumb>
-//             <Breadcrumb.Item href="#">Dashboard</Breadcrumb.Item>
-
-//             <Breadcrumb.Item active>Add Products</Breadcrumb.Item>
-//           </Breadcrumb>
-//         </Row>
-//         <Col>
-//           <div className="add_restro">
-//             <Formik
-//               initialValues={{
-//                 Name: "",
-
-//                 price: "",
-
-//                 category: "",
-//                 subcategory: "",
-//                 image: "",
-//                 restaurent: "",
-//                 option: "",
-//               }}
-//               validationSchema={SignupSchema}
-//               onSubmit={(values) => {
-//                 console.log(values);
-//               }}
-//             >
-//               {({ errors, touched }) => (
-//                 <Form>
-//                   <Row>
-//                     <Col md={3}>
-//                       <label htmlFor="name">Name:</label>
-//                     </Col>
-//                     <Col md={9}>
-//                       <Field name="name" as="input" type="text" />
-//                       {errors.name && touched.name ? (
-//                         <div>{errors.name}</div>
-//                       ) : null}
-//                     </Col>
-//                   </Row>
-//                   <Row>
-//                     <Col md={3}>
-//                       <label htmlFor="category">Category:</label>
-//                     </Col>
-//                     <Col md={9}>
-//                       <Field name="category" as="select">
-//                         <option value="">Select Category</option>
-//                         <option value="veg">Veg</option>
-//                         <option value="nonveg">Non-Veg</option>
-//                         <option value="fastfood">Fast Food</option>
-//                         <option value="southindian">South Indian</option>
-//                         <option value="chinese">Chinese</option>
-//                       </Field>
-//                       {errors.category && touched.category ? (
-//                         <div>{errors.category}</div>
-//                       ) : null}
-//                     </Col>
-//                   </Row>
-//                   <Row>
-//                     <Col md={3}>
-//                       <label htmlFor="subcategory">Subcategory:</label>
-//                     </Col>
-//                     <Col md={9}>
-//                       <Field name="subcategory" as="select">
-//                         <option value="">Select Subcategory</option>
-//                         <option value="veg">Veg</option>
-//                         <option value="nonveg">Non-Veg</option>
-//                         <option value="fastfood">Fast Food</option>
-//                         <option value="southindian">South Indian</option>
-//                         <option value="chinese">Chinese</option>
-//                       </Field>
-//                       {errors.subcategory && touched.subcategory ? (
-//                         <div>{errors.subcategory}</div>
-//                       ) : null}
-//                     </Col>
-//                   </Row>
-//                   <Row>
-//                     <Col md={3}>
-//                       <label htmlFor="restaurent">Restaurent:</label>
-//                     </Col>
-//                     <Col md={9}>
-//                       <Field name="restaurent" as="select">
-//                         <option value="">Select Restaurent</option>
-//                         <option value="veg">Zint</option>
-//                         <option value="nonveg">Bottle</option>
-//                         <option value="fastfood">Blue Dimond</option>
-//                         <option value="southindian">XYZ</option>
-//                         <option value="chinese">ABC</option>
-//                       </Field>
-//                     </Col>
-//                   </Row>
-
-//                   <Row>
-//                     <Col md={3}>
-//                       <label htmlFor="price">price:</label>
-//                     </Col>
-//                     <Col md={9}>
-//                       <Field name="price" />
-//                       {errors.price && touched.price ? (
-//                         <div>{errors.price}</div>
-//                       ) : null}
-//                     </Col>
-//                   </Row>
-//                   <Row>
-//                     <Col md={3}>
-//                       <label htmlFor="option">option:</label>
-//                     </Col>
-//                     <Col md={9}>
-//                       <Field name="option" as="select">
-//                         <option value="">Select option</option>
-
-//                         <option value="Veg-Starter">Veg-Starter</option>
-//                         <option value="Veg-MainCourse">Veg-Main Course</option>
-//                         <option value="NonVeg-starter">NonVeg-starter</option>
-//                         <option value="NonVeg-MainCourse">
-//                           NonVeg-Main Course
-//                         </option>
-//                         <option value="southindian">Desserts</option>
-//                         <option value="chinese">Beverage</option>
-//                         <option value="chinese">Sides</option>
-//                       </Field>
-//                       {errors.category && touched.category ? (
-//                         <div>{errors.category}</div>
-//                       ) : null}
-//                     </Col>
-//                   </Row>
-//                   <Row>
-//                     <Col md={3}>
-//                       <label htmlFor="image">Image :</label>
-//                     </Col>
-//                     <Col md={9}>
-//                       <input
-//                         type="file"
-//                         multiple
-//                         name="files"
-//                         onChange={(e) =>
-//                           errors("files", Array.from(e.currentTarget.files))
-//                         }
-//                       />
-
-//                       {/* {errors.touched.files && errors.errors.files && (
-//                                            <p>{errors.errors.files}</p>
-//                                          )} */}
-//                     </Col>
-//                   </Row>
-//                   <Row>
-//                     <Col>
-//                       <button type="submit">Submit</button>
-//                     </Col>
-//                   </Row>
-//                 </Form>
-//               )}
-//             </Formik>
-//           </div>
-//         </Col>
-//       </Row>
-//     </Container>
-//   );
-// };
-
-// export default AddProduct;
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -244,42 +15,30 @@ const categories = {
     "Desserts",
     "Beverages",
   ],
-  "Non-Veg": [
-    "Chicken",
-    "Mutton",
-    "Fish",
-    "Egg",
-    "Rice",
-    "Breads",
-    "Starters",
-  ],
+  "Non-Veg": ["Chicken", "Mutton", "Fish", "Egg", "Rice", "Breads", "Starters"],
 };
 
 //  ff
 const SignupSchema = Yup.object({
   foodType: Yup.string().required("Select food type"),
+  restaurentId: Yup.string().required("Select Restaurent"),
 
   category: Yup.string().required("Select category"),
 
   foodName: Yup.string()
-  .matches(
-    /^[a-zA-Z\s]+$/,
-    "Food name can contain only letters and spaces"
-  )
-  .min(2, "Minimum 2 characters")
-  .max(50, "Maximum 50 characters")
-  .required("Food name is required"),
+    .matches(/^[a-zA-Z\s]+$/, "Food name can contain only letters and spaces")
+    .min(2, "Minimum 2 characters")
+    .max(50, "Maximum 50 characters")
+    .required("Food name is required"),
 
   price: Yup.number()
     .typeError("Price must be a number")
     .positive("Price must be greater than 0")
     .required("Price is required"),
 
-  description: Yup.string()
-    .min(10)
-    .required("Description is required"),
+  description: Yup.string().min(10).required("Description is required"),
 
-   files: Yup.array()
+  files: Yup.array()
     .min(1, "Please select at least one image")
     .max(5, "Maximum 5 images are allowed")
     .test(
@@ -289,16 +48,14 @@ const SignupSchema = Yup.object({
         !files ||
         files.every((file) =>
           ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
-            file.type
-          )
-        )
+            file.type,
+          ),
+        ),
     )
     .test(
       "fileSize",
       "Each image must be less than 2 MB",
-      (files) =>
-        !files ||
-        files.every((file) => file.size <= 2 * 1024 * 1024)
+      (files) => !files || files.every((file) => file.size <= 2 * 1024 * 1024),
     ),
 });
 
@@ -308,7 +65,6 @@ export default function AddProduct() {
   return (
     <div>
       <Container>
-
         <Row>
           <Col md={5}>
             <Sidebar />
@@ -317,16 +73,19 @@ export default function AddProduct() {
             <h1>Add products</h1>
           </Col>
           <Breadcrumb>
-            <Breadcrumb.Item > <Link to={'/Dashboard'}>Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {" "}
+              <Link to={"/Dashboard"}>Dashboard</Link>
+            </Breadcrumb.Item>
             <Breadcrumb.Item active>Add Products</Breadcrumb.Item>
           </Breadcrumb>
         </Row>
       </Container>
 
-
       <Formik
         initialValues={{
           foodType: "Veg",
+          restaurentId:"",
           category: "Main Course",
           foodName: "",
           price: "",
@@ -340,7 +99,6 @@ export default function AddProduct() {
           resetForm();
         }}
       >
-
         {({ values, setFieldValue }) => (
           <Form
             style={{
@@ -348,9 +106,28 @@ export default function AddProduct() {
               margin: "30px auto",
             }}
           >
+             <label>Choose Restaurent</label>
 
+            <Field
+              as="select"
+              name="restaurentId"
+              className="form-control"
+              onChange={(e) => {
+                const value = e.target.value;
+                setFieldValue("restaurentId", value);
+                setFieldValue("restaurentId", categories[value][0]);
+                setSubCategories(categories[value]);
+              }}
+            >
+              <option value="restaurentId">Zing</option>
+              <option value="restaurentId">Blue Diamond</option>
+            </Field>
 
-            {/* Food Type */}
+            <ErrorMessage
+              name="restaurentId"
+              component="div"
+              className="text-danger"
+            />
 
             <label>Food Type</label>
 
@@ -399,11 +176,7 @@ export default function AddProduct() {
 
             <label>Food Name</label>
 
-            <Field
-              name="foodName"
-              type="text"
-              className="form-control"
-            />
+            <Field name="foodName" type="text" className="form-control" />
 
             <ErrorMessage
               name="foodName"
@@ -417,11 +190,7 @@ export default function AddProduct() {
 
             <label>Price</label>
 
-            <Field
-              name="price"
-              type="number"
-              className="form-control"
-            />
+            <Field name="price" type="number" className="form-control" />
 
             <ErrorMessage
               name="price"
@@ -435,11 +204,7 @@ export default function AddProduct() {
 
             <label>Description</label>
 
-            <Field
-              as="textarea"
-              name="description"
-              className="form-control"
-            />
+            <Field as="textarea" name="description" className="form-control" />
 
             <ErrorMessage
               name="description"
@@ -459,13 +224,9 @@ export default function AddProduct() {
               className="form-control"
               accept="image/jpeg, image/jpg, image/png, image/webp"
               onChange={(event) => {
-                setFieldValue(
-                  "files",
-                  Array.from(event.currentTarget.files)
-                );
+                setFieldValue("files", Array.from(event.currentTarget.files));
               }}
             />
-
 
             <ErrorMessage
               name="files"
@@ -476,25 +237,21 @@ export default function AddProduct() {
               {values.files.map((file, index) => (
                 <Col md={3} key={index}>
                   <img
-                  key={index}
-                  src={URL.createObjectURL(file)}
-                  alt="preview"
-                  width="120"
-                  height="120"
-                  style={{ objectFit: "cover", borderRadius: "5px" }}
-                />
-                </Col>  
+                    key={index}
+                    src={URL.createObjectURL(file)}
+                    alt="preview"
+                    width="120"
+                    height="120"
+                    style={{ objectFit: "cover", borderRadius: "5px" }}
+                  />
+                </Col>
               ))}
             </Row>
             <br />
 
-            <button
-              type="submit"
-              className="btn btn-success"
-            >
+            <button type="submit" className="btn btn-success">
               Add Product
             </button>
-
           </Form>
         )}
       </Formik>
