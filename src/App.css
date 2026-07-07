@@ -410,11 +410,13 @@ textarea{
   border-radius: 5px;
 }
 label{
+  margin:10px;
   font-weight: 700;
   color: #a50f1b;
   /* padding: 5px; */
 }
 button{
+  margin: 10px;
   background-color: #a50f1b;
   color: white;
   padding: 10px 20px;
