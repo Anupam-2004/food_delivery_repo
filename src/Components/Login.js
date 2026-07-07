@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Navigate } from "react-router-dom";
+import { login } from "./../slices/auth";
+import { clearMessage } from "./../slices/message";
 import { Col, Container, Row, Offcanvas, Button } from "react-bootstrap";
 import { useFormik } from "formik";
 import { Formik, Form, Field } from "formik";
@@ -6,18 +10,15 @@ import * as Yup from "yup";
 import axios from "axios";
 
 const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .matches(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "Enter a valid email address",
-    )
-    .required("Email required"),
+  username: Yup.string()
+    // .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address")
+    .required("Mobile required"),
   password: Yup.string()
     .required("Password is required")
     .min(5, "Minimum 5 characters")
-    .matches(/[a-z]/, "Must contain a lowercase letter")
-    .matches(/[A-Z]/, "Must contain an uppercase letter")
-    .matches(/[0-9]/, "Must contain a number"),
+    // .matches(/[a-z]/, "Must contain a lowercase letter")
+    // .matches(/[A-Z]/, "Must contain an uppercase letter")
+    // .matches(/[0-9]/, "Must contain a number"),
 });
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -33,14 +34,14 @@ const SignupSchema = Yup.object().shape({
     .required("lastname is Required"),
 
   mobileNumber: Yup.string()
-    .matches(/^[6-9]\d{9}$/, "enter valid 10 digit numbers")
+    .matches(
+      /^[6-9]\d{9}$/,
+      "enter valid 10 digit numbers",
+    )
     // .required("only digits are required")
     .required("Mobile number is required"),
   email: Yup.string()
-    .matches(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "Enter a valid email address",
-    )
+    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address")
     .required("Email required"),
   password: Yup.string()
     .required("Password is required")
@@ -51,9 +52,44 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Login = () => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [successful, setSuccessful] = useState(false);
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        dispatch(clearMessage());
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [message, dispatch]);
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
+  const handleLogin = (formValue) => {
+    const { username, password } = formValue;
+    setLoading(true);
+    console.log(formValue);
+    dispatch(login({ username, password }))
+      .unwrap()
+      .then(() => {
+        navigate("/");
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <Container fluid>
@@ -71,71 +107,90 @@ const Login = () => {
                 }}
                 validationSchema={SignupSchema}
                 onSubmit={(values) => {
-                  const data = {
-                    username: values.mobileNumber,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    mobileNumber: values.mobileNumber,
-                    email: values.email,
-                    password: values.password,
-                  };
-
-                  console.log(data);
-                  axios
-                    .post("http://localhost:8090/api/auth/signup", data)
-                    .then((response) => {
-                      console.log("user sucessfully Registered");
-                    })
-                    .catch((error) => {
-                      console.log("user reistered failed");
-                    });
+                  console.log(values);
+                  const data={
+                    firstName:values.firstName,
+                  lastName: values.lastName,
+                  mobileNumber: values.mobileNumber,
+                  email: values.email,
+                  password: values.password,
+                  username:values.mobileNumber
+                  }
+                  axios.post("http://localhost:8090/api/auth/signup",data).then((response)=>
+                  {
+                    console.log("User Successfully Registered");
+                    alert("User Successfully Registered");
+                  }).catch((error)=>{
+                    console.log("User Registration Failed!");
+                    alert("User Registration Failed!");
+                  })
                 }}
               >
                 {({ errors, touched }) => (
                   <Form>
-                   
-                        <label htmlFor="firstName">First Name:</label>
-                     
+                    <Row>
+                      <Col>
+                        <label htmlFor="firstName">First Name</label>
+                      </Col>
+                      <Col>
                         <Field name="firstName" />
-                        {errors.firstName && touched.firstName ? (
-                          <div>{errors.firstName}</div>
-                        ) : null}
-                    
-                        <label htmlFor="lastName">Last Name:</label>
-                    
+                        {
+                          errors.firstName && touched.firstName ? (
+                            <div>{errors.firstName}</div>
+                          ) : null}
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <label htmlFor="lastName">Last Name</label>
+                      </Col>
+                      <Col>
                         <Field name="lastName" />
                         {errors.lastName && touched.lastName ? (
                           <div>{errors.lastName}</div>
                         ) : null}
-                    
-                    
-                        <label htmlFor="mobileNumber">Mobile:</label>
-                    
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <label htmlFor="mobileNumber">Mobile</label>
+                      </Col>
+                      <Col>
                         <Field name="mobileNumber" />
                         {errors.mobileNumber && touched.mobileNumber ? (
                           <div>{errors.mobileNumber}</div>
                         ) : null}
-                      
-                        <label htmlFor="email">Email:</label>
-                     
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <label htmlFor="email">Email</label>
+                      </Col>
+                      <Col>
                         <Field name="email" type="email" />
                         {errors.email && touched.email ? (
                           <div>{errors.email}</div>
                         ) : null}
-                    
+                      </Col>
+                    </Row>
 
-                   
-                        <label htmlFor="password">Password:</label>
-                     
+                    <Row>
+                      <Col>
+                        <label htmlFor="password">Password</label>
+                      </Col>
+                      <Col>
                         <Field name="password" />
                         {errors.password && touched.password ? (
                           <div>{errors.password}</div>
                         ) : null}
-                     
+                      </Col>
+                    </Row>
 
-                    
-                        <button type="submit">Register</button>
-                    
+                    <Row>
+                      <Col>
+                        <button type="submit">Submit</button>
+                      </Col>
+                    </Row>
                   </Form>
                 )}
               </Formik>
@@ -153,24 +208,22 @@ const Login = () => {
             <div className="add_restro">
               <Formik
                 initialValues={{
-                  email: "",
+                  username: "",
                   password: "",
                 }}
                 validationSchema={LoginSchema}
-                onSubmit={(values) => {
-                  console.log(values);
-                }}
+                onSubmit={handleLogin}
               >
                 {({ errors, touched }) => (
                   <Form>
                     <Row>
                       <Col md={3}>
-                        <label htmlFor="email">Email:</label>
+                        <label htmlFor="email">Mobile:</label>
                       </Col>
                       <Col md={9}>
-                        <Field name="email" type="email" />
-                        {errors.email && touched.email ? (
-                          <div>{errors.email}</div>
+                        <Field name="username" type="text" />
+                        {errors.username && touched.username ? (
+                          <div>{errors.username}</div>
                         ) : null}
                       </Col>
                     </Row>
