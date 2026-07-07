@@ -26,7 +26,10 @@ const SignupSchema = Yup.object({
   category: Yup.string().required("Select category"),
 
   foodName: Yup.string()
-    .matches(/^[a-zA-Z\s]+$/, "Food name can contain only letters and spaces")
+    .matches(
+      /^[a-zA-Z\s]+$/,
+      "Food name can contain only letters and spaces"
+    )
     .min(2, "Minimum 2 characters")
     .max(50, "Maximum 50 characters")
     .required("Food name is required"),
