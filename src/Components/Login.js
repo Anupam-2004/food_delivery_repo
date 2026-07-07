@@ -1,19 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Navigate } from "react-router-dom";
+import { login } from "./../slices/auth";
+import { clearMessage } from "./../slices/message";
 import { Col, Container, Row, Offcanvas, Button } from "react-bootstrap";
 import { useFormik } from "formik";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 const LoginSchema = Yup.object().shape({
-   email: Yup.string()
-  .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address")
-  .required("Email required"),
+  username: Yup.string()
+    // .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address")
+    .required("Mobile required"),
   password: Yup.string()
     .required("Password is required")
     .min(5, "Minimum 5 characters")
-    .matches(/[a-z]/, "Must contain a lowercase letter")
-    .matches(/[A-Z]/, "Must contain an uppercase letter")
-    .matches(/[0-9]/, "Must contain a number"),
+    // .matches(/[a-z]/, "Must contain a lowercase letter")
+    // .matches(/[A-Z]/, "Must contain an uppercase letter")
+    // .matches(/[0-9]/, "Must contain a number"),
 });
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -27,17 +31,17 @@ const SignupSchema = Yup.object().shape({
     .max(50, "lastname must not exceed 50 characters")
     .matches(/^[A-Za-z .]+$/, "Name can only contain letters")
     .required("lastname is Required"),
-    
+
   mobileNumber: Yup.string()
     .matches(
       /^[6-9]\d{9}$/,
       "enter valid 10 digit numbers",
     )
     // .required("only digits are required")
-    .required("Mobile number is required"),                               
+    .required("Mobile number is required"),
   email: Yup.string()
-  .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address")
-  .required("Email required"),
+    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address")
+    .required("Email required"),
   password: Yup.string()
     .required("Password is required")
     .min(5, "Minimum 5 characters")
@@ -50,6 +54,41 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [successful, setSuccessful] = useState(false);
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        dispatch(clearMessage());
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [message, dispatch]);
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
+  const handleLogin = (formValue) => {
+    const { username, password } = formValue;
+    setLoading(true);
+    console.log(formValue);
+    dispatch(login({ username, password }))
+      .unwrap()
+      .then(() => {
+        navigate("/");
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <Container fluid>
@@ -79,9 +118,9 @@ const Login = () => {
                       <Col>
                         <Field name="firstName" />
                         {
-                        errors.firstName && touched.firstName ? (
-                          <div>{errors.firstName}</div>
-                        ) : null}
+                          errors.firstName && touched.firstName ? (
+                            <div>{errors.firstName}</div>
+                          ) : null}
                       </Col>
                     </Row>
                     <Row>
@@ -152,24 +191,22 @@ const Login = () => {
             <div className="add_restro">
               <Formik
                 initialValues={{
-                  email: "",
+                  username: "",
                   password: "",
                 }}
                 validationSchema={LoginSchema}
-                onSubmit={(values) => {
-                  console.log(values);
-                }}
+                onSubmit={handleLogin}
               >
                 {({ errors, touched }) => (
                   <Form>
                     <Row>
                       <Col md={3}>
-                        <label htmlFor="email">Email:</label>
+                        <label htmlFor="email">Mobile:</label>
                       </Col>
                       <Col md={9}>
-                        <Field name="email" type="email" />
-                        {errors.email && touched.email ? (
-                          <div>{errors.email}</div>
+                        <Field name="username" type="text" />
+                        {errors.username && touched.username ? (
+                          <div>{errors.username}</div>
                         ) : null}
                       </Col>
                     </Row>
@@ -194,7 +231,7 @@ const Login = () => {
                   </Form>
                 )}
               </Formik>
-              <button  className="register_btn"  onClick={handleShow}>
+              <button className="register_btn" onClick={handleShow}>
                 If you are not registerd then click here
               </button>
             </div>
