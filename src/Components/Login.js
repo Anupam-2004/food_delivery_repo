@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
-import { login } from "./../slices/auth";
+import { login, register } from "./../slices/auth";
 import { clearMessage } from "./../slices/message";
 import { Col, Container, Row, Offcanvas, Button } from "react-bootstrap";
 import { useFormik } from "formik";
@@ -15,10 +15,10 @@ const LoginSchema = Yup.object().shape({
     .required("Mobile required"),
   password: Yup.string()
     .required("Password is required")
-    .min(5, "Minimum 5 characters")
-    // .matches(/[a-z]/, "Must contain a lowercase letter")
-    // .matches(/[A-Z]/, "Must contain an uppercase letter")
-    // .matches(/[0-9]/, "Must contain a number"),
+    .min(5, "Minimum 5 characters"),
+  // .matches(/[a-z]/, "Must contain a lowercase letter")
+  // .matches(/[A-Z]/, "Must contain an uppercase letter")
+  // .matches(/[0-9]/, "Must contain a number"),
 });
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -34,14 +34,14 @@ const SignupSchema = Yup.object().shape({
     .required("lastname is Required"),
 
   mobileNumber: Yup.string()
-    .matches(
-      /^[6-9]\d{9}$/,
-      "enter valid 10 digit numbers",
-    )
+    .matches(/^[6-9]\d{9}$/, "enter valid 10 digit numbers")
     // .required("only digits are required")
     .required("Mobile number is required"),
   email: Yup.string()
-    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address")
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Enter a valid email address",
+    )
     .required("Email required"),
   password: Yup.string()
     .required("Password is required")
@@ -90,6 +90,20 @@ const Login = () => {
         setLoading(false);
       });
   };
+  // const handleRegister = (formValue) => {
+  //   const {firstName,lastName,mobileNumber,email,password } = formValue;
+  //   setLoading(true);
+  //   console.log(formValue);
+  //   dispatch(register({firstName,lastName,mobileNumber,email,password }))
+  //     .unwrap()
+  //     .then(() => {
+  //       navigate("/Login");
+  //     })
+  //     .catch(() => {
+  //       setLoading(false);
+  //     });
+  // };
+  
 
   return (
     <Container fluid>
@@ -108,95 +122,76 @@ const Login = () => {
                 validationSchema={SignupSchema}
                 onSubmit={(values) => {
                   console.log(values);
-                  const data={
-                    firstName:values.firstName,
-                  lastName: values.lastName,
-                  mobileNumber: values.mobileNumber,
-                  email: values.email,
-                  password: values.password,
-                  username:values.mobileNumber
-                  }
-                  axios.post("http://localhost:8090/api/auth/signup",data).then((response)=>
-                  {
-                    console.log("User Successfully Registered");
-                    alert("User Successfully Registered");
-                  }).catch((error)=>{
-                    console.log("User Registration Failed!");
-                    alert("User Registration Failed!");
-                  })
+                  const data = {
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    mobileNumber: values.mobileNumber,
+                    email: values.email,
+                    password: values.password,
+                    username: values.mobileNumber,
+                  };
+                  axios
+                    .post("http://localhost:8090/api/auth/signup", data)
+                    .then((response) => {
+                      console.log("User Successfully Registered");
+                      alert("User Successfully Registered");
+                      setShow=(false);
+                    })
+                    .catch((error) => {
+                      console.log("User Registration Failed!");
+                      alert("User Registration Failed!");
+                      // handleClose();
+                    });
                 }}
               >
                 {({ errors, touched }) => (
                   <Form>
+                    <label htmlFor="firstName">First Name:</label>
+                    <Field name="firstName" />
+                    {errors.firstName && touched.firstName ? (
+                      <div>{errors.firstName}</div>
+                    ) : null}
+                    <label htmlFor="lastName">Last Name:</label>
+                    <Field name="lastName" />
+                    {errors.lastName && touched.lastName ? (
+                      <div>{errors.lastName}</div>
+                    ) : null}
+                    <label htmlFor="mobileNumber">Mobile:</label>
+                    <Field name="mobileNumber" />
+                    {errors.mobileNumber && touched.mobileNumber ? (
+                      <div>{errors.mobileNumber}</div>
+                    ) : null}
+                    <label htmlFor="mobileNumber">Email:</label>
+                    <Field name="email" type="email" />
+                    {errors.email && touched.email ? (
+                      <div>{errors.email}</div>
+                    ) : null}
+                    <label htmlFor="password">Password:</label>
+                    <Field name="password" />
+                    {errors.password && touched.password ? (
+                      <div>{errors.password}</div>
+                    ) : null}{" "}
                     <Row>
                       <Col>
-                        <label htmlFor="firstName">First Name</label>
-                      </Col>
-                      <Col>
-                        <Field name="firstName" />
-                        {
-                          errors.firstName && touched.firstName ? (
-                            <div>{errors.firstName}</div>
-                          ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <label htmlFor="lastName">Last Name</label>
-                      </Col>
-                      <Col>
-                        <Field name="lastName" />
-                        {errors.lastName && touched.lastName ? (
-                          <div>{errors.lastName}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <label htmlFor="mobileNumber">Mobile</label>
-                      </Col>
-                      <Col>
-                        <Field name="mobileNumber" />
-                        {errors.mobileNumber && touched.mobileNumber ? (
-                          <div>{errors.mobileNumber}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <label htmlFor="email">Email</label>
-                      </Col>
-                      <Col>
-                        <Field name="email" type="email" />
-                        {errors.email && touched.email ? (
-                          <div>{errors.email}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col>
-                        <label htmlFor="password">Password</label>
-                      </Col>
-                      <Col>
-                        <Field name="password" />
-                        {errors.password && touched.password ? (
-                          <div>{errors.password}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col>
-                        <button type="submit">Submit</button>
+                        <button
+                          className="register_btn"
+                          type="submit"
+                          onClick={() => setShow(true)}
+                        >
+                          Register
+                        </button>
                       </Col>
                     </Row>
                   </Form>
                 )}
               </Formik>
-              <button className="login_btn" onClick={handleClose}>
-                If already registered then click here
-              </button>
+              <Row>
+                <Col className="already-registered-btn">
+                  <button onClick={handleClose}>
+                    Already have an account? Login
+                  </button>
+                </Col>
+              </Row>
             </div>
           </Col>
         </Row>
@@ -216,41 +211,31 @@ const Login = () => {
               >
                 {({ errors, touched }) => (
                   <Form>
+                    <label htmlFor="email">Mobile:</label>
+                    <Field name="username" type="text" />
+                    {errors.username && touched.username ? (
+                      <div>{errors.username}</div>
+                    ) : null}
+                    <label htmlFor="password">Password:</label>
+                    <Field name="password" />
+                    {errors.password && touched.password ? (
+                      <div>{errors.password}</div>
+                    ) : null}{" "}
                     <Row>
-                      <Col md={3}>
-                        <label htmlFor="email">Mobile:</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="username" type="text" />
-                        {errors.username && touched.username ? (
-                          <div>{errors.username}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="password">Password:</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="password" />
-                        {errors.password && touched.password ? (
-                          <div>{errors.password}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col md={12}>
+                      <Col>
                         <button type="submit">Log In</button>
                       </Col>
-                    </Row>
+                    </Row>{" "}
                   </Form>
                 )}
               </Formik>
-              <button className="register_btn" onClick={handleShow}>
-                If you are not registerd then click here
-              </button>
+              <Row>
+                <Col className="not-registered-btn">
+                  <button onClick={handleShow}>
+                    Don't have an account? Register
+                  </button>
+                </Col>
+              </Row>
             </div>
           </Col>
         </Row>

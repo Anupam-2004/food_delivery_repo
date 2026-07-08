@@ -349,9 +349,11 @@ color: #a50f1b;
   border: none;
 
 }
-.login_btn{
+/* .login_btn{
+  margin: 10px;
   text-align: center;
-}
+} */
+
 .dashboard{
   text-align: center;
   color:black;
@@ -415,15 +417,24 @@ label{
   color: #a50f1b;
   /* padding: 5px; */
 }
-button{
+.addProduct_btn,.addRestaurent_btn{
   margin: 10px;
   background-color: #a50f1b;
   color: white;
-  /* padding: 10px 20px; */
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
+/* .addRestaurent_btn{
+  margin: 10px;
+  background-color: #a50f1b;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+} */
  .owner-order-table-header{
   
   text-align: center;
@@ -437,3 +448,40 @@ button{
   text-align: center;
 
 }
+.register_btn{
+  margin: 10px;
+  background-color: #a50f1b;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+}
+.already-registered-btn ,.not-registered-btn{
+  /* margin: 10px; */
+  background-color: #a50f1b;
+  color:white;
+
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.already-registered-btn:hover ,.not-registered-btn:hover{
+  color: #0a58ca;
+}
+/* .not-registered-btn {
+   margin: 10px;
+  background-color: #a50f1b;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+} */
+
+/* .not-registered-btn:hover {
+  color: #0a58ca;
+} */

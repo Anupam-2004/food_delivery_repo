@@ -116,6 +116,7 @@ const foods = [
   {
     image: "/food_images_no_names/south_indian.png",
     name: "North Indian",
+    onclick
   },
 ];
 const products = [

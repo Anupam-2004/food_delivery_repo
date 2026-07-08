@@ -431,7 +431,7 @@ const AddRestaurent = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <button type="submit">Submit</button>
+                      <button className="addRestaurent_btn" type="submit">Submit</button>
                     </Col>
                   </Row>
                 </Form>

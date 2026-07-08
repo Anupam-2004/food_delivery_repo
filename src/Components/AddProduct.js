@@ -252,7 +252,7 @@ export default function AddProduct() {
             </Row>
             <br />
 
-            <button type="submit" className="btn btn-success">
+            <button className="addProduct_btn "type="submit">
               Add Product
             </button>
           </Form>
