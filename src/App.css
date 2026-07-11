@@ -11,9 +11,8 @@ body {
   align-items: center;
   width: 100%;
 }
-.nav.link{
+.nav.link {
   padding-left: 5px;
-
 }
 .mx-auto :hover {
   border-bottom: 2px brown solid;
@@ -502,6 +501,11 @@ label {
   background-color: orange !important;
   border-color: red;
   color: white;
+  transition: 0.3s;
+}
+
+.buy_btn:hover {
+  transform: scale(1.08);
 }
 .food_category_heading {
   color: #ff5200;
@@ -515,4 +519,45 @@ label {
   background-color: orange !important;
   border-color: red;
   color: white;
+  transition: 0.3s;
+}
+.restaurent_btn:hover {
+  transform: scale(1.08);
+}
+.foodCategory_top {
+  background-image: url("C:/Users/aanup/OneDrive/Documents/GitHub/food_delivery_repo/public/backgroundImage.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-radius: 20px;
+  padding: 100px 50px;
+  color: black;
+
+  position: relative;
+  overflow: hidden;
+}
+.foodCategory_top h1 {
+  font-size: 55px;
+  font-weight: 700;
+}
+
+.foodCategory_top p {
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: #ff5200;
+  font-style: italic;
+}
+.foodCategory_top .btn {
+  border-radius: 30px;
+  padding: 10px 18px;
+  font-weight: 500;
+  border: none;
+  transition: 0.3s;
+}
+
+.foodCategory_top .btn:hover {
+  background: #ff6b00;
+  color: #fff;
+  transform: translateY(-3px);
 }

@@ -41,6 +41,7 @@ import { PiShoppingCartSimpleThin } from "react-icons/pi";
 import { BiSolidOffer } from "react-icons/bi";
 import { IoRestaurant } from "react-icons/io5";
 import { CiHome } from "react-icons/ci";
+import { BiFoodMenu } from "react-icons/bi";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -80,7 +81,7 @@ function App() {
                       <CiHome />Home
                     </Nav.Link>
                     <Nav.Link as={Link} to={"/menu"}>
-                      Menu
+                     <BiFoodMenu /> Menu
                     </Nav.Link>
                     <Nav.Link as={Link} to={"/restaurent"}>
                      <IoRestaurant /> Restaurent

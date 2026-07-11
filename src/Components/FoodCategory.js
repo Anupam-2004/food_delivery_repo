@@ -5,6 +5,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import Sidebar from "./Sidebar";
 import { FaShoppingCart } from "react-icons/fa";
 
+
 const breads = [
   {
     image: "/breads/butter_naan.jpg",
@@ -610,39 +611,41 @@ const FoodCategory = () => {
   const handleClose=()=>setShow(true);
   const handleShow=()=>setShow(false);
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h1>North Indian</h1>
-          <p>Indulge with the best of North Indian cuisines.</p>
-          <div className="d-flex flex-wrap gap-2 mb-2">
-            <Button variant="light">
-              Filter
-              <RiArrowDropDownLine />
-            </Button>
-            <Button variant="light">
-              Sort by
-              <RiArrowDropDownLine />
-            </Button>
-            <Button variant="light">
-              Veg/Non Veg
-              <RiArrowDropDownLine />
-            </Button>
-            <Button variant="light">
-              Ratings
-              <RiArrowDropDownLine />
-            </Button>
-            <Button variant="light">
-              Delivery Time
-              <RiArrowDropDownLine />
-            </Button>
-            <Button variant="light">
-              Cost for you
-              <RiArrowDropDownLine />
-            </Button>
-          </div>
-        </Col>
-      </Row>
+    <Container fluid>
+   <Row>
+  <Col className="foodCategory_top">
+    <div className="banner_content">
+      <h1>North Indian</h1>
+      <p>Indulge with the best of North Indian cuisines.</p>
+
+      <div className="d-flex flex-wrap gap-2 mb-2">
+        <Button variant="light">
+          Filter <RiArrowDropDownLine />
+        </Button>
+
+        <Button variant="light">
+          Sort by <RiArrowDropDownLine />
+        </Button>
+
+        <Button variant="light">
+          Veg/Non Veg <RiArrowDropDownLine />
+        </Button>
+
+        <Button variant="light">
+          Ratings <RiArrowDropDownLine />
+        </Button>
+
+        <Button variant="light">
+          Delivery Time <RiArrowDropDownLine />
+        </Button>
+
+        <Button variant="light">
+          Cost for you <RiArrowDropDownLine />
+        </Button>
+      </div>
+    </div>
+  </Col>
+</Row>
       <hr />
       <Row>
         <Col className="food_category_heading">
