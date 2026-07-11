@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -33,10 +33,14 @@ import AdminProducts from "./Components/AdminProducts";
 import OwnerOrders from "./Components/OwnerOrders";
 import Users from "./Components/Users";
 import About from "./Components/About";
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
-import { IoIosLogOut } from 'react-icons/io';
-import { logout } from './slices/auth';
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { IoIosLogOut } from "react-icons/io";
+import { logout } from "./slices/auth";
+import { PiShoppingCartSimpleThin } from "react-icons/pi";
+import { BiSolidOffer } from "react-icons/bi";
+import { IoRestaurant } from "react-icons/io5";
+import { CiHome } from "react-icons/ci";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -73,52 +77,50 @@ function App() {
                 <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="mx-auto">
                     <Nav.Link as={Link} to={"/"}>
-                      Home
+                      <CiHome />Home
                     </Nav.Link>
-                    <Nav.Link as={Link} to={"/about"}>
-                      About
+                    <Nav.Link as={Link} to={"/menu"}>
+                      Menu
                     </Nav.Link>
                     <Nav.Link as={Link} to={"/restaurent"}>
-                      Restaurent
+                     <IoRestaurant /> Restaurent
+                    </Nav.Link>
+                    <Nav.Link as={Link} to={"/"}>
+                      <PiShoppingCartSimpleThin /> Cart
                     </Nav.Link>
 
-                    <NavDropdown title="Services" id="basic-nav-dropdown">
-                      <NavDropdown.Item href="#">Action</NavDropdown.Item>
-
-                      <NavDropdown.Item href="#">
-                        Another Action
-                      </NavDropdown.Item>
-                    </NavDropdown>
-
-                    <Nav.Link href="#contact">Contact</Nav.Link>
+                    <Nav.Link href="#offers">
+                      <BiSolidOffer />
+                      Offer
+                    </Nav.Link>
                   </Nav>
                 </Navbar.Collapse>
               </Col>
               <Col md={3} className="text-end">
-                {
-                  currentUser ? (
-                    <div>
-                      <span className="me-2">Welcome {currentUser.firstName}</span> <Button onClick={handleLogout} >
-                        <IoIosLogOut />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div>
-                      <button className="btn btn-danger" onClick={handleShow}>
-                        Log In
-                      </button>
-                      <Offcanvas show={show} onHide={handleClose} placement="end">
-                        <Offcanvas.Header closeButton>
-                          {/* <Offcanvas.Title>Register</Offcanvas.Title> */}
-                        </Offcanvas.Header>
-                        <Offcanvas.Body>
-
-                          <Login />
-                        </Offcanvas.Body>
-                      </Offcanvas>
-                    </div>
-                  )
-                }
+                {currentUser ? (
+                  <div>
+                    <span className="me-2">
+                      Welcome {currentUser.firstName}
+                    </span>{" "}
+                    <Button onClick={handleLogout}>
+                      <IoIosLogOut />
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    <button className="btn btn-danger" onClick={handleShow}>
+                      Log In
+                    </button>
+                    <Offcanvas show={show} onHide={handleClose} placement="end">
+                      <Offcanvas.Header closeButton>
+                        {/* <Offcanvas.Title>Register</Offcanvas.Title> */}
+                      </Offcanvas.Header>
+                      <Offcanvas.Body>
+                        <Login />
+                      </Offcanvas.Body>
+                    </Offcanvas>
+                  </div>
+                )}
               </Col>
             </Row>
           </Container>
@@ -146,9 +148,6 @@ function App() {
         <Route path="/AdminProducts" element={<AdminProducts />} />
         <Route path="/OwnerOrders" element={<OwnerOrders />} />
         <Route path="Users" element={<Users />} />
-
-
-
       </Routes>
     </div>
   );

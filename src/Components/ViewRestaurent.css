@@ -61,7 +61,7 @@ color:rgb(188, 113, 113);
 
 .me-auto :hover {
   font-weight: 700;
-  border-bottom: 2px brown solid;
+  /* border-bottom: 2px brown solid; */
 }
 .location_review {
   margin: 20px 0;

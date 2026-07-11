@@ -11,6 +11,10 @@ body {
   align-items: center;
   width: 100%;
 }
+.nav.link{
+  padding-left: 5px;
+
+}
 .mx-auto :hover {
   border-bottom: 2px brown solid;
 }
@@ -472,10 +476,18 @@ label {
 }
 .food_info {
   margin-bottom: 50px !important;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.food_info:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  opacity: 1;
 }
 .foods_info img {
   height: 200px !important;
 }
+
 .foods_text {
   height: 30px;
   font-weight: 600;
@@ -498,8 +510,8 @@ label {
 .food_category_heading h2 {
   font-size: 45px;
 }
-.restaurent_btn{
-   border: none !important;
+.restaurent_btn {
+  border: none !important;
   background-color: orange !important;
   border-color: red;
   color: white;

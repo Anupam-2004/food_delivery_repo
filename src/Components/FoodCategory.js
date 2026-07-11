@@ -940,6 +940,7 @@ const FoodCategory = () => {
             <Col md={3} key={index}>
               <Card className="food_info">
                 <Card.Img
+                className="food_img"
                   src={dessert.image}
                   style={{
                     height: "220px",
