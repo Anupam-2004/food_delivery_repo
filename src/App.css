@@ -498,3 +498,9 @@ label {
 .food_category_heading h2 {
   font-size: 45px;
 }
+.restaurent_btn{
+   border: none !important;
+  background-color: orange !important;
+  border-color: red;
+  color: white;
+}

@@ -65,7 +65,7 @@ const Restaurent = () => {
                     {restaurent.name}
                     {restaurent.location}
                   </Card.Text>
-                  <Button variant="primary">View</Button>
+                  <Button className="restaurent_btn">View</Button>
                 </Card.Body>
               </Card>
             </Col>
