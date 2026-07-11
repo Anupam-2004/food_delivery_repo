@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from 'react'
+
 import Sidebar from "./Sidebar";
 import Box from "@mui/material/Box";
 import { ChartsContainer } from "@mui/x-charts/ChartsContainer";
@@ -13,13 +14,7 @@ import {
   Container,
   Row,
   Card,
-  ListGroup,
-  Navbar,
-  Nav,
-  Offcanvas,
-  NavDropdown,
-  Button,
-  Form,
+  
   Breadcrumb,
 } from "react-bootstrap";
 import {
@@ -41,6 +36,10 @@ import { Doughnut } from "react-chartjs-2";
 
 import { Line } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+// import { Navigate } from "react-router";
+
 
 ChartJS.register(
   CategoryScale,
@@ -177,6 +176,20 @@ export const data2 = {
 };
 
 const Dashboard = () => {
+  let navigate = useNavigate();
+   const { user: currentUser } = useSelector((state) => state.auth);
+    useEffect(() => {
+
+      if (!currentUser) {
+        navigate('/');
+      }
+      else if(currentUser.roles[0]!=="ROLE_ADMIN"){
+        navigate('/'); 
+      }
+      else{
+        console.log(currentUser);
+      }
+    }, [currentUser, navigate]);
   const expand = "none";
   const margin = { right: 24 };
   const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
@@ -208,6 +221,7 @@ const Dashboard = () => {
 
             <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
           </Breadcrumb>
+          <h4 className='welcome-anupam'>Welcome <b>{currentUser.firstName}</b></h4>
             </Col>
           </Row>
           <Row>

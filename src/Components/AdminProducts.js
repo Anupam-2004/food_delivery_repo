@@ -1,9 +1,27 @@
 import React from "react";
+import  { useEffect } from 'react'
+
 import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
 import { Link } from "react-router";
 import Sidebar from "./Sidebar";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 const AdminProducts = () => {
+    let navigate = useNavigate();
+   const { user: currentUser } = useSelector((state) => state.auth);
+    useEffect(() => {
+
+      if (!currentUser) {
+        navigate('/');
+      }
+      else if(currentUser.roles[0]!=="ROLE_ADMIN"){
+        navigate('/'); 
+      }
+      else{
+        console.log(currentUser);
+      }
+    }, [currentUser, navigate]);
   return (
     <Container>
       <Row>

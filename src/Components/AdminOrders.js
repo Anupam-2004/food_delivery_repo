@@ -14,6 +14,9 @@ import Sidebar from "./Sidebar";
 import { Link } from "react-router";
 import { FaFilePdf } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 const Orders = [
   {
     restaurentName: "KFC",
@@ -84,9 +87,20 @@ const Orders = [
 ];
 const AdminOrders = () => {
   const [show, setShow] = useState(false);
-  
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  let navigate = useNavigate();
+  const { user: currentUser } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/");
+    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+      navigate("/");
+    } else {
+      console.log(currentUser);
+    }
+  }, [currentUser, navigate]);
   return (
     <Container>
       <Row>
@@ -99,19 +113,16 @@ const AdminOrders = () => {
       </Row>
       <Row>
         <Col>
-            <Col md={11}>
-                    
-                    <Breadcrumb>
-                      <Breadcrumb.Item href="/Dashboard">
-                        Dashboard
-                      </Breadcrumb.Item>
-          
-                      <Breadcrumb.Item active>Orders(Admin)</Breadcrumb.Item>
-                    </Breadcrumb>
-                  </Col>
+          <Col md={11}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="/Dashboard">Dashboard</Breadcrumb.Item>
+
+              <Breadcrumb.Item active>Orders(Admin)</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
         </Col>
       </Row>
-      
+
       <Row>
         <Col>
           <Table striped bordered hover>
@@ -146,28 +157,30 @@ const AdminOrders = () => {
                       })}
                     </ul>
                   </td>
-                 <td>{order.totalPrice}</td>
+                  <td>{order.totalPrice}</td>
                   <td>
                     <Button variant="primary" onClick={handleShow}>
-        <FaEye />
-      </Button>
+                      <FaEye />
+                    </Button>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                    <Modal show={show} onHide={handleClose}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Modal heading</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        Woohoo, you are reading this text in a modal!
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                          Close
+                        </Button>
+                        <Button variant="primary" onClick={handleClose}>
+                          Save Changes
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
                   </td>
-                   <td>
+                  <td>
                     <FaFilePdf />
                   </td>
                 </tr>

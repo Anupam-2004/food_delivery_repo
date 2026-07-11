@@ -74,8 +74,7 @@ const foods = [
     image: "/food_icons/pizza.png",
     name: "Pizza",
   },
-  //   ];
-  // const meals = [
+ 
   {
     image: "/food_images_no_names/burger.png",
     name: "Burger",
@@ -343,7 +342,7 @@ const Landing = () => {
               <Col>
                 <Card className="border-0">
                   <Card.Img variant="top" src={food.image} />
-                  <Card.Body className="food_name text-center">
+                  <Card.Body className="food_name text-center" >
                     <Card.Text>{food.name}</Card.Text>
                   </Card.Body>
                 </Card>

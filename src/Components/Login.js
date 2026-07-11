@@ -90,20 +90,7 @@ const Login = () => {
         setLoading(false);
       });
   };
-  // const handleRegister = (formValue) => {
-  //   const {firstName,lastName,mobileNumber,email,password } = formValue;
-  //   setLoading(true);
-  //   console.log(formValue);
-  //   dispatch(register({firstName,lastName,mobileNumber,email,password }))
-  //     .unwrap()
-  //     .then(() => {
-  //       navigate("/Login");
-  //     })
-  //     .catch(() => {
-  //       setLoading(false);
-  //     });
-  // };
-  
+
 
   return (
     <Container fluid>

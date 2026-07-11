@@ -1,10 +1,12 @@
-
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Sidebar from "./Sidebar";
 import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
 import { Link } from "react-router";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 const categories = {
   Veg: [
     "Main Course",
@@ -14,11 +16,11 @@ const categories = {
     "Snacks",
     "Desserts",
     "Beverages",
-  ],
-  "Non-Veg": ["Chicken", "Mutton", "Fish", "Egg", "Rice", "Breads", "Starters"],
-};
+  ], 
 
-//  ff
+  "Non-Veg": ["Chicken", "Mutton", "Fish", "Egg", "Rice", "Breads", "Starters"],
+  
+};
 const SignupSchema = Yup.object({
   foodType: Yup.string().required("Select food type"),
   restaurentId: Yup.string().required("Select Restaurent"),
@@ -26,10 +28,7 @@ const SignupSchema = Yup.object({
   category: Yup.string().required("Select category"),
 
   foodName: Yup.string()
-    .matches(
-      /^[a-zA-Z\s]+$/,
-      "Food name can contain only letters and spaces"
-    )
+    .matches(/^[a-zA-Z\s]+$/, "Food name can contain only letters and spaces")
     .min(2, "Minimum 2 characters")
     .max(50, "Maximum 50 characters")
     .required("Food name is required"),
@@ -63,6 +62,17 @@ const SignupSchema = Yup.object({
 });
 
 export default function AddProduct() {
+  let navigate = useNavigate();
+  const { user: currentUser } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/");
+    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+      navigate("/");
+    } else {  
+      console.log(currentUser);
+    }
+  }, [currentUser, navigate]);
   const [subCategories, setSubCategories] = useState(categories["Veg"]);
 
   return (
@@ -88,7 +98,7 @@ export default function AddProduct() {
       <Formik
         initialValues={{
           foodType: "Veg",
-          restaurentId:"",
+          restaurentId: "",
           category: "Main Course",
           foodName: "",
           price: "",
@@ -109,7 +119,7 @@ export default function AddProduct() {
               margin: "30px auto",
             }}
           >
-             <label>Choose Restaurent</label>
+            <label>Choose Restaurent</label>
 
             <Field
               as="select"
@@ -172,9 +182,9 @@ export default function AddProduct() {
               component="div"
               className="text-danger"
             />
-
             <br />
 
+            
             {/* Food Name */}
 
             <label>Food Name</label>
@@ -252,7 +262,7 @@ export default function AddProduct() {
             </Row>
             <br />
 
-            <button className="addProduct_btn "type="submit">
+            <button className="addProduct_btn" type="submit">
               Add Product
             </button>
           </Form>

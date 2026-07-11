@@ -4,6 +4,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 // import { FaLocationDot } from "react-icons/fa6";
 
 const addresses = {
@@ -119,6 +122,17 @@ const SignupSchema = Yup.object().shape({
     ),
 });
 const AddRestaurent = () => {
+  let navigate = useNavigate();
+  const { user: currentUser } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/");
+    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+      navigate("/");
+    } else {
+      console.log(currentUser);
+    }
+  }, [currentUser, navigate]);
   const [subCategories, setSubCategories] = useState(addresses["Jamshedpur"]);
   //  const [subCategories, setSubCategories] = useState(categories["Veg"]);
 
@@ -154,9 +168,6 @@ const AddRestaurent = () => {
                 email: "",
                 ownerName: "",
                 website: "",
-
-                // categories: "",
-
                 description: "",
                 images: [],
               }}
@@ -199,11 +210,11 @@ const AddRestaurent = () => {
                         <option value="Non-Veg">Non-Veg</option>
                       </Field>
 
-                      {/* <ErrorMessage
+                      <ErrorMessage
                         name="foodType"
                         component="div"
                         className="text-danger"
-                      /> */}
+                      />
                     </Col>
                   </Row>
 
@@ -431,7 +442,9 @@ const AddRestaurent = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <button className="addRestaurent_btn" type="submit">Submit</button>
+                      <button className="addRestaurent_btn" type="submit">
+                        Submit
+                      </button>
                     </Col>
                   </Row>
                 </Form>

@@ -1,8 +1,9 @@
 import React from "react";
+import { useState } from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Sidebar from "./Sidebar";
-
+import { FaShoppingCart } from "react-icons/fa";
 
 const breads = [
   {
@@ -588,7 +589,7 @@ const beverages = [
     time: "5 mins",
     price: "₹80",
   },
-  
+
   {
     image: "/sides/choclate coofeee.jpg",
     name: "coffee Tea",
@@ -605,6 +606,9 @@ const beverages = [
   },
 ];
 const FoodCategory = () => {
+  const [show,setShow]=useState(false);
+  const handleClose=()=>setShow(true);
+  const handleShow=()=>setShow(false);
   return (
     <Container>
       <Row>
@@ -641,23 +645,23 @@ const FoodCategory = () => {
       </Row>
       <hr />
       <Row>
-        <Col>
+        <Col className="food_category_heading">
           <h2>Restaurants to explore</h2>
         </Col>
       </Row>
       <hr />
       <Row>
         <Col>
-         <hr/>
+          <hr />
           <h2>Breads</h2>
-           <hr/>
+          <hr />
         </Col>
       </Row>
       <Row>
         {breads.map((bread, index) => {
           return (
             <Col md={3} key={index}>
-              <Card className="h-100 shadow-sm">
+              <Card className="food_info">
                 <Card.Img
                   src={bread.image}
                   style={{
@@ -666,16 +670,26 @@ const FoodCategory = () => {
                   }}
                 />
                 <Card.Body>
-                  <Card.Text>
+                  <Card.Text className="foods_text">
                     {bread.name}
                     {bread.price}
-
-                    
                   </Card.Text>
                   <div className="d-flex justify-content-between">
-                      <span> {bread.rating}</span>
-                      <span>{bread.time}</span>
-                    </div>
+                    <span> {bread.rating}</span>
+                    <span>{bread.time}</span>
+                  </div>
+                  <div className="food_buy_cart">
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">Buy</Button>
+                    </span>
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">
+                        <FaShoppingCart />
+                      </Button>
+                    </span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
@@ -685,16 +699,16 @@ const FoodCategory = () => {
       <hr />
       <Row>
         <Col>
-         <hr/>
+          <hr />
           <h2>Veg Main Course</h2>
-           <hr/>
+          <hr />
         </Col>
       </Row>
       <Row>
         {vegs.map((veg, index) => {
           return (
             <Col md={3} key={index}>
-              <Card className="h-100 shadow-sm">
+              <Card className="food_info">
                 <Card.Img
                   src={veg.image}
                   style={{
@@ -703,35 +717,44 @@ const FoodCategory = () => {
                   }}
                 />
                 <Card.Body>
-                  <Card.Text>
+                  <Card.Text className="foods_text">
                     {veg.name}
                     {veg.price}
-
-                  
                   </Card.Text>
-                    <div className="d-flex justify-content-between">
-                      <span> {veg.rating}</span>
-                      <span>{veg.time}</span>
-                    </div>
-                  {/* <Button variant="primary">Go somewhere</Button> */}
+                  <div className="d-flex justify-content-between">
+                    <span> {veg.rating}</span>
+                    <span>{veg.time}</span>
+                  </div>
+                  <div className="food_buy_cart">
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">Buy</Button>
+                    </span>
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">
+                        <FaShoppingCart />
+                      </Button>
+                    </span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
           );
         })}
       </Row>
-       <Row>
+      <Row>
         <Col>
-         <hr/>
+          <hr />
           <h2>Non-Veg Main Course</h2>
-           <hr/>
+          <hr />
         </Col>
       </Row>
       <Row>
         {nonVeges.map((nonVeg, index) => {
           return (
             <Col md={3} key={index}>
-              <Card className="h-100 shadow-sm">
+              <Card className="food_info ">
                 <Card.Img
                   src={nonVeg.image}
                   style={{
@@ -740,35 +763,44 @@ const FoodCategory = () => {
                   }}
                 />
                 <Card.Body>
-                  <Card.Text>
+                  <Card.Text className="foods_text">
                     {nonVeg.name}
                     {nonVeg.price}
-
-                    
                   </Card.Text>
                   <div className="d-flex justify-content-between">
-                      <span> {nonVeg.rating}</span>
-                      <span>{nonVeg.time}</span>
-                    </div>
-                  {/* <Button variant="primary">Go somewhere</Button> */}
+                    <span> {nonVeg.rating}</span>
+                    <span>{nonVeg.time}</span>
+                  </div>
+                  <div className="food_buy_cart">
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">Buy</Button>
+                    </span>
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">
+                        <FaShoppingCart />
+                      </Button>
+                    </span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
           );
         })}
       </Row>
-       <Row>
+      <Row>
         <Col>
-         <hr/>
+          <hr />
           <h2>Staters</h2>
-           <hr/>
+          <hr />
         </Col>
       </Row>
       <Row>
         {starters.map((starter, index) => {
           return (
             <Col md={3} key={index}>
-              <Card className="h-100 shadow-sm">
+              <Card className="food_info ">
                 <Card.Img
                   src={starter.image}
                   style={{
@@ -777,17 +809,26 @@ const FoodCategory = () => {
                   }}
                 />
                 <Card.Body>
-                  <Card.Text>
+                  <Card.Text className="foods_text">
                     {starter.name}
                     {starter.price}
-
-                  
                   </Card.Text>
-                    <div className="d-flex justify-content-between">
-                      <span> {starter.rating}</span>
-                      <span>{starter.time}</span>
-                    </div>
-                  {/* <Button variant="primary">Go somewhere</Button> */}
+                  <div className="d-flex justify-content-between">
+                    <span> {starter.rating}</span>
+                    <span>{starter.time}</span>
+                  </div>
+                  <div className="food_buy_cart">
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow}className="buy_btn">Buy</Button>
+                    </span>
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">
+                        <FaShoppingCart />
+                      </Button>
+                    </span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
@@ -796,16 +837,16 @@ const FoodCategory = () => {
       </Row>
       <Row>
         <Col>
-        <hr/>
+          <hr />
           <h2>Biryani</h2>
-           <hr/>
+          <hr />
         </Col>
       </Row>
       <Row>
-       { biryaniCategorys.map((biryaniCategory, index) => {
+        {biryaniCategorys.map((biryaniCategory, index) => {
           return (
             <Col md={3} key={index}>
-              <Card className="h-100 shadow-sm">
+              <Card className="food_info ">
                 <Card.Img
                   src={biryaniCategory.image}
                   style={{
@@ -814,35 +855,44 @@ const FoodCategory = () => {
                   }}
                 />
                 <Card.Body>
-                  <Card.Text>
+                  <Card.Text className="foods_text">
                     {biryaniCategory.name}
                     {biryaniCategory.price}
-
-                  
                   </Card.Text>
-                    <div className="d-flex justify-content-between">
-                      <span> {biryaniCategory.rating}</span>
-                      <span>{biryaniCategory.time}</span>
-                    </div>
-                  {/* <Button variant="primary">Go somewhere</Button> */}
+                  <div className="d-flex justify-content-between">
+                    <span> {biryaniCategory.rating}</span>
+                    <span>{biryaniCategory.time}</span>
+                  </div>
+                  <div className="food_buy_cart">
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">Buy</Button>
+                    </span>
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">
+                        <FaShoppingCart />
+                      </Button>
+                    </span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
           );
         })}
       </Row>
-       <Row>
+      <Row>
         <Col>
-        <hr/>
+          <hr />
           <h2>Sides</h2>
-           <hr/>
+          <hr />
         </Col>
       </Row>
       <Row>
-       { sides.map((side, index) => {
+        {sides.map((side, index) => {
           return (
             <Col md={3} key={index}>
-              <Card className="h-100 shadow-sm">
+              <Card className="food_info">
                 <Card.Img
                   src={side.image}
                   style={{
@@ -851,35 +901,44 @@ const FoodCategory = () => {
                   }}
                 />
                 <Card.Body>
-                  <Card.Text>
+                  <Card.Text className="foods_text">
                     {side.name}
                     {side.price}
-
-                   
                   </Card.Text>
-                   <div className="d-flex justify-content-between">
-                      <span> {side.rating}</span>
-                      <span>{side.time}</span>
-                    </div>
-                  {/* <Button variant="primary">Go somewhere</Button> */}
+                  <div className="d-flex justify-content-between">
+                    <span> {side.rating}</span>
+                    <span>{side.time}</span>
+                  </div>
+                  <div className="food_buy_cart">
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">Buy</Button>
+                    </span>
+                    <span>
+                      {" "}
+                      <Button className="buy_btn">
+                        <FaShoppingCart />
+                      </Button>
+                    </span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
           );
         })}
       </Row>
-       <Row>
+      <Row>
         <Col>
-        <hr/>
+          <hr />
           <h2>Desserts</h2>
-           <hr/>
+          <hr />
         </Col>
       </Row>
       <Row>
-       { desserts.map((dessert, index) => {
+        {desserts.map((dessert, index) => {
           return (
             <Col md={3} key={index}>
-              <Card className="h-100 shadow-sm">
+              <Card className="food_info">
                 <Card.Img
                   src={dessert.image}
                   style={{
@@ -888,17 +947,26 @@ const FoodCategory = () => {
                   }}
                 />
                 <Card.Body>
-                  <Card.Text>
+                  <Card.Text className="foods_text">
                     {dessert.name}
                     {dessert.price}
-
-                  
                   </Card.Text>
-                    <div className="d-flex justify-content-between">
-                      <span> {dessert.rating}</span>
-                      <span>{dessert.time}</span>
-                    </div>
-                  {/* <Button variant="primary">Go somewhere</Button> */}
+                  <div className="d-flex justify-content-between">
+                    <span> {dessert.rating}</span>
+                    <span>{dessert.time}</span>
+                  </div>
+                  <div className="food_buy_cart">
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">Buy</Button>
+                    </span>
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">
+                        <FaShoppingCart />
+                      </Button>
+                    </span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
@@ -906,43 +974,52 @@ const FoodCategory = () => {
         })}
       </Row>
       <Row>
-  <Col>
-    <hr />
-    <h2>Beverages</h2>
-    <hr />
-  </Col>
-</Row>
+        <Col>
+          <hr />
+          <h2>Beverages</h2>
+          <hr />
+        </Col>
+      </Row>
+      <Row>
+        {beverages.map((drink, index) => {
+          return (
+            <Col md={3} className="mb-4" key={index}>
+              <Card className="food_info">
+                <Card.Img
+                  src={drink.image}
+                  style={{
+                    height: "220px",
+                    objectFit: "cover",
+                  }}
+                />
 
-<Row>
-  {beverages.map((drink, index) => {
-    return (
-      <Col md={3} className="mb-4" key={index}>
-        <Card className="h-100 shadow-sm">
-          <Card.Img
-            src={drink.image}
-            style={{
-              height: "220px",
-              objectFit: "cover",
-            }}
-          />
-
-          <Card.Body>
-            <Card.Text>
-              {drink.name}
-              {drink.price}
-
-             
-            </Card.Text>
-             <div className="d-flex justify-content-between">
-                <span>{drink.rating}</span>
-                <span>{drink.time}</span>
-              </div>
-          </Card.Body>
-        </Card>
-      </Col>
-    );
-  })}
-</Row>
+                <Card.Body>
+                  <Card.Text className="foods_text">
+                    {drink.name}
+                    {drink.price}
+                  </Card.Text>
+                  <div className="d-flex justify-content-between">
+                    <span>{drink.rating}</span>
+                    <span>{drink.time}</span>
+                  </div>
+                  <div className="food_buy_cart">
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow}className="buy_btn">Buy</Button>
+                    </span>
+                    <span>
+                      {" "}
+                      <Button onClick={handleShow} className="buy_btn">
+                        <FaShoppingCart />
+                      </Button>
+                    </span>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
     </Container>
   );
 };

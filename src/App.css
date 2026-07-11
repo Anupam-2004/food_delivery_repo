@@ -14,7 +14,7 @@ body {
 .mx-auto :hover {
   border-bottom: 2px brown solid;
 }
-.main_image{
+.main_image {
   width: 100%;
 }
 .logo {
@@ -43,7 +43,6 @@ body {
   color: brown;
   font-weight: 600;
   font-size: 45px;
-
 }
 
 .carousel p {
@@ -55,14 +54,12 @@ body {
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
-
 .location {
   /* max-width: 600px;
   margin-top: 30px; */
- 
 }
-.location_input{
- width: 100%;
+.location_input {
+  width: 100%;
   text-align: center !important;
   /* background: #b11414; */
 }
@@ -113,7 +110,7 @@ body {
   font-weight: 700;
   color: #a50f1b;
 }
-.food_name{
+.food_name {
   color: #a50f1b;
   font-weight: 700;
   tecxt-align: center;
@@ -199,27 +196,25 @@ body {
 .footer {
   /* background-color: #0f172a; */
   margin-left: 17px !important;
-  background-color:#faf4f0;
+  background-color: #faf4f0;
 }
-
 
 .footer_list ul {
   list-style: none;
   color: #666;
 }
-.footer h5{
+.footer h5 {
   font-weight: 700;
   margin-top: 10px;
   color: #c1121f;
-
 }
-.footer li{
+.footer li {
   margin-bottom: 12px;
   cursor: pointer;
   transition: 0.3s;
 }
-.footer li:hover{
-  color:rgb(7, 7, 135);
+.footer li:hover {
+  color: rgb(7, 7, 135);
   padding-left: 5px;
 }
 .customer_support ul {
@@ -227,14 +222,14 @@ body {
 
   color: #666;
 }
-.contact_us a{
+.contact_us a {
   color: #666;
-  
+
   text-decoration: none;
   margin-bottom: 15px;
 }
-.contact_us a:hover{
-  color:darkblue;
+.contact_us a:hover {
+  color: darkblue;
 }
 .download {
   /* margin-left: 5px; */
@@ -242,39 +237,36 @@ body {
 .download img {
   width: 220px;
   margin-top: 20px;
-
 }
 
-.logo_list p{
+.logo_list p {
   color: #a50f1b;
 }
-.logo_list ul{
+.logo_list ul {
   display: flex;
   gap: 5px;
   margin-top: 20px;
   margin-right: 40px;
 }
-.logo_list img{
- height: 50px;
+.logo_list img {
+  height: 50px;
   padding-top: 10px;
   background-color: #fff4ed;
-
 }
 
-.logo_list ul li img{
+.logo_list ul li img {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-
 }
 .footer_list,
 .customer_support,
 .contact_us,
-.download{
-  border-left: 1px solid rgba(255,255,255,0.1) !important;
+.download {
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
   padding-left: 25px;
 }
-.service_card{
+.service_card {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -282,35 +274,34 @@ body {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.service_card h6{
+.service_card h6 {
   color: rgb(232, 110, 22);
   font-weight: 700;
 }
-.service_card h2{
+.service_card h2 {
   font-weight: 700;
   font-size: 30px;
 }
-.service_card p{
-  color:black;
+.service_card p {
+  color: black;
   font-weight: 600;
 }
-.service_info_card{
+.service_info_card {
   /* width: 300px; */
   border-radius: 50px !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) ;
-  
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
-.card_image{
+.card_image {
   width: 100px;
   height: 100px;
-    background: #fff4ed;
+  background: #fff4ed;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-margin: 20px auto;
+  margin: 20px auto;
 }
-.serve_img{
+.serve_img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -324,100 +315,91 @@ margin: 20px auto;
 }
 .service_info_card p {
   color: #666;
-
 }
-.card.title  {
+.card.title {
   color: brown;
-
 }
 .service_desc {
-color: #a50f1b;
+  color: #a50f1b;
 }
-.add_restro{
+.add_restro {
   background-color: rgb(227, 186, 186);
-  padding: 100px ;
-
+  padding: 100px;
 }
-.add_restro .row{
+.add_restro .row {
   margin: 15px 0;
 }
-.register_restro{
-   background-color:rgb(225, 193, 193);
-  padding: 100px ;
+.register_restro {
+  background-color: rgb(225, 193, 193);
+  padding: 100px;
 }
-.add_restro button{
+.add_restro button {
   border: none;
-
 }
 /* .login_btn{
   margin: 10px;
   text-align: center;
 } */
 
-.dashboard{
+.dashboard {
   text-align: center;
-  color:black;
-
- 
-
+  color: black;
 }
-.dashboard_card{
- 
+.dashboard_card {
   border: 1px red solid;
   border-radius: 20px;
   padding: 20px;
   text-align: center;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
-.dashboard_cards{
+.dashboard_cards {
   /* margin-top: 50px; */
 }
-.dashboard_card h5{
-color: #ff5200;
-font-weight: 700;
- text-transform: uppercase;
+.dashboard_card h5 {
+  color: #ff5200;
+  font-weight: 700;
+  text-transform: uppercase;
   text-decoration: none;
-
 }
-.dashboard_card h4{
-color:orange;
-font-weight: 700;
+.dashboard_card h4 {
+  color: orange;
+  font-weight: 700;
   text-decoration: none;
-
 }
-.admin_restaurent{
+.admin_restaurent {
   text-align: center;
   color: orange;
   font-weight: 900;
 }
-.admin_restaurent_btn{
+.admin_restaurent_btn {
   padding: 10px 50px;
 }
-a{
+a {
   text-decoration: none !important;
 }
-input{
+input {
   width: 100%;
-  height:40px;
+  height: 40px;
   border-radius: 5px;
 }
-select{
-  width:100%;
-  height:40px;
+select {
+  width: 100%;
+  height: 40px;
   border-radius: 5px;
 }
-textarea{
-  width:100%;
-  height:100px;
+textarea {
+  width: 100%;
+  height: 100px;
   border-radius: 5px;
 }
-label{
-  margin:10px;
+label {
+  margin: 10px;
   font-weight: 700;
   color: #a50f1b;
   /* padding: 5px; */
 }
-.addProduct_btn,.addRestaurent_btn{
+.addProduct_btn,
+.addRestaurent_btn {
   margin: 10px;
   background-color: #a50f1b;
   color: white;
@@ -435,20 +417,18 @@ label{
   border-radius: 5px;
   cursor: pointer;
 } */
- .owner-order-table-header{
-  
+.owner-order-table-header {
   text-align: center;
- }
- .owner-order-table-header th{
+}
+.owner-order-table-header th {
   color: #a50f1b !important;
   font-size: 20px;
   font-weight: 700;
- }
-.owner-order-table-body{
-  text-align: center;
-
 }
-.register_btn{
+.owner-order-table-body {
+  text-align: center;
+}
+.register_btn {
   margin: 10px;
   background-color: #a50f1b;
   color: white;
@@ -456,12 +436,12 @@ label{
   border: none;
   border-radius: 5px;
   cursor: pointer;
-
 }
-.already-registered-btn ,.not-registered-btn{
+.already-registered-btn,
+.not-registered-btn {
   /* margin: 10px; */
   background-color: #a50f1b;
-  color:white;
+  color: white;
 
   padding: 10px 10px;
   border: none;
@@ -469,19 +449,52 @@ label{
   cursor: pointer;
 }
 
-.already-registered-btn:hover ,.not-registered-btn:hover{
+.already-registered-btn:hover,
+.not-registered-btn:hover {
   color: #0a58ca;
 }
-/* .not-registered-btn {
-   margin: 10px;
-  background-color: #a50f1b;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-} */
 
-/* .not-registered-btn:hover {
-  color: #0a58ca;
-} */
+.welcome-anupam {
+  float: left;
+}
+.welcome-anupam b {
+  color: orangered;
+  font-size: 30px;
+}
+.restaurents_info {
+  margin-bottom: 50px !important;
+}
+.restaurents_info img {
+  height: 260px !important;
+}
+.restaurents_text {
+  height: 50px !important;
+}
+.food_info {
+  margin-bottom: 50px !important;
+}
+.foods_info img {
+  height: 200px !important;
+}
+.foods_text {
+  height: 30px;
+  font-weight: 600;
+}
+.food_buy_cart {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.buy_btn {
+  border: none !important;
+  background-color: orange !important;
+  border-color: red;
+  color: white;
+}
+.food_category_heading {
+  color: #ff5200;
+  text-align: center;
+}
+.food_category_heading h2 {
+  font-size: 45px;
+}
