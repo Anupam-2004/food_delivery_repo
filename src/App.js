@@ -11,6 +11,10 @@ import {
   Navbar,
   Offcanvas,
   Button,
+  Dropdown,
+  DropdownButton,
+  DropdownDivider,
+  
 } from "react-bootstrap";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import Landing from "./Components/Landing";
@@ -32,7 +36,8 @@ import Products from "./Components/Products";
 import AdminProducts from "./Components/AdminProducts";
 import OwnerOrders from "./Components/OwnerOrders";
 import Users from "./Components/Users";
-import About from "./Components/About";
+// import About from "./Components/About";
+import Account from "./Components/Account";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { IoIosLogOut } from "react-icons/io";
@@ -78,13 +83,14 @@ function App() {
                 <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="mx-auto">
                     <Nav.Link as={Link} to={"/"}>
-                      <CiHome />Home
+                      <CiHome />
+                      Home
                     </Nav.Link>
                     <Nav.Link as={Link} to={"/menu"}>
-                     <BiFoodMenu /> Menu
+                      <BiFoodMenu /> Menu
                     </Nav.Link>
                     <Nav.Link as={Link} to={"/restaurent"}>
-                     <IoRestaurant /> Restaurent
+                      <IoRestaurant /> Restaurent
                     </Nav.Link>
                     <Nav.Link as={Link} to={"/"}>
                       <PiShoppingCartSimpleThin /> Cart
@@ -100,12 +106,25 @@ function App() {
               <Col md={3} className="text-end">
                 {currentUser ? (
                   <div>
-                    <span className="me-2">
+                    {/* <span className="me-2">
                       Welcome {currentUser.firstName}
-                    </span>{" "}
-                    <Button onClick={handleLogout}>
+                    </span>{" "} */}
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title={currentUser.firstName}
+                    >
+                      <Dropdown.Item href="#/action-1">Account</Dropdown.Item>
+                     
+                      <Dropdown.Item as={Link} to={'/Order'}>Orders</Dropdown.Item>
+                     
+                      <Dropdown.Item href="#/action-3">
+                        Logout <IoIosLogOut />
+                      </Dropdown.Item>
+                    </DropdownButton>
+                   
+                    {/* <Button onClick={handleLogout}>
                       <IoIosLogOut />
-                    </Button>
+                    </Button> */}
                   </div>
                 ) : (
                   <div>
@@ -137,7 +156,7 @@ function App() {
         <Route path="/ViewRestaurent" element={<ViewRestaurent />} />
         <Route path="/FoodCategory" element={<FoodCategory />} />
         <Route path="/AddfoodCategory" element={<AddfoodCategory />} />
-        <Route path="/About" element={<About />} />
+        {/* <Route path="/About" element={<About />} /> */}
         <Route path="/Foods" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/AddProduct" element={<AddProduct />} />
@@ -149,6 +168,8 @@ function App() {
         <Route path="/AdminProducts" element={<AdminProducts />} />
         <Route path="/OwnerOrders" element={<OwnerOrders />} />
         <Route path="Users" element={<Users />} />
+        <Route path="Account" element={<Account />} />
+
       </Routes>
     </div>
   );

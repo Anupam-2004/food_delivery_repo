@@ -2,6 +2,10 @@ import React from "react";
 import Sidebar from "./Sidebar";
 import { Container, Row, Col, Breadcrumb, Table } from "react-bootstrap";
 import { Link } from "react-router";
+import  { useState } from "react";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import  { useEffect } from 'react'
 const Usersdetails = [
   {
     FirstName: "Anupam",
@@ -29,6 +33,20 @@ const Usersdetails = [
   },
 ];
 const Users = () => {
+  let navigate = useNavigate();
+     const { user: currentUser } = useSelector((state) => state.auth);
+      useEffect(() => {
+  
+        if (!currentUser) {
+          navigate('/');
+        }
+        else if(currentUser.roles[0]!=="ROLE_ADMIN"){
+          navigate('/'); 
+        }
+        else{
+          console.log(currentUser);
+        }
+      }, [currentUser, navigate]);
   return (
     <Container>
       <Row>

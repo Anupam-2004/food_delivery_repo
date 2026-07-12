@@ -495,12 +495,14 @@ label {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
+ /* text-shadow: 3px 3px 1px #2E140C; */
 }
 .buy_btn {
   border: none !important;
   background-color: orange !important;
   border-color: red;
   color: white;
+   text-shadow: 1px 1px 1px #2E140C;
   transition: 0.3s;
 }
 
@@ -529,8 +531,6 @@ label {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
-  border-radius: 20px;
   padding: 100px 50px;
   color: black;
 
@@ -560,4 +560,13 @@ label {
   background: #ff6b00;
   color: #fff;
   transform: translateY(-3px);
+}
+.account_section{
+
+  font-size: 20px;
+}
+.account_head{
+  width: 800px;
+height: 500px;
+border: 1px solid black;
 }

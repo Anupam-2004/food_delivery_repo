@@ -83,14 +83,14 @@ export default function AddProduct() {
             <Sidebar />
           </Col>
           <Col md={7}>
-            <h1>Add products</h1>
+            <h1>Add product</h1>
           </Col>
           <Breadcrumb>
             <Breadcrumb.Item>
               {" "}
               <Link to={"/Dashboard"}>Dashboard</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item active>Add Products</Breadcrumb.Item>
+            <Breadcrumb.Item active>Add Product</Breadcrumb.Item>
           </Breadcrumb>
         </Row>
       </Container>
