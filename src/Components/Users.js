@@ -2,10 +2,14 @@ import React from "react";
 import Sidebar from "./Sidebar";
 import { Container, Row, Col, Breadcrumb, Table } from "react-bootstrap";
 import { Link } from "react-router";
-import  { useState } from "react";
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
-import  { useEffect } from 'react'
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
+
+import axios from "axios";
+import { RxCrossCircled } from "react-icons/rx";
+import { FaCheckCircle } from "react-icons/fa";
 const Usersdetails = [
   {
     FirstName: "Anupam",
@@ -34,19 +38,29 @@ const Usersdetails = [
 ];
 const Users = () => {
   let navigate = useNavigate();
-     const { user: currentUser } = useSelector((state) => state.auth);
-      useEffect(() => {
-  
-        if (!currentUser) {
-          navigate('/');
-        }
-        else if(currentUser.roles[0]!=="ROLE_ADMIN"){
-          navigate('/'); 
-        }
-        else{
-          console.log(currentUser);
-        }
-      }, [currentUser, navigate]);
+  const [users, setUsers] = useState();
+  const { user: currentUser } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/");
+    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+      navigate("/");
+    } else {
+      console.log(currentUser);
+    }
+  }, [currentUser, navigate]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8090/api/auth/alluser")
+      .then((response) => {
+        console.log(response.data);
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <Container>
       <Row>
@@ -81,16 +95,21 @@ const Users = () => {
               </tr>
             </thead>
             <tbody className="owner-order-table-body">
-              {Usersdetails.map((user, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{user.FirstName}</td>
-                  <td>{user.LastName}</td>
-                  <td>{user.Mobile}</td>
-                  <td>{user.Email}</td>
-                  <td>Active</td>
-                </tr>
-              ))}
+              {users
+                ? users.map((user, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{user.firstName}</td>
+                      <td>{user.lastName}</td>
+                      <td>{user.mobileNumber}</td>
+                      <td>{user.email}</td>
+                      <td>
+                        {user.status ? <FaCheckCircle /> : <RxCrossCircled />}
+                      </td>
+                    </tr>
+                  ))
+                : "Data Not Available"
+              }
             </tbody>
           </Table>
         </Col>

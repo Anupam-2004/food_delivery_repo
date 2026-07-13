@@ -597,3 +597,10 @@ label {
 .change_password_btn{
   padding-bottom: 10px;
 }
+.searchfood{
+  width: 400px;
+  height: 10px;
+  border-radius: 30px !important;
+  font-size: 20px;
+  padding: 20px !important;
+}

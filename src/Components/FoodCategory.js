@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Container, Row, Col, Button, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Card ,Form} from "react-bootstrap";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Sidebar from "./Sidebar";
 import { FaShoppingCart } from "react-icons/fa";
@@ -614,7 +614,16 @@ const FoodCategory = () => {
     <Container fluid>
    <Row>
   <Col className="foodCategory_top">
+   <Form className="food_category_form ">
+            <Form.Control
+              type="search"
+              placeholder="Search"
+              className="searchfood"
+              aria-label="Search"
+            />
+            </Form>
     <div className="banner_content">
+     
       <h1>Delicious Food</h1>
       <p>Indulge with the best of North Indian cuisines.</p>
 
