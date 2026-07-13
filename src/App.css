@@ -499,7 +499,9 @@ label {
 }
 .buy_btn {
   border: none !important;
-  background-color: orange !important;
+  /* background-color: orange !important; */
+  background-color: #ff5200 !important;
+
   border-color: red;
   color: white;
    text-shadow: 1px 1px 1px #2E140C;
@@ -518,7 +520,8 @@ label {
 }
 .restaurent_btn {
   border: none !important;
-  background-color: orange !important;
+  background-color: #ff5200 !important;
+  /* background-color: #ff5200; */
   border-color: red;
   color: white;
   transition: 0.3s;
@@ -561,12 +564,36 @@ label {
   color: #fff;
   transform: translateY(-3px);
 }
-.account_section{
-
-  font-size: 20px;
+.account_card{
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
-.account_head{
-  width: 800px;
-height: 500px;
-border: 1px solid black;
+
+.account_section{
+  padding-left:20px ;
+    display: flex;
+    /* justify-content: space-between; */
+    gap: 30px;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.account_section:last-child{
+    border-bottom: none;
+}
+
+.label{
+    font-weight: 600;
+    color: #555;
+}
+
+.value{
+    color: #222;
+    font-weight: 500;
+}
+.change_password_btn{
+  padding-bottom: 10px;
 }

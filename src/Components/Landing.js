@@ -58,10 +58,10 @@ const foods = [
     image: "/food_icons/momo.png",
     name: "Momos",
   },
-  {
-    image: "/food_icons/north_indian.png",
-    name: "North Indian",
-  },
+  // {
+  //   image: "/food_icons/north_indian.png",
+  //   name: "North Indian",
+  // },
   {
     image: "/food_icons/paratha.png",
     name: "Paratha",
@@ -112,11 +112,11 @@ const foods = [
     image: "/food_images_no_names/shawarma.png",
     name: "Shawarma",
   },
-  {
-    image: "/food_images_no_names/south_indian.png",
-    name: "North Indian",
-    onclick
-  },
+  // {
+  //   image: "/food_images_no_names/south_indian.png",
+  //   name: "North Indian",
+  //   onclick
+  // },
 ];
 const products = [
   {

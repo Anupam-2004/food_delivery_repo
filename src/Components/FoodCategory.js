@@ -615,7 +615,7 @@ const FoodCategory = () => {
    <Row>
   <Col className="foodCategory_top">
     <div className="banner_content">
-      <h1>North Indian</h1>
+      <h1>Delicious Food</h1>
       <p>Indulge with the best of North Indian cuisines.</p>
 
       <div className="d-flex flex-wrap gap-2 mb-2">
