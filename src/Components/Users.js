@@ -10,32 +10,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { RxCrossCircled } from "react-icons/rx";
 import { FaCheckCircle } from "react-icons/fa";
-const Usersdetails = [
-  {
-    FirstName: "Anupam",
-    LastName: "Kumari",
-    Mobile: "1234567890",
-    Email: "anupam.kumari@example.com",
-  },
-  {
-    FirstName: "Smriti",
-    LastName: "Kumari",
-    Mobile: "1234567890",
-    Email: "smriti.kumari@example.com",
-  },
-  {
-    FirstName: "Anisha",
-    LastName: "Kumari",
-    Mobile: "1234567890",
-    Email: "anisha.kumari@example.com",
-  },
-  {
-    FirstName: "Anushka",
-    LastName: "Kumari",
-    Mobile: "1234567890",
-    Email: "anushka.kumari@example.com",
-  },
-];
+
 const Users = () => {
   let navigate = useNavigate();
   const [users, setUsers] = useState();
