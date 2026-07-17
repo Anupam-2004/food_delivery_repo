@@ -140,11 +140,11 @@ const ViewRestaurent = () => {
           <hr />
         </Col>
       </Row>
-<Row>
-  <Col>
-    <Sidebar/>
-  </Col>
-</Row>
+      <Row>
+        <Col>
+          <Sidebar />
+        </Col>
+      </Row>
       <Row>
         <Col>
           <div className="restro_name">
@@ -245,11 +245,9 @@ const ViewRestaurent = () => {
             <a href="">
               <FaPhoneAlt /> +91 84068 00083
             </a>
-
             <a href="">
               <FaEnvelope /> Email
             </a>
-
             <a href="/">Improve this listing</a>
           </div>
         </Col>
@@ -290,7 +288,6 @@ const ViewRestaurent = () => {
                   <div className="hour">
                     <h3>Hours</h3>
                   </div>
-
                   <div className="time">
                     {" "}
                     <a href="">Open untill 9:30 PM</a>

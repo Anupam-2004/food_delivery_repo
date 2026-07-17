@@ -8,7 +8,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
 const categories = {
-  Veg: [
+  'Select Food Type...': ["Select Category"],
+  'Veg': [
     "Main Course",
     "Breads",
     "Rice",
@@ -16,10 +17,8 @@ const categories = {
     "Snacks",
     "Desserts",
     "Beverages",
-  ], 
-
-  "Non-Veg": ["Chicken", "Mutton", "Fish", "Egg", "Rice", "Breads", "Starters"],
-  
+  ],
+  'Non-Veg': ["Chicken", "Mutton", "Fish", "Egg", "Rice", "Breads", "Starters"],
 };
 const SignupSchema = Yup.object({
   foodType: Yup.string().required("Select food type"),
@@ -69,11 +68,11 @@ export default function AddProduct() {
       navigate("/");
     } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
       navigate("/");
-    } else {  
+    } else {
       console.log(currentUser);
     }
   }, [currentUser, navigate]);
-  const [subCategories, setSubCategories] = useState(categories["Veg"]);
+  const [subCategories, setSubCategories] = useState(categories["Select Food Type..."]);
 
   return (
     <div>
@@ -97,7 +96,7 @@ export default function AddProduct() {
 
       <Formik
         initialValues={{
-          foodType: "Veg",
+          foodType: "Select Food Type...",
           restaurentId: "",
           category: "Main Course",
           foodName: "",
@@ -125,15 +124,17 @@ export default function AddProduct() {
               as="select"
               name="restaurentId"
               className="form-control"
-              onChange={(e) => {
-                const value = e.target.value;
-                setFieldValue("restaurentId", value);
-                setFieldValue("restaurentId", categories[value][0]);
-                setSubCategories(categories[value]);
-              }}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFieldValue("restaurentId", value);
+                  setFieldValue("restaurentId", categories[value][0]);
+                  setSubCategories(categories[value]);
+                }
+              }
             >
               <option value="restaurentId">Zing</option>
               <option value="restaurentId">Blue Diamond</option>
+              <option value="restaurentId">Haveli</option>
             </Field>
 
             <ErrorMessage
@@ -155,8 +156,10 @@ export default function AddProduct() {
                 setSubCategories(categories[value]);
               }}
             >
+              {/* <option value="foodType">Food Type</option> */}
+              <option value="Select Food Type...">Select Food Type...</option>
               <option value="Veg">Veg</option>
-              <option value="Non-Veg">Non-Veg</option>
+              <option value="Non-Veg"> Non-Veg</option>
             </Field>
 
             <ErrorMessage
@@ -184,7 +187,6 @@ export default function AddProduct() {
             />
             <br />
 
-            
             {/* Food Name */}
 
             <label>Food Name</label>
@@ -226,8 +228,6 @@ export default function AddProduct() {
             />
 
             <br />
-
-            {/* Image */}
 
             <label>Food Image</label>
 

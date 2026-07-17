@@ -157,7 +157,7 @@ function App() {
         <Route path="/FoodCategory" element={<FoodCategory />} />
         <Route path="/AddfoodCategory" element={<AddfoodCategory />} />
         {/* <Route path="/About" element={<About />} /> */}
-        <Route path="/Foods" element={<Foods />} />
+        <Route path="/menu" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/AddProduct" element={<AddProduct />} />
         <Route path="/Login" element={<Login />} />

@@ -7,13 +7,32 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
+import axios from "axios";
 // import { FaLocationDot } from "react-icons/fa6";
 
-const addresses = {
+const city = {
   Aera: ["Jamshedpur", "Bokaro", "Dhanbad", "Ranchi", "Hazaribagh", "Giridih"],
 };
-const cities = {
+const location = {
   Jamshedpur: ["Sakschi", "Bistupur", "Kadma", "Adityapur", "Ghamhriya"],
+
+  Ranchi: [
+    "Lalpur",
+    "Main Road",
+    "Morabadi",
+    "Harmu",
+    "Doranda",
+    "Bariatu",
+    "Hinoo",
+    "Kanke",
+    "Argora",
+    "Kadru",
+    "Circular Road",
+    "Firayalal Chowk",
+    "Booty More",
+    "Kantatoli",
+    "Ratu Road",
+  ],
   Bokaro: [
     "Chas",
     "Bokaro Steel City",
@@ -22,13 +41,7 @@ const cities = {
     "Chandrapura",
   ],
 };
-const areas = {
-  Sakschi: ["Sakchi Main Road"],
-  Bistupur: ["Bistupur Main Road"],
-  Kadma: ["Kadma Main Road"],
-  Adityapur: ["Adityapur Main Road"],
-  Ghamhriya: ["Ghamhriya Main Road"],
-};
+
 const categories = {};
 
 const SignupSchema = Yup.object().shape({
@@ -88,13 +101,6 @@ const SignupSchema = Yup.object().shape({
 
   website: Yup.string().url("Enter a valid URL").required("Required"),
 
-  // category: Yup.string().required("Select category"),
-  // foodName: Yup.string()
-
-  //   .matches(/^[a-zA-Z\s]+$/, "Food name can contain only letters and spaces")
-  //   .min(2, "Minimum 2 characters")
-  //   .max(50, "Maximum 50 characters")
-  //   .required("Food name is required"),
   description: Yup.string()
     .min(20, "description must be atleast 20 characters")
     .max(2000, "description must not exceed 2000 characters")
@@ -133,7 +139,7 @@ const AddRestaurent = () => {
       console.log(currentUser);
     }
   }, [currentUser, navigate]);
-  const [subCategories, setSubCategories] = useState(addresses["Jamshedpur"]);
+  const [subCategories, setSubCategories] = useState([]);
   //  const [subCategories, setSubCategories] = useState(categories["Veg"]);
 
   return (
@@ -172,9 +178,37 @@ const AddRestaurent = () => {
                 images: [],
               }}
               validationSchema={SignupSchema}
-              onSubmit={(values) => {
-                console.log(values);
-                alert("Form submitted successfully!");
+              onSubmit={async (values, { resetForm }) => {
+                const formData = new FormData();
+                formData.append("userId", currentUser.id);
+                Object.keys(values).forEach((key) => {
+                  if (key !== "images") {
+                    formData.append(key, values[key]);
+                  }
+                });
+
+                values.images.forEach((file) => {
+                  formData.append("images", file);
+                });
+                // error occured with form data image upload
+                try {
+                  const res = await axios.post(
+                    "http://localhost:8090/api/restaurents",
+                    formData,
+                    {
+                      headers: {
+                        "Content-Type": "multipart/form-data",
+                      },
+                    },
+                  );
+                  console.log(res);
+                  console.log(formData);
+                  alert("Restaurent registered successfully!");
+                
+                } catch (err) {
+                  console.error("registration failed");
+                  alert("registration failed");
+                }
               }}
             >
               {({ errors, touched, values, setFieldValue }) => (
@@ -202,12 +236,13 @@ const AddRestaurent = () => {
                         onChange={(e) => {
                           const value = e.target.value;
                           setFieldValue("foodType", value);
-                          setFieldValue("category", categories[value][0]);
+                          // setFieldValue("category", categories[value][0]);
                           setSubCategories(categories[value]);
                         }}
                       >
-                        <option value="Veg">Veg</option>
-                        <option value="Non-Veg">Non-Veg</option>
+                        <option value="FoodType">Food type</option>
+                        <option value="Veg">Pure Veg</option>
+                        <option value="Non-Veg">Veg & Non-Veg</option>
                       </Field>
 
                       <ErrorMessage
@@ -242,19 +277,22 @@ const AddRestaurent = () => {
                   </Row>
                   <Row>
                     <Col md={3}>
-                      <label htmlFor="location">location :</label>
+                      <label htmlFor="city">City:</label>
                     </Col>
                     <Col md={9}>
                       <Field
                         as="select"
-                        name="location"
-                        className="form-control"
+                        name="city"
                         onChange={(e) => {
                           const value = e.target.value;
-                          setFieldValue("location", value);
+
+                          setFieldValue("city", value);
+                          setFieldValue("location", ""); // Reset location
+
+                          setSubCategories(location[value] || []);
                         }}
                       >
-                        <option value="selectcity">Select Location</option>
+                        <option value="">Select City</option>
                         <option value="Jamshedpur">Jamshedpur</option>
                         <option value="Bokaro">Bokaro</option>
                         <option value="Ranchi">Ranchi</option>
@@ -264,22 +302,11 @@ const AddRestaurent = () => {
                   </Row>
                   <Row>
                     <Col md={3}>
-                      <label htmlFor="city">City:</label>
+                      <label htmlFor="location">location :</label>
                     </Col>
                     <Col md={9}>
-                      <Field
-                        as="select"
-                        name="city"
-                        className="form-control"
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setFieldValue("city", value);
-                          setFieldValue("city", cities[value][0]);
-                          setSubCategories(cities[value]);
-                        }}
-                      >
-                        <option value="selectarea">Select City</option>
-
+                      <Field as="select" name="location">
+                        <option value="selectcity">Select Location</option>
                         <option value="Jamshedpur">Sakchi</option>
                         <option value="bokaro">Bistupur</option>
                         <option value="ranchi">Kadma</option>
@@ -288,6 +315,7 @@ const AddRestaurent = () => {
                       </Field>
                     </Col>
                   </Row>
+
                   <Row>
                     <Col md={3}>
                       <label htmlFor="state">State:</label>
@@ -296,11 +324,7 @@ const AddRestaurent = () => {
                       <Field
                         as="select"
                         name="state"
-                        className="form-control"
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setFieldValue("state", value);
-                        }}
+                      
                       >
                         <option value="selectstate">Select State</option>
                         <option value="jharkhand">Jharkhand</option>
@@ -320,11 +344,7 @@ const AddRestaurent = () => {
                       <Field
                         as="select"
                         name="country"
-                        className="form-control"
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setFieldValue("country", value);
-                        }}
+                       
                       >
                         <option value="selectcountry">Select Country</option>
                         <option value="India">India</option>
@@ -412,7 +432,7 @@ const AddRestaurent = () => {
                         accept="image/jpeg, image/jpg, image/png, image/webp"
                         onChange={(event) => {
                           setFieldValue(
-                            "files",
+                            "images",
                             Array.from(event.currentTarget.files),
                           );
                         }}

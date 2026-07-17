@@ -9,6 +9,7 @@ import {
   Modal,
   Button,
 } from "react-bootstrap";
+import axios from "axios";
 
 import Sidebar from "./Sidebar";
 import { Link } from "react-router";
@@ -17,79 +18,25 @@ import { FaEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
-const Orders = [
-  {
-    restaurentName: "KFC",
-    CustomerName: "Anupam",
-    items: [
-      {
-        itemName: "Burger",
-        quantity: 2,
-        price: 10.99,
-      },
-      {
-        itemName: "Biryani",
-        quantity: 1,
-        price: 200,
-      },
-      {
-        itemName: "French Fries",
-        quantity: 2,
-        price: 100,
-      },
-    ],
-    totalPrice: 321.99,
-  },
-  {
-    restaurentName: "KFC",
-    CustomerName: "Anupam",
-    items: [
-      {
-        itemName: "Burger",
-        quantity: 2,
-        price: 10.99,
-      },
-      {
-        itemName: "Biryani",
-        quantity: 1,
-        price: 200,
-      },
-      {
-        itemName: "French Fries",
-        quantity: 2,
-        price: 100,
-      },
-    ],
-    totalPrice: 321.99,
-  },
-  {
-    restaurentName: "KFC",
-    CustomerName: "Anupam",
-    items: [
-      {
-        itemName: "Burger",
-        quantity: 2,
-        price: 10.99,
-      },
-      {
-        itemName: "Biryani",
-        quantity: 1,
-        price: 200,
-      },
-      {
-        itemName: "French Fries",
-        quantity: 2,
-        price: 100,
-      },
-    ],
-    totalPrice: 321.99,
-  },
-];
-const AdminOrders = () => {
-  const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+const AdminOrders = () => {
+  const [Orders, setOrders] = useState(false);
+
+  const handleClose = () => setOrders(false);
+  const handleShow = () => setOrders(true);
+ useEffect(() => {
+    axios
+      .get("http://localhost:8090/api/restaurents")
+      .then((response) => {
+        console.log(response.data);
+        setOrders(response.data);
+      })
+      .catch((error) => {
+        console.log("Failed to fetch orders");
+        console.log(error);
+        alert("Failed to fetch orders");
+      });
+  }, []);
   let navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
   useEffect(() => {
@@ -163,7 +110,7 @@ const AdminOrders = () => {
                       <FaEye />
                     </Button>
 
-                    <Modal show={show} onHide={handleClose}>
+                    <Modal show={Orders} onHide={handleClose}>
                       <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                       </Modal.Header>

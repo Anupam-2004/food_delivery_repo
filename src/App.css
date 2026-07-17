@@ -464,14 +464,14 @@ label {
   color: orangered;
   font-size: 30px;
 }
-.restaurents_info {
-  margin-bottom: 50px !important;
-}
+/* .restaurents_info {
+   height: 600px;
+} */
 .restaurents_info img {
   height: 260px !important;
 }
 .restaurents_text {
-  height: 50px !important;
+  /* height: 50px !important; */
 }
 .food_info {
   margin-bottom: 50px !important;
