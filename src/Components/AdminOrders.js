@@ -20,7 +20,7 @@ import { useNavigate } from "react-router";
 import { useEffect } from "react";
 
 const AdminOrders = () => {
-  const [Orders, setOrders] = useState(false);
+  const [orders, setOrders] = useState(false);
 
   const handleClose = () => setOrders(false);
   const handleShow = () => setOrders(true);
@@ -86,7 +86,7 @@ const AdminOrders = () => {
               </tr>
             </thead>
             <tbody className="owner-order-table-body">
-              {Orders.map((order, index) => (
+              {orders.map((order, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{order.restaurentName}</td>
@@ -110,7 +110,7 @@ const AdminOrders = () => {
                       <FaEye />
                     </Button>
 
-                    <Modal show={Orders} onHide={handleClose}>
+                    <Modal show={orders} onHide={handleClose}>
                       <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                       </Modal.Header>

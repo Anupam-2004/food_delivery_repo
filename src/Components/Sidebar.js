@@ -31,8 +31,7 @@ export default function Sidebar() {
               >
                 <Offcanvas.Body>
                   <Nav className="justify-content-end flex-grow-1 pe-3">
-                    <Nav.Link as={Link} to={"/Foods"}>
-                      {" "}
+                     <Nav.Link as={Link} to={"/AdminProducts"}>
                       Products
                     </Nav.Link>
                   
@@ -41,9 +40,7 @@ export default function Sidebar() {
                        Restaurents
                     </Nav.Link>
 
-                    <Nav.Link as={Link} to={"/AddProducts"}>
-                      Add Products
-                    </Nav.Link>
+                   
                    
                     <Nav.Link as={Link} to={"/Order"}>
                       Orders

@@ -8,7 +8,6 @@ const Restaurent = () => {
   const [restaurents, setRestaurents] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
 
-
   useEffect(() => {
     axios
       .get("http://localhost:8090/api/restaurents")
@@ -20,8 +19,6 @@ const Restaurent = () => {
         console.log(error);
       });
   }, []);
-
-
 
   return (
     <Container>
@@ -35,18 +32,23 @@ const Restaurent = () => {
       <Row>
         {restaurents.map((restaurent, index) => (
           <Col md={3} key={index}>
-            <Card as={Link} to={"/ViewRestaurent"} className="restaurents_info">
-              {restaurent.images[0] &&
-                 (
-                  <Card.Img
-                    variant="top"
-                    key={index}
-                    src={`http://localhost:8090/upload/${restaurent.images[0]}`}
-                    alt=""
-                    width="200"
-                  />
-                ) 
-              }
+            <Card
+              as={Link}
+              to={`/ViewRestaurent/${restaurent.id}`}
+
+              className="restaurents_info"
+            >
+              {restaurent.images[0] && (
+                <Card.Img
+                  variant="top"
+                  key={index}
+                  src={`http://localhost:8090/upload/${restaurent.images[0]}`}
+                  alt=""
+                  width="200"
+                  as={Link}
+                  to={`/ViewRestaurent/${restaurent.images}`}
+                />
+              )}
               <Card.Body>
                 <Card.Text className="restaurents_text">
                   {restaurent.restaurentName}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Sidebar from "./Sidebar";
+// import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -146,7 +146,7 @@ const AddRestaurent = () => {
     <Container>
       <Row>
         <Col md={1}>
-          <Sidebar />
+          {/* <Sidebar /> */}
         </Col>
         <Col md={11}>
           <h1>Add Restaurent</h1>

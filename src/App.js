@@ -113,11 +113,17 @@ function App() {
                       id="dropdown-basic-button"
                       title={currentUser.firstName}
                     >
+                      {
+                        currentUser.roles[0]=="ROLE_ADMIN" ?
+                      <Dropdown.Item as={Link} to={'/Dashboard'}>Dashboard</Dropdown.Item>
+                        :
+                        ""
+                      }
                       <Dropdown.Item href="#/action-1">Account</Dropdown.Item>
                      
                       <Dropdown.Item as={Link} to={'/Order'}>Orders</Dropdown.Item>
                      
-                      <Dropdown.Item href="#/action-3">
+                      <Dropdown.Item onClick={handleLogout}>
                         Logout <IoIosLogOut />
                       </Dropdown.Item>
                     </DropdownButton>
@@ -153,7 +159,7 @@ function App() {
         <Route path="/restaurent" element={<Restaurent />} />
         <Route path="/AddRestaurent" element={<AddRestaurent />} />
         <Route path="/AdminRestaurent" element={<AdminRestaurent />} />
-        <Route path="/ViewRestaurent" element={<ViewRestaurent />} />
+        <Route path="/ViewRestaurent/:restaurentId" element={<ViewRestaurent />} />
         <Route path="/FoodCategory" element={<FoodCategory />} />
         <Route path="/AddfoodCategory" element={<AddfoodCategory />} />
         {/* <Route path="/About" element={<About />} /> */}

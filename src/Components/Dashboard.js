@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from "react";
 
 import Sidebar from "./Sidebar";
 import Box from "@mui/material/Box";
@@ -8,15 +8,7 @@ import { LinePlot } from "@mui/x-charts/LineChart";
 import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
 import { ChartsYAxis } from "@mui/x-charts/ChartsYAxis";
 
-
-import {
-  Col,
-  Container,
-  Row,
-  Card,
-  
-  Breadcrumb,
-} from "react-bootstrap";
+import { Col, Container, Row, Card, Breadcrumb } from "react-bootstrap";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -36,10 +28,11 @@ import { Doughnut } from "react-chartjs-2";
 
 import { Line } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
-// import { Navigate } from "react-router";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import axios from "axios";
 
+// import { Navigate } from "react-router";
 
 ChartJS.register(
   CategoryScale,
@@ -176,20 +169,45 @@ export const data2 = {
 };
 
 const Dashboard = () => {
+  const [numberofproducts, setNumberofProducts] = useState();
+  useEffect(() => {
+    axios
+      .get("http://localhost:8090/api/products/count")
+      .then((response) => {
+        console.log(response.data);
+        setNumberofProducts(response.data);
+      })
+      .catch((error) => {
+        console.log("Failed to all fetch products");
+        console.log(error);
+        alert("Failed to all fetch products");
+      });
+  }, []);
+   const [numberofrestaurents, setNumberofRestaurents] = useState();
+  useEffect(() => {
+    axios
+      .get("http://localhost:8090/api/restaurents/count")
+      .then((response) => {
+        console.log(response.data);
+        setNumberofRestaurents(response.data);
+      })
+      .catch((error) => {
+        console.log("Failed to all fetch Restaurents");
+        console.log(error);
+        alert("Failed to all fetch Restaurents");
+      });
+  }, []);
   let navigate = useNavigate();
-   const { user: currentUser } = useSelector((state) => state.auth);
-    useEffect(() => {
-
-      if (!currentUser) {
-        navigate('/');
-      }
-      else if(currentUser.roles[0]!=="ROLE_ADMIN"){
-        navigate('/'); 
-      }
-      else{
-        console.log(currentUser);
-      }
-    }, [currentUser, navigate]);
+  const { user: currentUser } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/");
+    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+      navigate("/");
+    } else {
+      console.log(currentUser);
+    }
+  }, [currentUser, navigate]);
   const expand = "none";
   const margin = { right: 24 };
   const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
@@ -205,30 +223,30 @@ const Dashboard = () => {
   ];
   return (
     <Container>
-      
       <Row>
         <Col md={1}>
-          <Sidebar/>
+          <Sidebar />
         </Col>
         <Col className="dashboard" md={11}>
           <Row>
             <Col>
               <h2>Dashboard</h2>
-               <Breadcrumb>
-            <Breadcrumb.Item href="/Dashboard">
-              Dashboard
-            </Breadcrumb.Item>
+              <Breadcrumb>
+                <Breadcrumb.Item href="/Dashboard">Dashboard</Breadcrumb.Item>
 
-            <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
-          </Breadcrumb>
-          <h4 className='welcome-anupam'>Welcome <b>{currentUser.firstName}</b></h4>
+                <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
+              </Breadcrumb>
+              <h4 className="welcome-anupam">
+                Welcome <b>{currentUser.firstName}</b>
+              </h4>
             </Col>
           </Row>
           <Row>
             <Col className="dashboard_cards">
               <Link to={"/Restaurent"}>
                 <Card className="dashboard_card">
-                  <h4>20</h4>
+                  <h4>{numberofrestaurents ? numberofrestaurents.totalRestaurents : ""} </h4>
+                  
                   <h5>Restaurents</h5>
                 </Card>
               </Link>
@@ -253,7 +271,7 @@ const Dashboard = () => {
             <Col>
               <Link to={"/Foods"}>
                 <Card className="dashboard_card">
-                  <h4>100</h4>
+                  <h4>{numberofproducts ? numberofproducts.totalProducts : ""} </h4>
                   <h5>Products</h5>
                 </Card>
               </Link>

@@ -604,3 +604,6 @@ label {
   font-size: 20px;
   padding: 20px !important;
 }
+.thumb{
+  width: 100px !important;
+}

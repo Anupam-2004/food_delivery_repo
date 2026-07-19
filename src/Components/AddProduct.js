@@ -7,9 +7,10 @@ import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
+import axios from "axios";
 const categories = {
-  'Select Food Type...': ["Select Category"],
-  'Veg': [
+  "Select Food Type...": ["Select Category"],
+  Veg: [
     "Main Course",
     "Breads",
     "Rice",
@@ -18,7 +19,7 @@ const categories = {
     "Desserts",
     "Beverages",
   ],
-  'Non-Veg': ["Chicken", "Mutton", "Fish", "Egg", "Rice", "Breads", "Starters"],
+  "Non-Veg": ["Chicken", "Mutton", "Fish", "Egg", "Rice", "Breads", "Starters"],
 };
 const SignupSchema = Yup.object({
   foodType: Yup.string().required("Select food type"),
@@ -39,7 +40,7 @@ const SignupSchema = Yup.object({
 
   description: Yup.string().min(10).required("Description is required"),
 
-  files: Yup.array()
+  images: Yup.array()
     .min(1, "Please select at least one image")
     .max(5, "Maximum 5 images are allowed")
     .test(
@@ -72,8 +73,22 @@ export default function AddProduct() {
       console.log(currentUser);
     }
   }, [currentUser, navigate]);
-  const [subCategories, setSubCategories] = useState(categories["Select Food Type..."]);
+  const [subCategories, setSubCategories] = useState(
+    categories["Select Food Type..."],
+  );
+  const [restaurents, setRestaurents] = useState([]);
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:8090/api/restaurents")
+      .then((response) => {
+        console.log("data comes from backend :", response.data);
+        setRestaurents(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <div>
       <Container>
@@ -85,9 +100,10 @@ export default function AddProduct() {
             <h1>Add product</h1>
           </Col>
           <Breadcrumb>
-            <Breadcrumb.Item>
+            <Breadcrumb.Item href="/Dashboard">
               {" "}
-              <Link to={"/Dashboard"}>Dashboard</Link>
+              {/* <Link to={"/Dashboard"}>Dashboard</Link> */}
+              Dashboard
             </Breadcrumb.Item>
             <Breadcrumb.Item active>Add Product</Breadcrumb.Item>
           </Breadcrumb>
@@ -102,13 +118,40 @@ export default function AddProduct() {
           foodName: "",
           price: "",
           description: "",
-          files: [],
+          images: [],
         }}
+       
         validationSchema={SignupSchema}
-        onSubmit={(values, { resetForm }) => {
-          console.log(values);
-          alert("Food Added Successfully");
-          resetForm();
+        onSubmit={async (values, { resetForm }) => {
+          const formData = new FormData();
+          formData.append("userId", currentUser.id);
+          Object.keys(values).forEach((key) => {
+            if (key !== "images") {
+              formData.append(key, values[key]);
+            }
+          });
+
+          values.images.forEach((file) => {
+            formData.append("images", file);
+          });
+          console.log(formData);
+
+          try {
+            const res = await axios.post(
+              "http://localhost:8090/api/products",
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              },
+            );
+            console.log(res);
+            alert("Food Added successfully!");
+          } catch (err) {
+            console.error("Food added  failed");
+            alert("Food added  failed");
+          }
         }}
       >
         {({ values, setFieldValue }) => (
@@ -120,21 +163,16 @@ export default function AddProduct() {
           >
             <label>Choose Restaurent</label>
 
-            <Field
-              as="select"
-              name="restaurentId"
-              className="form-control"
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setFieldValue("restaurentId", value);
-                  setFieldValue("restaurentId", categories[value][0]);
-                  setSubCategories(categories[value]);
-                }
-              }
-            >
-              <option value="restaurentId">Zing</option>
-              <option value="restaurentId">Blue Diamond</option>
-              <option value="restaurentId">Haveli</option>
+            <Field as="select" name="restaurentId" className="form-control">
+              {restaurents
+                ? restaurents.map((restaurent, index) => {
+                    return (
+                      <option value={restaurent.id} key={index}>
+                        {restaurent.restaurentName}
+                      </option>
+                    );
+                  })
+                : ""}
             </Field>
 
             <ErrorMessage
@@ -145,19 +183,9 @@ export default function AddProduct() {
 
             <label>Food Type</label>
 
-            <Field
-              as="select"
-              name="foodType"
-              className="form-control"
-              onChange={(e) => {
-                const value = e.target.value;
-                setFieldValue("foodType", value);
-                setFieldValue("category", categories[value][0]);
-                setSubCategories(categories[value]);
-              }}
-            >
+            <Field as="select" name="foodType" className="form-control">
               {/* <option value="foodType">Food Type</option> */}
-              <option value="Select Food Type...">Select Food Type...</option>
+              <option value="">Select Food Type...</option>
               <option value="Veg">Veg</option>
               <option value="Non-Veg"> Non-Veg</option>
             </Field>
@@ -175,9 +203,27 @@ export default function AddProduct() {
             <label>Category</label>
 
             <Field as="select" name="category" className="form-control">
-              {subCategories.map((cat) => (
-                <option key={cat}>{cat}</option>
-              ))}
+              <option value="">choose category</option>
+              <option value="biryani">Biryani</option>
+              <option value="Paneer">Paneer</option>
+              <option value="pizza">Pizza</option>
+              <option value="burger"></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+              <option value=""></option>
+
             </Field>
 
             <ErrorMessage
@@ -186,8 +232,6 @@ export default function AddProduct() {
               className="text-danger"
             />
             <br />
-
-            {/* Food Name */}
 
             <label>Food Name</label>
 
@@ -237,7 +281,7 @@ export default function AddProduct() {
               className="form-control"
               accept="image/jpeg, image/jpg, image/png, image/webp"
               onChange={(event) => {
-                setFieldValue("files", Array.from(event.currentTarget.files));
+                setFieldValue("images", Array.from(event.currentTarget.files));
               }}
             />
 
@@ -247,11 +291,11 @@ export default function AddProduct() {
               className="text-danger"
             />
             <Row>
-              {values.files.map((file, index) => (
+              {values.images.map((image, index) => (
                 <Col md={3} key={index}>
                   <img
                     key={index}
-                    src={URL.createObjectURL(file)}
+                    src={URL.createObjectURL(image)}
                     alt="preview"
                     width="120"
                     height="120"

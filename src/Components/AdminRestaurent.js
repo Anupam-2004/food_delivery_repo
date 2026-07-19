@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import axios from "axios";
 
+
 import {
   Container,
   Row,
@@ -46,9 +47,6 @@ const AdminRestaurent = () => {
       console.log(currentUser);
     }
   }, [currentUser, navigate]);
-  const testButton = () => {
-    console.log("Add Restaurent");
-  };
 
   return (
     <Container>
@@ -61,20 +59,14 @@ const AdminRestaurent = () => {
           <Breadcrumb>
             <Breadcrumb.Item href="/Dashboard">Dashboard</Breadcrumb.Item>
 
-            <Breadcrumb.Item active>Admin Restaurents</Breadcrumb.Item>
+            <Breadcrumb.Item active>Restaurents</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
       </Row>
 
       <Row>
         <Col>
-          <Button
-            className="admin_restaurent_btn"
-            onClick={testButton}
-            variant="success"
-          >
-            Add
-          </Button>
+          <Link to={'/AddRestaurent'} className="btn btn-primary">Add</Link> 
         </Col>
       </Row>
       <Row>
@@ -100,9 +92,7 @@ const AdminRestaurent = () => {
                   <td>{restaurent.city}</td>
                   <td>{restaurent.location}</td>
                   <td>{restaurent.ownerName}</td>
-                  <td>
-                  {restaurent.mobileNumber}
-                  </td>
+                  <td>{restaurent.mobileNumber}</td>
                   <td>
                     <Button variant="warning" size="sm" className="me-2">
                       <AiFillEdit />
