@@ -3,7 +3,7 @@ import { Col, Container, Row, Breadcrumb } from "react-bootstrap";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router";
 
-const Order = () => {
+const Orders = () => {
   return (
     <Container>
       <Row>
@@ -25,4 +25,4 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default Orders;

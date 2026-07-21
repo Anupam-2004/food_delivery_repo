@@ -133,7 +133,7 @@ const AddRestaurent = () => {
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
-    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+    } else if (currentUser.roles[0] !== "ROLE_ADMIN","ROLE_OWNER") {
       navigate("/");
     } else {
       console.log(currentUser);
@@ -145,9 +145,7 @@ const AddRestaurent = () => {
   return (
     <Container>
       <Row>
-        <Col md={1}>
-          {/* <Sidebar /> */}
-        </Col>
+        <Col md={1}>{/* <Sidebar /> */}</Col>
         <Col md={11}>
           <h1>Add Restaurent</h1>
           <Breadcrumb>
@@ -190,6 +188,33 @@ const AddRestaurent = () => {
                 values.images.forEach((file) => {
                   formData.append("images", file);
                 });
+
+                //////////////
+
+                const nameSplit = values.ownerName.trim().split(/\s+/);
+                const data = {
+                  firstName: nameSplit[0],
+                  lastName: nameSplit[1],
+                  mobileNumber: values.mobileNumber,
+                  email: values.email,
+                  password: String(values.mobileNumber),
+                  username: values.mobileNumber,
+                  roles:["owner"]
+                };
+                console.log(data);
+                axios
+                  .post("http://localhost:8090/api/auth/signup", data)
+                  .then((response) => {
+                    console.log("User Successfully Registered");
+                    // alert("User Successfully Registered");
+                  })
+                  .catch((error) => {
+                    console.log("User Registration Failed!");
+                    // alert("User Registration Failed!");
+                    // handleClose();
+                  });
+
+                /////////////////////
                 // error occured with form data image upload
                 try {
                   const res = await axios.post(
@@ -203,8 +228,8 @@ const AddRestaurent = () => {
                   );
                   console.log(res);
                   console.log(formData);
+
                   alert("Restaurent registered successfully!");
-                
                 } catch (err) {
                   console.error("registration failed");
                   alert("registration failed");
@@ -321,11 +346,7 @@ const AddRestaurent = () => {
                       <label htmlFor="state">State:</label>
                     </Col>
                     <Col md={9}>
-                      <Field
-                        as="select"
-                        name="state"
-                      
-                      >
+                      <Field as="select" name="state">
                         <option value="selectstate">Select State</option>
                         <option value="jharkhand">Jharkhand</option>
                         <option value="Bihar">Bihar</option>
@@ -341,11 +362,7 @@ const AddRestaurent = () => {
                       <label htmlFor="country">Country :</label>
                     </Col>
                     <Col md={9}>
-                      <Field
-                        as="select"
-                        name="country"
-                       
-                      >
+                      <Field as="select" name="country">
                         <option value="selectcountry">Select Country</option>
                         <option value="India">India</option>
                         <option value="Nepal">Nepal</option>

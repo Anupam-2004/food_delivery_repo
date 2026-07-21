@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 
-const Restaurent = () => {
+const Restaurents = () => {
   const [restaurents, setRestaurents] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
 
@@ -31,7 +31,7 @@ const Restaurent = () => {
 
       <Row>
         {restaurents.map((restaurent, index) => (
-          <Col md={3} key={index}>
+          <Col md={4} key={index}>
             <Card
               as={Link}
               to={`/ViewRestaurent/${restaurent.id}`}
@@ -62,4 +62,4 @@ const Restaurent = () => {
   );
 };
 
-export default Restaurent;
+export default Restaurents;

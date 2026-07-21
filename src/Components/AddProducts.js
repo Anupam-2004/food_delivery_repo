@@ -61,7 +61,7 @@ const SignupSchema = Yup.object({
     ),
 });
 
-export default function AddProduct() {
+export default function AddProducts() {
   let navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
   useEffect(() => {
@@ -120,7 +120,6 @@ export default function AddProduct() {
           description: "",
           images: [],
         }}
-       
         validationSchema={SignupSchema}
         onSubmit={async (values, { resetForm }) => {
           const formData = new FormData();
@@ -203,27 +202,22 @@ export default function AddProduct() {
             <label>Category</label>
 
             <Field as="select" name="category" className="form-control">
-              <option value="">choose category</option>
-              <option value="biryani">Biryani</option>
-              <option value="Paneer">Paneer</option>
-              <option value="pizza">Pizza</option>
-              <option value="burger"></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
+              <option value="">Choose Category</option>
 
+              {/* Veg Categories */}
+              <option value="Main Course">Main Course</option>
+              <option value="Breads">Breads</option>
+              <option value="Rice">Rice</option>
+              <option value="Starters">Starters</option>
+              <option value="Snacks">Snacks</option>
+              <option value="Desserts">Desserts</option>
+              <option value="Beverages">Beverages</option>
+
+              {/* Non-Veg Categories */}
+              <option value="Chicken">Chicken</option>
+              <option value="Mutton">Mutton</option>
+              <option value="Fish">Fish</option>
+              <option value="Egg">Egg</option>
             </Field>
 
             <ErrorMessage

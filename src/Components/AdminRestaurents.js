@@ -19,7 +19,7 @@ import Sidebar from "./Sidebar";
 
 import { Link } from "react-router";
 
-const AdminRestaurent = () => {
+const AdminRestaurents = () => {
   const [restaurents, setRestaurents] = useState([]);
 
   useEffect(() => {
@@ -35,6 +35,25 @@ const AdminRestaurent = () => {
         alert("Failed to fetch restaurants");
       });
   }, []);
+
+ const handleDelete = async (id) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this product?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete(`http://localhost:8090/api/restaurents/${id}`);
+
+    setRestaurents(restaurents.filter((restaurents) => restaurents.id !== id));
+
+    alert("Restaurant deleted successfully");
+  } catch (error) {
+    console.log(error);
+    alert("Something went wrong");
+  }
+};
 
   let navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -66,7 +85,7 @@ const AdminRestaurent = () => {
 
       <Row>
         <Col>
-          <Link to={'/AddRestaurent'} className="btn btn-primary">Add</Link> 
+          <Link to={'/AddRestaurent'} className="btn btn-success">Add</Link> 
         </Col>
       </Row>
       <Row>
@@ -93,14 +112,14 @@ const AdminRestaurent = () => {
                   <td>{restaurent.location}</td>
                   <td>{restaurent.ownerName}</td>
                   <td>{restaurent.mobileNumber}</td>
-                  <td>
-                    <Button variant="warning" size="sm" className="me-2">
+                  <td className="edit-btn">
+                    <Button variant="warning" size="sm" >
                       <AiFillEdit />
                     </Button>
                   </td>
 
-                  <td>
-                    <Button variant="danger" size="sm">
+                  <td className="delete-btn">
+                    <Button variant="danger" size="sm"  onClick={() => handleDelete(restaurent.id)}>
                       <MdDelete />
                     </Button>
                   </td>
@@ -114,4 +133,4 @@ const AdminRestaurent = () => {
   );
 };
 
-export default AdminRestaurent;
+export default AdminRestaurents;

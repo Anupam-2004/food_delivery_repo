@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
@@ -7,30 +6,25 @@ import {
   Container,
   Row,
   Nav,
-  NavDropdown,
   Navbar,
   Offcanvas,
-  Button,
   Dropdown,
   DropdownButton,
-  DropdownDivider,
-  
 } from "react-bootstrap";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import Landing from "./Components/Landing";
-import Restaurent from "./Components/Restaurent";
+import Restaurents from "./Components/Restaurents";
 import AddRestaurent from "./Components/AddRestaurent";
-import AdminRestaurent from "./Components/AdminRestaurent";
+import AdminRestaurents from "./Components/AdminRestaurents";
 import ViewRestaurent from "./Components/ViewRestaurent";
 import FoodCategory from "./Components/FoodCategory";
 import AddfoodCategory from "./Components/AddfoodCategory";
-// import Addfood from "./Components/Addfood";
 import Foods from "./Components/Foods";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
-import AddProduct from "./Components/AddProduct";
+import AddProducts from "./Components/AddProducts";
 import Dashboard from "./Components/Dashboard";
-import Order from "./Components/Order";
+import Orders from "./Components/Orders";
 import AdminOrders from "./Components/AdminOrders";
 import Products from "./Components/Products";
 import AdminProducts from "./Components/AdminProducts";
@@ -63,7 +57,6 @@ function App() {
   }, [currentUser]);
   const handleLogout = () => {
     dispatch(logout());
-    // navigate('/login'); // Redirect to login page
     window.location.reload();
   };
   return (
@@ -113,21 +106,24 @@ function App() {
                       id="dropdown-basic-button"
                       title={currentUser.firstName}
                     >
-                      {
-                        currentUser.roles[0]=="ROLE_ADMIN" ?
-                      <Dropdown.Item as={Link} to={'/Dashboard'}>Dashboard</Dropdown.Item>
-                        :
+                      {currentUser.roles[0] == "ROLE_ADMIN" ? (
+                        <Dropdown.Item as={Link} to={"/Dashboard"}>
+                          Dashboard
+                        </Dropdown.Item>
+                      ) : (
                         ""
-                      }
+                      )}
                       <Dropdown.Item href="#/action-1">Account</Dropdown.Item>
-                     
-                      <Dropdown.Item as={Link} to={'/Order'}>Orders</Dropdown.Item>
-                     
+
+                      <Dropdown.Item as={Link} to={"/Order"}>
+                        Orders
+                      </Dropdown.Item>
+
                       <Dropdown.Item onClick={handleLogout}>
                         Logout <IoIosLogOut />
                       </Dropdown.Item>
                     </DropdownButton>
-                   
+
                     {/* <Button onClick={handleLogout}>
                       <IoIosLogOut />
                     </Button> */}
@@ -139,7 +135,7 @@ function App() {
                     </button>
                     <Offcanvas show={show} onHide={handleClose} placement="end">
                       <Offcanvas.Header closeButton>
-                        {/* <Offcanvas.Title>Register</Offcanvas.Title> */}
+                      
                       </Offcanvas.Header>
                       <Offcanvas.Body>
                         <Login />
@@ -156,26 +152,29 @@ function App() {
       <Routes>
         <Route path="" element={<Landing />} />
         <Route path="/landing" element={<Landing />} />
-        <Route path="/restaurent" element={<Restaurent />} />
+        <Route path="/restaurents" element={<Restaurents />} />
         <Route path="/AddRestaurent" element={<AddRestaurent />} />
-        <Route path="/AdminRestaurent" element={<AdminRestaurent />} />
-        <Route path="/ViewRestaurent/:restaurentId" element={<ViewRestaurent />} />
+        <Route path="/AdminRestaurents" element={<AdminRestaurents />} />
+        <Route
+          path="/ViewRestaurent/:restaurentId"
+          element={<ViewRestaurent />}
+        />
         <Route path="/FoodCategory" element={<FoodCategory />} />
         <Route path="/AddfoodCategory" element={<AddfoodCategory />} />
         {/* <Route path="/About" element={<About />} /> */}
         <Route path="/menu" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
-        <Route path="/AddProduct" element={<AddProduct />} />
+      <Route path="/Addproducts/:id" element={<AddProducts />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/Order" element={<Order />} />
+        <Route path="/Orders" element={<Orders />} />
         <Route path="/AdminOrders" element={<AdminOrders />} />
         <Route path="/Products" element={<Products />} />
         <Route path="/AdminProducts" element={<AdminProducts />} />
         <Route path="/OwnerOrders" element={<OwnerOrders />} />
-        <Route path="Users" element={<Users />} />
-        <Route path="Account" element={<Account />} />
-
+        <Route path="/Users" element={<Users />} />
+        <Route path="/Account" element={<Account />} />
+        {/* <Route path="/Foods" element={<Foods/>} /> */}
       </Routes>
     </div>
   );
