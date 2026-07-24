@@ -164,7 +164,7 @@ function App() {
         {/* <Route path="/About" element={<About />} /> */}
         <Route path="/menu" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
-      <Route path="/Addproducts/:id" element={<AddProducts />} />
+      <Route path="/AddProducts/:id" element={<AddProducts />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Orders" element={<Orders />} />

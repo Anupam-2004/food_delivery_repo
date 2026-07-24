@@ -38,7 +38,7 @@ const AdminRestaurents = () => {
 
  const handleDelete = async (id) => {
   const confirmDelete = window.confirm(
-    "Are you sure you want to delete this product?"
+    "Are you sure you want to delete this restaurent?"
   );
 
   if (!confirmDelete) return;

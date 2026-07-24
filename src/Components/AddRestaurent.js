@@ -133,7 +133,7 @@ const AddRestaurent = () => {
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
-    } else if (currentUser.roles[0] !== "ROLE_ADMIN","ROLE_OWNER") {
+    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
       navigate("/");
     } else {
       console.log(currentUser);

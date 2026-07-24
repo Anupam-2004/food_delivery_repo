@@ -93,7 +93,7 @@ const AdminProducts = () => {
                   <td>{product.foodType}</td>
                   <td>{product.category}</td>
                   <td>{product.price}</td>
-                  <td>{product.restaurentId.restaurentName}</td>
+                  <td>{product.restaurentId ? product.restaurentId.restaurentName :''}</td>
                   <td>{product.stock}</td>
                   <td>{product.status}</td>
                   <td>{product.description}</td>

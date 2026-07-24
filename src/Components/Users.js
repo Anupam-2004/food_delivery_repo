@@ -1,7 +1,14 @@
 import React from "react";
 import Sidebar from "./Sidebar";
-import { Container, Row, Col, Breadcrumb, Table } from "react-bootstrap";
-import { Link } from "react-router";
+import {
+  Container,
+  Row,
+  Col,
+  Breadcrumb,
+  Table,
+  Button,
+} from "react-bootstrap";
+// import { Link } from "react-router";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -15,6 +22,25 @@ const Users = () => {
   let navigate = useNavigate();
   const [users, setUsers] = useState();
   const { user: currentUser } = useSelector((state) => state.auth);
+  const handleChange = async(id) => {
+    const confirmChange = window.confirm(
+      "Are you sure you want to change the status?",
+    );
+
+    if (!confirmChange) return;
+    console.log(id);
+    try {
+      await axios.post(`http://localhost:8090/api/auth/changeStatus/${id}`);
+
+      alert("status change successfully");
+          window.location.reload();
+
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong");
+    }
+  };
+
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
@@ -49,8 +75,8 @@ const Users = () => {
       <Row>
         <Col>
           <Breadcrumb>
-            <Breadcrumb.Item>
-              <Link to={"/Dashboard"}>Dashboard</Link>
+            <Breadcrumb.Item href={"/Dashboard"}>
+              Dashboard
             </Breadcrumb.Item>
             <Breadcrumb.Item active>Users</Breadcrumb.Item>
           </Breadcrumb>
@@ -79,12 +105,13 @@ const Users = () => {
                       <td>{user.mobileNumber}</td>
                       <td>{user.email}</td>
                       <td>
-                        {user.status ? <FaCheckCircle /> : <RxCrossCircled />}
+                        <Button onClick={() => handleChange(user._id)}>
+                          {user.status ? <FaCheckCircle /> : <RxCrossCircled />}
+                        </Button>
                       </td>
                     </tr>
                   ))
-                : "Data Not Available"
-              }
+                : "Data Not Available"}
             </tbody>
           </Table>
         </Col>

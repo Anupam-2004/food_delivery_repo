@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const Foods = () => {
   const [products, setProducts] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
     const [imageUrl, setImageUrl] = useState("");
   
 
@@ -17,21 +17,21 @@ const Foods = () => {
         console.log("data comes from backend :", response.data);
 
         setProducts(response.data);
-        // setLoading(false);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
-        // setLoading(false);
+        setLoading(false);
       });
   }, []);
 
-  // if (loading) {
-  //   return (
-  //     <div className="text-center mt-5">
-  //       <Spinner animation="border" />
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="text-center mt-5">
+        <Spinner animation="border" />
+      </div>
+    );
+  }
 
   return (
     <Container className="mt-4">
@@ -39,7 +39,7 @@ const Foods = () => {
         {products.map((product, index) => (
           <Col md={3} className="mb-4" key={index}>
             <Card  as={Link}
-              to={`/Addproducts/${product.id}`}>
+              to={`/AddProducts/${product.id}`}>
               {/* Product Image */}
              
               {product.images?.length > 0 && (

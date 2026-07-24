@@ -31,31 +31,28 @@ export default function Sidebar() {
               >
                 <Offcanvas.Body>
                   <Nav className="justify-content-end flex-grow-1 pe-3">
-                     <Nav.Link as={Link} to={"/AdminProducts"}>
+                    <Nav.Link as={Link} to={"/AdminProducts"}>
                       Products
                     </Nav.Link>
-                  
-                    <Nav.Link as={Link} to={"/AdminRestaurent"}>
+
+                    <Nav.Link as={Link} to={"/AdminRestaurents"}>
                       {" "}
-                       Restaurents
+                      Restaurents
                     </Nav.Link>
 
-                   
-                   
-                    <Nav.Link as={Link} to={"/Order"}>
+                    <Nav.Link as={Link} to={"/Orders"}>
                       Orders
                     </Nav.Link>
-                     <Nav.Link as={Link} to={"/Users"}>
+                    <Nav.Link as={Link} to={"/Users"}>
                       Users
                     </Nav.Link>
 
                     <Nav.Link as={Link} to={"/AdminOrders"}>
-                       Orders(Admin)
+                      Orders(Admin)
                     </Nav.Link>
-                     <Nav.Link as={Link} to={"/OwnerOrders"}>
-                       Orders(Owner)
+                    <Nav.Link as={Link} to={"/OwnerOrders"}>
+                      Orders(Owner)
                     </Nav.Link>
-                    
 
                     <NavDropdown
                       title="Dropdown"
@@ -89,10 +86,7 @@ export default function Sidebar() {
         </Col>
       </Row>
       <Row>
-        <Col>
-       
-
-        </Col>
+        <Col></Col>
       </Row>
     </Container>
   );

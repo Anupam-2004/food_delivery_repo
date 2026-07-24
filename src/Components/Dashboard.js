@@ -183,7 +183,21 @@ const Dashboard = () => {
         alert("Failed to all fetch products");
       });
   }, []);
-   const [numberofrestaurents, setNumberofRestaurents] = useState();
+  const [numberofusers, setNumberofUsers] = useState();
+  useEffect(() => {
+    axios
+      .get("http://localhost:8090/api/auth/usercount")
+      .then((response) => {
+        console.log(response.data);
+        setNumberofUsers(response.data);
+      })
+      .catch((error) => {
+        console.log("Failed to all fetch users");
+        console.log(error);
+        alert("Failed to all fetch users");
+      });
+  }, []);
+  const [numberofrestaurents, setNumberofRestaurents] = useState();
   useEffect(() => {
     axios
       .get("http://localhost:8090/api/restaurents/count")
@@ -243,19 +257,25 @@ const Dashboard = () => {
           </Row>
           <Row>
             <Col className="dashboard_cards">
-              <Link to={"/Restaurent"}>
+              <Link to={"/Restaurents"}>
                 <Card className="dashboard_card">
-                  <h4>{numberofrestaurents ? numberofrestaurents.totalRestaurents : ""} </h4>
-                  
+                  <h4>
+                    {numberofrestaurents
+                      ? numberofrestaurents.totalRestaurents
+                      : ""}{" "}
+                  </h4>
+
                   <h5>Restaurents</h5>
                 </Card>
               </Link>
             </Col>
             <Col>
-              <Link to={"/Order"}>
+              <Link to={"/Users"}>
                 <Card className="dashboard_card">
-                  <h4>500</h4>
-                  <h5>Orders</h5>
+                
+                  <h4>{numberofusers ? numberofusers.totalUsers : ""} </h4>
+
+                  <h5>Users</h5>
                 </Card>
               </Link>
             </Col>
@@ -271,7 +291,11 @@ const Dashboard = () => {
             <Col>
               <Link to={"/Foods"}>
                 <Card className="dashboard_card">
-                  <h4>{numberofproducts ? numberofproducts.totalProducts : ""} </h4>
+                  <h4>
+                    {numberofproducts
+                      ? numberofproducts.totalProducts
+                      : ""}{" "}
+                  </h4>
                   <h5>Products</h5>
                 </Card>
               </Link>

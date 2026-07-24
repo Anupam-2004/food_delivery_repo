@@ -162,7 +162,7 @@ const ViewRestaurent = () => {
           <Sidebar />
         </Col>
       </Row>
-      
+
       {restaurent ? (
         <>
           <Row>
@@ -211,9 +211,13 @@ const ViewRestaurent = () => {
               <Carousel>
                 {restaurent.images.map((image, index) => (
                   <Carousel.Item>
-                    <img className="d-block w-100" src={`http://localhost:8090/upload/${image}`} alt=""/>
+                    <img
+                      className="d-block w-100"
+                      src={`http://localhost:8090/upload/${image}`}
+                      alt=""
+                    />
                   </Carousel.Item>
-                 ))} 
+                ))}
               </Carousel>
             </Col>
           </Row>
@@ -238,7 +242,6 @@ const ViewRestaurent = () => {
                     </Nav.Link>
                   </Nav>
                 </Navbar.Collapse>
-              
               </Navbar>
             </Col>
           </Row>
@@ -252,20 +255,19 @@ const ViewRestaurent = () => {
               <div className="address">
                 <FaMapMarkerAlt />
                 <a href="">
-                 
                   {restaurent.addressLine1}
                   {restaurent.addressLine2}
-                   {restaurent.location}
+                  {restaurent.location}
                   {restaurent.state}
-            
+
                   {restaurent.country}
                 </a>
               </div>
-            
+
               <div className="links">
                 <a href="/">
-                  <FaGlobe />website: {restaurent.website}
-                
+                  <FaGlobe />
+                  website: {restaurent.website}
                 </a>
 
                 <a href="">
@@ -295,10 +297,7 @@ const ViewRestaurent = () => {
           <Row>
             <Col className="about" md={8}>
               <h2>About</h2>
-              <p>
-                {restaurent.description}
-               
-              </p>
+              <p>{restaurent.description}</p>
               <div className="feature">
                 <h4>Feature</h4>
                 <p>Lunch, Dinner</p>
@@ -328,9 +327,9 @@ const ViewRestaurent = () => {
                   <tr>
                     <th>Monday</th>
                     <td colSpan={4}>
-                  12:00 PM - 3:30 PM
-                  <tr> 6:00 PM - 10:15 PM</tr>
-                </td>
+                      12:00 PM - 3:30 PM
+                      <tr> 6:00 PM - 10:15 PM</tr>
+                    </td>
                   </tr>
                   <tr>
                     <th>Tuesday</th>
