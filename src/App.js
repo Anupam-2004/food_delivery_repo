@@ -22,7 +22,7 @@ import AddfoodCategory from "./Components/AddfoodCategory";
 import Foods from "./Components/Foods";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
-import AddProducts from "./Components/AddProducts";
+import AddProduct from "./Components/AddProduct";
 import Dashboard from "./Components/Dashboard";
 import Orders from "./Components/Orders";
 import AdminOrders from "./Components/AdminOrders";
@@ -30,7 +30,7 @@ import Products from "./Components/Products";
 import AdminProducts from "./Components/AdminProducts";
 import OwnerOrders from "./Components/OwnerOrders";
 import Users from "./Components/Users";
-// import About from "./Components/About";
+import AddCart from "./Components/AddCart";
 import Account from "./Components/Account";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -41,6 +41,7 @@ import { BiSolidOffer } from "react-icons/bi";
 import { IoRestaurant } from "react-icons/io5";
 import { CiHome } from "react-icons/ci";
 import { BiFoodMenu } from "react-icons/bi";
+import Address from "./Components/Address";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -82,10 +83,10 @@ function App() {
                     <Nav.Link as={Link} to={"/menu"}>
                       <BiFoodMenu /> Menu
                     </Nav.Link>
-                    <Nav.Link as={Link} to={"/restaurent"}>
-                      <IoRestaurant /> Restaurent
+                    <Nav.Link as={Link} to={"/restaurents"}>
+                      <IoRestaurant /> Restaurents
                     </Nav.Link>
-                    <Nav.Link as={Link} to={"/"}>
+                    <Nav.Link as={Link} to={"/cart"}>
                       <PiShoppingCartSimpleThin /> Cart
                     </Nav.Link>
 
@@ -164,7 +165,7 @@ function App() {
         {/* <Route path="/About" element={<About />} /> */}
         <Route path="/menu" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
-      <Route path="/AddProducts/:id" element={<AddProducts />} />
+      <Route path="/AddProduct" element={<AddProduct />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Orders" element={<Orders />} />
@@ -174,7 +175,8 @@ function App() {
         <Route path="/OwnerOrders" element={<OwnerOrders />} />
         <Route path="/Users" element={<Users />} />
         <Route path="/Account" element={<Account />} />
-        {/* <Route path="/Foods" element={<Foods/>} /> */}
+        <Route path="/cart" element={<AddCart/>} />
+        <Route path="/Address" element={<Address/>}/>
       </Routes>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
-import AddProducts from "./AddProducts";
+import AddProducts from "./AddProduct";
 import { Link } from "react-router-dom";
 
 const Foods = () => {

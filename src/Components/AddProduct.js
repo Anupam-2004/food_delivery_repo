@@ -61,7 +61,7 @@ const SignupSchema = Yup.object({
     ),
 });
 
-export default function AddProducts() {
+export default function AddProduct() {
   let navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
   useEffect(() => {
@@ -73,10 +73,11 @@ export default function AddProducts() {
       console.log(currentUser);
     }
   }, [currentUser, navigate]);
-  const [subCategories, setSubCategories] = useState(
-    categories["Select Food Type..."],
-  );
+  // const [subCategories, setSubCategories] = useState(
+  //   categories["Select Food Type..."],
+  // );
   const [restaurents, setRestaurents] = useState([]);
+  
 
   useEffect(() => {
     axios
@@ -163,6 +164,7 @@ export default function AddProducts() {
             <label>Choose Restaurent</label>
 
             <Field as="select" name="restaurentId" className="form-control">
+                <option value="">choose restaurent</option>
               {restaurents
                 ? restaurents.map((restaurent, index) => {
                     return (
@@ -186,7 +188,7 @@ export default function AddProducts() {
               {/* <option value="foodType">Food Type</option> */}
               <option value="">Select Food Type...</option>
               <option value="Veg">Veg</option>
-              <option value="Non-Veg"> Non-Veg</option>
+              <option value="Non-Veg"> Veg & Non-Veg</option>
             </Field>
 
             <ErrorMessage

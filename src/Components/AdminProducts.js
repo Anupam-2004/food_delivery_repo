@@ -17,7 +17,7 @@ import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router";
 import axios from "axios";
 
-const AdminProducts = () => {
+const AdminProduct = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -120,4 +120,4 @@ const AdminProducts = () => {
   );
 };
 
-export default AdminProducts;
+export default AdminProduct;
