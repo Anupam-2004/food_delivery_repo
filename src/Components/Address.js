@@ -4,91 +4,110 @@ import { Plus } from "react-bootstrap-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { login, register } from "./../slices/auth";
+import { clearMessage } from "./../slices/message";
+
+const SignupSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(2, "restaurent name must be at least minimum 2 characters")
+    .max(50, "restaurent name must not exceed 50 characters")
+    .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
+    .required(" restaurent name is Required"),
+  addressLine1: Yup.string()
+    .min(2, "adressLine1  must be at least minimum 2 characters")
+    .max(50, "addressLine1 must not exceed 50 characters")
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, "Name can only contain letters")
+    .required("addressLine1  is Mandatory"),
+  addressLine2: Yup.string()
+    .min(2, "addressLine2  must be at least minimum 2 characters")
+    .max(50, "addressLine2 must not exceed 50 characters")
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, "Name can only contain letters")
+    .required("addressLine2  is Mandatory"),
+  city: Yup.string()
+    .min(2, "city  must be at least minimum 2 characters")
+    .max(50, "city must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
+    .required("city  is Mandatory"),
+
+  district: Yup.string()
+    .min(2, "district  must be at least minimum 2 characters")
+    .max(50, "district must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
+    .required("district  is Mandatory"),
+
+  state: Yup.string()
+    .min(2, "state  must be at least minimum 2 characters")
+    .max(50, "state must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
+    .required("state  is Mandatory"),
+  pin: Yup.string()
+    .required("PIN code is required")
+    .matches(/^[1-9][0-9]{5}$/, "Enter a valid 6-digit PIN code"),
+
+  mobile: Yup.string().matches(/^[6-9]\d{9}$/, "enter valid 10 digit numbers"),
+  email: Yup.string().matches(
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    "Enter a valid email address",
+  ),
+
+  addressType: Yup.string().required("Address Type is required"),
+});
 
 const Address = () => {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const { user: currentUser } = useSelector((state) => state.auth);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
   let navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [successful, setSuccessful] = useState(false);
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const SignupSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, "restaurent name must be at least minimum 2 characters")
-      .max(50, "restaurent name must not exceed 50 characters")
-      .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
-      .required(" restaurent name is Required"),
-    addressLine1: Yup.string()
-      .min(2, "adressLine1  must be at least minimum 2 characters")
-      .max(50, "addressLine1 must not exceed 50 characters")
-      .matches(/^[a-zA-Z0-9\s,.-]+$/, "Name can only contain letters")
-      .required("addressLine1  is Mandatory"),
-    addressLine2: Yup.string()
-      .min(2, "addressLine2  must be at least minimum 2 characters")
-      .max(50, "addressLine2 must not exceed 50 characters")
-      .matches(/^[a-zA-Z0-9\s,.-]+$/, "Name can only contain letters")
-      .required("addressLine2  is Mandatory"),
-    city: Yup.string()
-      .min(2, "city  must be at least minimum 2 characters")
-      .max(50, "city must not exceed 50 characters")
-      .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-      .required("city  is Mandatory"),
-
-    district: Yup.string()
-      .min(2, "district  must be at least minimum 2 characters")
-      .max(50, "district must not exceed 50 characters")
-      .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-      .required("district  is Mandatory"),
-
-    state: Yup.string()
-      .min(2, "state  must be at least minimum 2 characters")
-      .max(50, "state must not exceed 50 characters")
-      .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-      .required("state  is Mandatory"),
-    pin: Yup.string()
-      .required("PIN code is required")
-      .matches(/^[1-9][0-9]{5}$/, "Enter a valid 6-digit PIN code"),
-
-    mobile: Yup.string().matches(
-      /^[6-9]\d{9}$/,
-      "enter valid 10 digit numbers",
-    ),
-    email: Yup.string().matches(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "Enter a valid email address",
-    ),
-
-    addressType: Yup.string().required("Address Type is required"),
-  });
+  // useEffect(() => {
+  //   fetchAddresses()
+  //   if (!currentUser) {
+  //     navigate("/");
+  //   } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+  //     navigate("/");
+  //   } else {
+  //     console.log(currentUser);
+  //   }
+  // }, [currentUser, navigate]);
   useEffect(() => {
-    fetchAddresses()
-    if (!currentUser) {
-      navigate("/");
-    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
-      navigate("/");
-    } else {
-      console.log(currentUser);
-    }
-  }, [currentUser, navigate]);
+    if (message) {
+      const timer = setTimeout(() => {
+        dispatch(clearMessage());
+      }, 3000);
 
-  const fetchAddresses = async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:8090/api/addresses/user/${currentUser.id}`,
-      );
-
-      setAddresses(res.data);
-      console.log('backend response :',res)
-    } catch (err) {
-      console.log(err);
+      return () => clearTimeout(timer);
     }
+  }, [message, dispatch]);
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
+  const handlelogin = (formValue) => {
+    const { username, password } = formValue;
+    setLoading(true);
+    console.log(formValue);
+    dispatch(Address({}))
+      .unwrap()
+      .then(() => {
+        navigate("/");
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
+
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col>
           <Button variant="primary" onClick={handleShow}>
@@ -115,29 +134,34 @@ const Address = () => {
                   addressType: "",
                 }}
                 validationSchema={SignupSchema}
-                onSubmit={async (values, { resetForm }) => {
-                  console.log('form submitted')
-                  try {
-                    const data = {
-                      userId: currentUser.id,
-                      ...values,
-                    };
-
-                    const res = await axios.post(
-                      "http://localhost:8090/api/addresses",
-                      data,
-                    );
-
-                    console.log(res.data);
-
-                    alert("Address added successfully!");
-                    await fetchAddresses();
-                    resetForm();
-                    handleClose();
-                  } catch (err) {
-                    console.error(err);
-                    alert("Failed to add address");
-                  }
+                onSubmit={(values) => {
+                  console.log("form submitted");
+                  const data = {
+                    name: values.name,
+                    addressLine1: values.addressLine1,
+                    addressLine2: values.addressLine2,
+                    city: values.city,
+                    district: values.district,
+                    state: values.state,
+                    pin: values.pin,
+                    mobile: values.mobile,
+                    email: values.email,
+                    addressType: values.addressType,
+                    userId:currentUser.id
+                  };
+                  console.log(data);
+                  axios
+                    .post("http://localhost:8090/api/addresses", data)
+                    .then((response) => {
+                      console.log("User Successfully Registered");
+                      alert("User Successfully Registered");
+                      setShow = false;
+                    })
+                    .catch((error) => {
+                      console.log("User Registration Failed!");
+                      alert("User Registration Failed!");
+                      // handleClose();
+                    });
                 }}
               >
                 {({ errors, touched, values, setFieldValue }) => (
@@ -199,7 +223,7 @@ const Address = () => {
                     </Row>
                     <Row>
                       <Col md={3}>
-                        <label htmlFor="location">District :</label>
+                        <label htmlFor="district">District :</label>
                       </Col>
                       <Col md={9}>
                         <Field name="district" as="input" type="text" />
@@ -272,31 +296,35 @@ const Address = () => {
                           <option value="Work">Work</option>
                           <option value="Other">Other</option>
                         </Field>
+                        <div className="text-end mt-3">
+                          <Button
+                            variant="secondary"
+                            onClick={handleClose}
+                            className="me-2"
+                          >
+                            Close
+                          </Button>
+
+                          <button
+                            className="register_btn"
+                            type="submit"
+                            onClick={() => setShow(true)}
+                          >
+                            save
+                          </button>
+                        </div>
                       </Col>
                     </Row>
                   </Form>
                 )}
               </Formik>
             </Modal.Body>
-            <div className="text-end mt-3">
-              <Button
-                variant="secondary"
-                onClick={handleClose}
-                className="me-2"
-              >
-                Close
-              </Button>
-
-              <Button type="submit" variant="primary">
-                Save Address
-              </Button>
-            </div>
           </Modal>
         </Col>
       </Row>
       <Row className="mt-4">
         <Col>
-          <h5>Saved Addresses</h5>
+          {/* <h5>Saved Addresses</h5> */}
 
           {addresses.length === 0 && <p>No address available.</p>}
 
