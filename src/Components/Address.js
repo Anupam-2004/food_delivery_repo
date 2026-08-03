@@ -1,364 +1,383 @@
-import React, { useState, useEffect } from "react";
-import { Col, Container, Row, Modal, Button } from "react-bootstrap";
-import { Plus } from "react-bootstrap-icons";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
-import { login, register } from "./../slices/auth";
-import { clearMessage } from "./../slices/message";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import { useSelector } from "react-redux";
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form as BootstrapForm,
+  Modal,
+  Row,
+  Spinner,
+} from "react-bootstrap";
+import { Plus } from "react-bootstrap-icons";
+import { FiEdit2, FiMail, FiMapPin, FiPhone, FiTrash2 } from "react-icons/fi";
 
-const SignupSchema = Yup.object().shape({
+const addressSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, "restaurent name must be at least minimum 2 characters")
-    .max(50, "restaurent name must not exceed 50 characters")
-    .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
-    .required(" restaurent name is Required"),
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must not exceed 50 characters")
+    .matches(/^[A-Za-z_ .]+$/, "Name can only contain letters")
+    .required("Name is required"),
   addressLine1: Yup.string()
-    .min(2, "adressLine1  must be at least minimum 2 characters")
-    .max(50, "addressLine1 must not exceed 50 characters")
-    .matches(/^[a-zA-Z0-9\s,.-]+$/, "Name can only contain letters")
-    .required("addressLine1  is Mandatory"),
+    .min(2, "Address line 1 must be at least 2 characters")
+    .max(80, "Address line 1 must not exceed 80 characters")
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, "Use letters, numbers, commas, dots and hyphens")
+    .required("Address line 1 is required"),
   addressLine2: Yup.string()
-    .min(2, "addressLine2  must be at least minimum 2 characters")
-    .max(50, "addressLine2 must not exceed 50 characters")
-    .matches(/^[a-zA-Z0-9\s,.-]+$/, "Name can only contain letters")
-    .required("addressLine2  is Mandatory"),
-  city: Yup.string()
-    .min(2, "city  must be at least minimum 2 characters")
-    .max(50, "city must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("city  is Mandatory"),
-
+    .min(2, "Address line 2 must be at least 2 characters")
+    .max(80, "Address line 2 must not exceed 80 characters")
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, "Use letters, numbers, commas, dots and hyphens")
+    .required("Address line 2 is required"),
+  city: Yup.string().required("City is required"),
   district: Yup.string()
-    .min(2, "district  must be at least minimum 2 characters")
-    .max(50, "district must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("district  is Mandatory"),
-
+    .min(2, "District must be at least 2 characters")
+    .max(50, "District must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "District can only contain letters")
+    .required("District is required"),
   state: Yup.string()
-    .min(2, "state  must be at least minimum 2 characters")
-    .max(50, "state must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("state  is Mandatory"),
+    .min(2, "State must be at least 2 characters")
+    .max(50, "State must not exceed 50 characters")
+    .matches(/^[A-Za-z1-9_ .]+$/, "State can only contain letters")
+    .required("State is required"),
   pin: Yup.string()
     .required("PIN code is required")
     .matches(/^[1-9][0-9]{5}$/, "Enter a valid 6-digit PIN code"),
-
-  mobile: Yup.string().matches(/^[6-9]\d{9}$/, "enter valid 10 digit numbers"),
-  email: Yup.string().matches(
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    "Enter a valid email address",
-  ),
-
-  addressType: Yup.string().required("Address Type is required"),
+  mobile: Yup.string()
+    .required("Mobile number is required")
+    .matches(/^[6-9]\d{9}$/, "Enter valid mobile number"),
+  email: Yup.string().required("Email is required").email("Invalid email"),
+  addressType: Yup.string().required("Address type is required"),
 });
 
+const emptyAddress = {
+  name: "",
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  district: "",
+  state: "",
+  pin: "",
+  mobile: "",
+  email: "",
+  addressType: "",
+};
+
 const Address = () => {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const { user: currentUser } = useSelector((state) => state.auth);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
-  let navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [editingAddress, setEditingAddress] = useState(null);
+  const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [successful, setSuccessful] = useState(false);
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { message } = useSelector((state) => state.message);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  // useEffect(() => {
-  //   fetchAddresses()
-  //   if (!currentUser) {
-  //     navigate("/");
-  //   } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
-  //     navigate("/");
-  //   } else {
-  //     console.log(currentUser);
-  //   }
-  // }, [currentUser, navigate]);
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        dispatch(clearMessage());
-      }, 3000);
+  const fetchAddresses = useCallback(async () => {
+    if (!currentUser?.id) return;
 
-      return () => clearTimeout(timer);
-    }
-  }, [message, dispatch]);
-  useEffect(() => {
-    dispatch(clearMessage());
-  }, [dispatch]);
-
-  const handlelogin = (formValue) => {
-    const { username, password } = formValue;
     setLoading(true);
-    console.log(formValue);
-    dispatch(Address({}))
-      .unwrap()
-      .then(() => {
-        navigate("/");
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    setError("");
+
+    try {
+      const response = await axios.get(`http://localhost:8090/api/addresses/user/${currentUser.id}`);
+      setAddresses(response.data || []);
+    } catch (err) {
+      console.error(err);
+      setError("Could not load your addresses. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, [currentUser?.id]);
+
+  useEffect(() => {
+    fetchAddresses();
+  }, [fetchAddresses]);
+
+  const closeModal = () => {
+    setShow(false);
+    setEditingAddress(null);
+    setError("");
   };
 
+  const openCreateModal = () => {
+    setEditingAddress(null);
+    setShow(true);
+  };
+
+  const openEditModal = (address) => {
+    setEditingAddress(address);
+    setShow(true);
+  };
+
+  const handleSubmit = async (values) => {
+    if (!currentUser?.id) {
+      setError("Please log in before saving an address.");
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+
+    const 
+    payload = {
+      ...values,
+      userId: currentUser.id,
+    };
+
+    try {
+      if (editingAddress?.id) {
+        const response = await axios.put(`$http://localhost:8090/api/addresses/${editingAddress.id}`, payload);
+        const updatedAddress = response.data || { ...payload, id: editingAddress.id };
+
+        setAddresses((items) =>
+          items.map((item) => (item.id === editingAddress.id ? updatedAddress : item)),
+        );
+        setSuccess("Address updated successfully.");
+      } else {
+        const response = await axios.post("http://localhost:8090/api/addresses", payload);
+        const createdAddress = response.data || payload;
+
+        setAddresses((items) => [...items, createdAddress]);
+        setSuccess("Address added successfully.");
+      }
+
+      closeModal();
+      fetchAddresses();
+    } catch (err) {
+      console.error(err);
+      setError(`Failed to ${editingAddress?.id ? "update" : "add"} address.`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteAddress = async (id) => {
+    if (!window.confirm("Delete this address?")) return;
+
+    setError("");
+
+    try {
+      await axios.delete(`http://localhost:8090/api/addresses/${id}`);
+      setAddresses((items) => items.filter((item) => item.id !== id));
+      setSelectedAddress((selected) => (selected === id ? "" : selected));
+      setSuccess("Address deleted successfully.");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to delete address.");
+    }
+  };
+
+  const initialValues = editingAddress
+    ? {
+        name: editingAddress.name || "",
+        addressLine1: editingAddress.addressLine1 || "",
+        addressLine2: editingAddress.addressLine2 || "",
+        city: editingAddress.city || "",
+        district: editingAddress.district || "",
+        state: editingAddress.state || "",
+        pin: editingAddress.pin || "",
+        mobile: editingAddress.mobile || "",
+        email: editingAddress.email || "",
+        addressType: editingAddress.addressType || "",
+      }
+    : emptyAddress;
+
   return (
-    <Container fluid>
-      <Row>
-        <Col>
-          <Button variant="primary" onClick={handleShow}>
-            <Plus />
-            Add New Address
+    <div className="address-page">
+      <Container>
+        <section className="address-hero">
+          <div>
+            <Badge className="address-hero-badge badge bg-danger">Fast checkout</Badge>
+            <h2>Delivery Addresses</h2>
+            <p>Keep your home, work and favorite delivery spots ready for the next order.</p>
+          </div>
+
+          <Button className="address-primary-btn" onClick={openCreateModal}>
+            <Plus size={20} /> Add Address
           </Button>
+        </section>
 
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Add Address</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Formik
-                initialValues={{
-                  name: "",
-                  addressLine1: "",
-                  addressLine2: "",
-                  city: "",
-                  district: "",
-                  state: "",
-                  pin: "",
-                  mobile: "",
-                  email: "",
-                  addressType: "",
-                }}
-                validationSchema={SignupSchema}
-                onSubmit={(values) => {
-                  console.log("form submitted");
-                  const data = {
-                    name: values.name,
-                    addressLine1: values.addressLine1,
-                    addressLine2: values.addressLine2,
-                    city: values.city,
-                    district: values.district,
-                    state: values.state,
-                    pin: values.pin,
-                    mobile: values.mobile,
-                    email: values.email,
-                    addressType: values.addressType,
-                    userId:currentUser.id
-                  };
-                  console.log(data);
-                  axios
-                    .post("http://localhost:8090/api/addresses", data)
-                    .then((response) => {
-                      console.log("User Successfully Registered");
-                      alert("User Successfully Registered");
-                      setShow = false;
-                    })
-                    .catch((error) => {
-                      console.log("User Registration Failed!");
-                      alert("User Registration Failed!");
-                      // handleClose();
-                    });
-                }}
-              >
-                {({ errors, touched, values, setFieldValue }) => (
-                  <Form>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="name">Name:</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="name" as="input" type="text" />
-                        {errors.name && touched.name ? (
-                          <div>{errors.name}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="addressLine1">Address line 1:</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="addressLine1" as="input" type="text" />
-                        {errors.addressLine1 && touched.addressLine1 ? (
-                          <div>{errors.addressLine1}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="addressLine2">Address line 2:</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="addressLine2" as="input" type="text" />
-                        {errors.addressLine2 && touched.addressLine2 ? (
-                          <div>{errors.addressLine2}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="city">City:</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field
-                          as="select"
-                          name="city"
-                          onChange={(e) => {
-                            const value = e.target.value;
+        {error && <div className="address-alert address-alert-error">{error}</div>}
+        {success && <div className="address-alert address-alert-success">{success}</div>}
 
-                            setFieldValue("city", value);
-                          }}
-                        >
-                          <option value="">Select City</option>
-                          <option value="Jamshedpur">Jamshedpur</option>
-                          <option value="Bokaro">Bokaro</option>
-                          <option value="Ranchi">Ranchi</option>
-                          <option value="Dhanbad">Dhanbad</option>
-                        </Field>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="district">District :</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="district" as="input" type="text" />
-                        {errors.district && touched.district ? (
-                          <div>{errors.district}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
+        {loading ? (
+          <div className="address-loader">
+            <Spinner animation="border" />
+            <span>Loading addresses...</span>
+          </div>
+        ) : addresses.length === 0 ? (
+          <div className="address-empty">
+            <FiMapPin />
+            <h4>No Address Found</h4>
+            <p>Add a delivery address to make checkout quicker.</p>
+            <Button className="address-primary-btn" onClick={openCreateModal}>
+              <Plus size={18} /> Add your first address
+            </Button>
+          </div>
+        ) : (
+          <Row className="g-4">
+            {addresses.map((address) => (
+              <Col lg={6} key={address.id}>
+                <Card
+                  className={`address-card ${
+                    selectedAddress === address.id ? "address-card-selected" : ""
+                  }`}
+                >
+                  <Card.Body>
+                    <div className="address-card-top">
+                      <BootstrapForm.Check
+                        type="radio"
+                        name="selectedAddress"
+                        aria-label={`Select ${address.name}`}
+                        checked={selectedAddress === address.id}
+                        onChange={() => setSelectedAddress(address.id)}
+                      />
+                      <Badge className="address-type  badge bg-danger">{address.addressType}</Badge>
+                    </div>
 
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="state">State:</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="state" as="input" type="text" />
-                        {errors.state && touched.state ? (
-                          <div>{errors.state}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="pin">Pincode:</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="pin" type="text" maxLength={6} />
-                        {errors.pin && touched.pin ? (
-                          <div>{errors.pin}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="mobile">Mobile No. :</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="mobile" type="text" maxLength={10} />
-                        {errors.mobile && touched.mobile ? (
-                          <div>{errors.mobile}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="email">Email :</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field name="email" as="input" type="email" />
-                        {errors.email && touched.email ? (
-                          <div>{errors.email}</div>
-                        ) : null}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={3}>
-                        <label htmlFor="addressType">Address Type :</label>
-                      </Col>
-                      <Col md={9}>
-                        <Field
-                          as="select"
-                          name="addressType"
-                          onChange={(e) => {
-                            const value = e.target.value;
+                    <h5>{address.name}</h5>
+                    <p className="address-line">
+                      {address.addressLine1}
+                      <br />
+                      {address.addressLine2}
+                    </p>
+                    <p className="address-location">
+                      <FiMapPin /> {address.city}, {address.district}, {address.state} -{" "}
+                      {address.pin}
+                    </p>
 
-                            setFieldValue("addressType", value);
-                          }}
-                        >
-                          <option value="">Select Address Type</option>
-                          <option value="Home">Home</option>
-                          <option value="Work">Work</option>
-                          <option value="Other">Other</option>
-                        </Field>
-                        <div className="text-end mt-3">
-                          <Button
-                            variant="secondary"
-                            onClick={handleClose}
-                            className="me-2"
-                          >
-                            Close
-                          </Button>
+                    <div className="address-contact">
+                      <span>
+                        <FiPhone /> {address.mobile}
+                      </span>
+                      <span>
+                        <FiMail /> {address.email}
+                      </span>
+                    </div>
 
-                          <button
-                            className="register_btn"
-                            type="submit"
-                            onClick={() => setShow(true)}
-                          >
-                            save
-                          </button>
-                        </div>
-                      </Col>
-                    </Row>
-                  </Form>
-                )}
-              </Formik>
-            </Modal.Body>
-          </Modal>
-        </Col>
-      </Row>
-      <Row className="mt-4">
-        <Col>
-          {/* <h5>Saved Addresses</h5> */}
+                    <div className="address-actions">
+                      <Button variant="light" onClick={() => openEditModal(address)}>
+                        <FiEdit2 /> Edit
+                      </Button>
+                      <Button variant="light" onClick={() => handleDeleteAddress(address.id)}>
+                        <FiTrash2 /> Delete
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
 
-          {addresses.length === 0 && <p>No address available.</p>}
+        <Modal show={show} onHide={closeModal} centered size="lg" className="address-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>{editingAddress ? "Update Address" : "Add Address"}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Formik
+              initialValues={initialValues}
+              enableReinitialize
+              validationSchema={addressSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ errors, touched, isSubmitting }) => (
+                <Form className="address-form">
+                  <Row className="g-3">
+                    <Col md={6}>
+                      <label htmlFor="name">Name</label>
+                      <Field name="name" type="text" className="form-control" />
+                      {errors.name && touched.name && <div className="field-error">{errors.name}</div>}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="addressType">Address Type</label>
+                      <Field as="select" name="addressType" className="form-control">
+                        <option value="">Select Address Type</option>
+                        <option value="Home">Home</option>
+                        <option value="Work">Work</option>
+                        <option value="Other">Other</option>
+                      </Field>
+                      {errors.addressType && touched.addressType && (
+                        <div className="field-error">{errors.addressType}</div>
+                      )}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="addressLine1">Address line 1</label>
+                      <Field name="addressLine1" type="text" className="form-control" />
+                      {errors.addressLine1 && touched.addressLine1 && (
+                        <div className="field-error">{errors.addressLine1}</div>
+                      )}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="addressLine2">Address line 2</label>
+                      <Field name="addressLine2" type="text" className="form-control" />
+                      {errors.addressLine2 && touched.addressLine2 && (
+                        <div className="field-error">{errors.addressLine2}</div>
+                      )}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="city">City</label>
+                      <Field as="select" name="city" className="form-control">
+                        <option value="">Select City</option>
+                        <option value="Jamshedpur">Jamshedpur</option>
+                        <option value="Bokaro">Bokaro</option>
+                        <option value="Ranchi">Ranchi</option>
+                        <option value="Dhanbad">Dhanbad</option>
+                      </Field>
+                      {errors.city && touched.city && <div className="field-error">{errors.city}</div>}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="district">District</label>
+                      <Field name="district" type="text" className="form-control" />
+                      {errors.district && touched.district && (
+                        <div className="field-error">{errors.district}</div>
+                      )}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="state">State</label>
+                      <Field name="state" type="text" className="form-control" />
+                      {errors.state && touched.state && <div className="field-error">{errors.state}</div>}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="pin">Pincode</label>
+                      <Field name="pin" type="text" maxLength={6} className="form-control" />
+                      {errors.pin && touched.pin && <div className="field-error">{errors.pin}</div>}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="mobile">Mobile No.</label>
+                      <Field name="mobile" type="text" maxLength={10} className="form-control" />
+                      {errors.mobile && touched.mobile && (
+                        <div className="field-error">{errors.mobile}</div>
+                      )}
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="email">Email</label>
+                      <Field name="email" type="email" className="form-control" />
+                      {errors.email && touched.email && <div className="field-error">{errors.email}</div>}
+                    </Col>
+                  </Row>
 
-          {addresses.map((address) => (
-            <div key={address.id} className="border rounded p-3 mb-3">
-              <input
-                type="radio"
-                name="selectedAddress"
-                value={address.id}
-                checked={selectedAddress === address.id}
-                onChange={() => setSelectedAddress(address.id)}
-              />
-
-              <strong className="ms-2">{address.name}</strong>
-
-              <p className="mb-1">{address.addressLine1}</p>
-
-              <p className="mb-1">{address.addressLine2}</p>
-
-              <p className="mb-1">
-                {address.city}, {address.district}
-              </p>
-
-              <p className="mb-1">
-                {address.state} - {address.pin}
-              </p>
-
-              <p>{address.mobile}</p>
-            </div>
-          ))}
-        </Col>
-      </Row>
-    </Container>
-  );
+                  <div className="address-form-actions">
+                    <Button variant="light" type="button" onClick={closeModal}>
+                      Close
+                    </Button>
+                    <Button className="address-primary-btn" type="submit" disabled={saving || isSubmitting}>
+                      {saving ? "Saving..." : editingAddress ? "Update Address" : "Save Address"}
+                    </Button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </Modal.Body>
+        </Modal>
+      </Container>
+    </div>
+);
 };
-
 export default Address;

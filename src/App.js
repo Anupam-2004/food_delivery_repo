@@ -10,6 +10,7 @@ import {
   Offcanvas,
   Dropdown,
   DropdownButton,
+  Button,
 } from "react-bootstrap";
 import { Routes, Route, Link } from "react-router-dom";
 import Landing from "./Components/Landing";
@@ -73,8 +74,11 @@ function App() {
                 </Navbar.Brand>
               </Col>
               <Col md={6}>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
+                <Navbar.Toggle
+                  aria-controls="offcanvasNavbar"
+                  onClick={handleShow}
+                />
+                {/* <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="mx-auto">
                     <Nav.Link as={Link} to={"/"}>
                       <CiHome />
@@ -95,14 +99,39 @@ function App() {
                       Offer
                     </Nav.Link>
                   </Nav>
-                </Navbar.Collapse>
+                </Navbar.Collapse> */}
+                <Navbar.Offcanvas id="offcanvasNavbar" placement="start">
+                  <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Foodie</Offcanvas.Title>
+                  </Offcanvas.Header>
+
+                  <Offcanvas.Body>
+                    <Nav className="justify-content-end flex-grow-1">
+                      <Nav.Link href="/">
+                        {" "}
+                        <CiHome /> Home
+                      </Nav.Link>
+                       <Nav.Link as={Link} to={"/menu"}>
+                      <BiFoodMenu /> Menu
+                    </Nav.Link>
+                      <Nav.Link href="/restaurants">
+                        {" "}
+                        <IoRestaurant /> Restaurants
+                      </Nav.Link>
+                      <Nav.Link href="/offers">
+                        {" "}
+                        <BiSolidOffer /> Offers
+                      </Nav.Link>
+                     <Nav.Link as={Link} to={"/cart"}>
+                      <PiShoppingCartSimpleThin /> Cart
+                    </Nav.Link>
+                    </Nav>
+                  </Offcanvas.Body>
+                </Navbar.Offcanvas>
               </Col>
               <Col md={3} className="text-end">
                 {currentUser ? (
                   <div>
-                    {/* <span className="me-2">
-                      Welcome {currentUser.firstName}
-                    </span>{" "} */}
                     <DropdownButton
                       id="dropdown-basic-button"
                       title={currentUser.firstName}
@@ -135,9 +164,7 @@ function App() {
                       Log In
                     </button>
                     <Offcanvas show={show} onHide={handleClose} placement="end">
-                      <Offcanvas.Header closeButton>
-                      
-                      </Offcanvas.Header>
+                      <Offcanvas.Header closeButton></Offcanvas.Header>
                       <Offcanvas.Body>
                         <Login />
                       </Offcanvas.Body>
@@ -165,7 +192,7 @@ function App() {
         {/* <Route path="/About" element={<About />} /> */}
         <Route path="/menu" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
-      <Route path="/AddProduct" element={<AddProduct />} />
+        <Route path="/AddProduct" element={<AddProduct />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Orders" element={<Orders />} />
@@ -175,8 +202,8 @@ function App() {
         <Route path="/OwnerOrders" element={<OwnerOrders />} />
         <Route path="/Users" element={<Users />} />
         <Route path="/Account" element={<Account />} />
-        <Route path="/cart" element={<AddCart/>} />
-        <Route path="/Address" element={<Address/>}/>
+        <Route path="/cart" element={<AddCart />} />
+        <Route path="/Address" element={<Address />} />
       </Routes>
     </div>
   );
