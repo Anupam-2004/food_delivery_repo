@@ -107,7 +107,7 @@ const Address = () => {
       getCart();
     }
   }, [currentUser]);
-  // Get Address
+
   const getAddresses = async () => {
     try {
       const response = await axios.get(
@@ -126,25 +126,24 @@ const Address = () => {
     }
   }, [currentUser]);
 
-  // Open Modal
+  
   const handleShow = () => {
     setEditAddress(null);
     setShow(true);
   };
 
-  // Close Modal
   const handleClose = () => {
     setShow(false);
     setEditAddress(null);
   };
 
-  // Edit
+  
   const handleEdit = (item) => {
     setEditAddress(item);
     setShow(true);
   };
 
-  // Delete
+
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this address?")) {
       return;
@@ -159,7 +158,6 @@ const Address = () => {
     }
   };
 
-  // Save Address
   const handleSubmit = async (values) => {
     const data = {
       ...values,
@@ -263,7 +261,7 @@ const Address = () => {
                 <h5>No Address Found</h5>
 
                 <Button className="mt-3" onClick={handleShow}>
-                  Add Address
+                 + Add Address
                 </Button>
               </Card.Body>
             </Card>
@@ -330,7 +328,7 @@ const Address = () => {
           ))
         )}
       </Row>
-      {/* Modal */}
+    
 
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>

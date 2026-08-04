@@ -44,14 +44,15 @@ const ViewRestaurent = () => {
       .catch((error) => {
         console.log(error);
       })
-    .finally(() => {
-      setLoading(false);
-    });
+      .finally(() => {
+        setLoading(false);
+      });
 
     axios
       .get(`http://localhost:8090/api/products/restaurant/${restaurentId}`)
       .then((response) => {
         setFoods(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -67,11 +68,12 @@ const ViewRestaurent = () => {
             productId: food.id,
             quantity: 1,
             price: food.price,
+            restaurantId: food.restaurentId._id,
           },
         ],
         active: true,
       };
-      console.log("Food:", food);
+      console.log("Food:", food.restaurentId._id);
       console.log("Request Data:", data);
 
       const response = await axios.post(
@@ -104,11 +106,7 @@ const ViewRestaurent = () => {
         <Col>
           <div className="restaurant_banner">
             <img
-              src={
-                // restaurent?.images?.length?
-                   `http://localhost:8090/upload/${restaurent.images[0]}`
-              //     : "/REStaurent/an-unique-experiance.jpg"
-              }
+              src={`http://localhost:8090/upload/${restaurent.images[0]}`}
               alt={restaurent?.restaurantName}
               className="restaurant_banner_img"
             />
@@ -120,8 +118,8 @@ const ViewRestaurent = () => {
                     <img
                       src={
                         // restaurent.images.length > 0 ?
-                           `http://localhost:8090/upload/${restaurent.images[0]}`
-                          // : "/an-unique-experiance.jpg"
+                        `http://localhost:8090/upload/${restaurent.images[0]}`
+                        // : "/an-unique-experiance.jpg"
                       }
                       alt="Logo"
                       className="restaurant_logo"
@@ -195,8 +193,8 @@ const ViewRestaurent = () => {
                   <Card.Img
                     src={
                       // food.images && food.images.length ?
-                         `http://localhost:8090/upload/${food.images[0]}`
-                        // : "/REStaurent/an-unique-experiance.jpg"
+                      `http://localhost:8090/upload/${food.images[0]}`
+                      // : "/REStaurent/an-unique-experiance.jpg"
                     }
                   />
 
@@ -211,7 +209,7 @@ const ViewRestaurent = () => {
 
                 <Card.Body>
                   <div className="d-flex justify-content-between">
-                    <Card.Title>{food.foodName}</Card.Title>
+                    <Card.Title>{food.foodName} </Card.Title>
 
                     <h5>₹{food.price}</h5>
                   </div>

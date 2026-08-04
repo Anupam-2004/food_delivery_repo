@@ -43,6 +43,7 @@ import { IoRestaurant } from "react-icons/io5";
 import { CiHome } from "react-icons/ci";
 import { BiFoodMenu } from "react-icons/bi";
 import Address from "./Components/Address";
+import RestaurentOrder from "./Components/RestaurentOrder";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -114,7 +115,7 @@ function App() {
                        <Nav.Link as={Link} to={"/menu"}>
                       <BiFoodMenu /> Menu
                     </Nav.Link>
-                      <Nav.Link href="/restaurants">
+                      <Nav.Link href="/Restaurents">
                         {" "}
                         <IoRestaurant /> Restaurants
                       </Nav.Link>
@@ -180,7 +181,7 @@ function App() {
       <Routes>
         <Route path="" element={<Landing />} />
         <Route path="/landing" element={<Landing />} />
-        <Route path="/restaurents" element={<Restaurents />} />
+        <Route path="/Restaurents" element={<Restaurents />} />
         <Route path="/AddRestaurent" element={<AddRestaurent />} />
         <Route path="/AdminRestaurents" element={<AdminRestaurents />} />
         <Route
@@ -204,6 +205,7 @@ function App() {
         <Route path="/Account" element={<Account />} />
         <Route path="/cart" element={<AddCart />} />
         <Route path="/Address" element={<Address />} />
+        <Route path="/RestaurentOrder" element={<RestaurentOrder/>}/>
       </Routes>
     </div>
   );
