@@ -75,7 +75,7 @@ border-0 shadow-lg mb-4 .cart-card:hover {
 .remove-btn {
 position: absolute;
 top: 0%;
-  right: 1%;
+  right: 2%;
   width: 38px;
   height: 38px;
   border-radius: 50%;
