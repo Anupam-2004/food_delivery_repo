@@ -185,7 +185,7 @@ const AddCart = () => {
             <h3 className="fw-bold text-success">₹ {total}</h3>
           </div>
 
-          <Button variant="success" size="lg" className="w-100 fw-bold">
+          <Button variant="success" size="lg" className="w-100 fw-bold" href="/A;.ddress">
             Proceed To Checkout
           </Button>
         </Card.Body>

@@ -1,0 +1,139 @@
+/* Page */
+body {
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* Heading */
+h2 {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Card */
+.card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body h5 {
+  color: #0d6efd;
+  margin-bottom: 10px;
+}
+
+.card-body p {
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 15px;
+}
+
+/* Badge */
+.badge {
+  font-size: 13px;
+  padding: 6px 10px;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 5px;
+}
+
+.btn-warning {
+  color: #fff;
+}
+
+.btn-danger {
+  margin-left: 10px;
+}
+
+/* Modal */
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.modal-title {
+  font-size: 20px;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+/* Form */
+label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+.text-danger {
+  font-size: 13px;
+}
+
+/* Radio */
+.form-check {
+  margin-bottom: 10px;
+}
+
+/* Empty Card */
+.card.text-center {
+  padding: 30px;
+}
+
+/* Buttons at Bottom */
+.text-end {
+  margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .btn-danger {
+    margin-left: 0;
+  }
+
+  .text-end {
+    text-align: center !important;
+  }
+}
+
+/* Address Card */
+.address-card {
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.address-card:hover {
+  border-color: #ff9800;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* Selected Address */
+.selected-card {
+  border: 2px solid #ff6b00;
+  background-color: #fff8f2;
+  box-shadow: 0 4px 15px rgba(255,107,0,0.25);
+}
