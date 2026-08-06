@@ -27,6 +27,7 @@ const ViewRestaurent = () => {
   const [restaurent, setRestaurent] = useState({
     images: [],
   });
+  // const{user:currentUser}=useSelector((state)=>state.auth);
 
   const [foods, setFoods] = useState([]);
   const [cart, setCart] = useState([]);
@@ -36,10 +37,12 @@ const ViewRestaurent = () => {
     axios
       .get(`http://localhost:8090/api/restaurents/${restaurentId}`)
       .then((response) => {
-        setRestaurent({
-          ...response.data,
-          images: response.data.images || [],
-        });
+        // setRestaurent({
+        //   ...response.data,
+        //   images: response.data.images || [],
+        // });
+        setRestaurent(response.data);
+        console.log("Restaurant Data:", response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -58,11 +61,12 @@ const ViewRestaurent = () => {
         console.log(error);
       });
   }, [restaurentId]);
-
+  console.log("Current User:", currentUser);
   const AddToCart = async (food) => {
     try {
       const data = {
-        userId: currentUser._id || currentUser.id,
+        userId: currentUser.id,
+
         items: [
           {
             productId: food.id,
@@ -74,21 +78,16 @@ const ViewRestaurent = () => {
         active: true,
       };
       console.log("Food:", food.restaurentId._id);
-      console.log("Request Data:", data);
+      console.log(data);
 
-      const response = await axios.post(
-        "http://localhost:8090/api/carts",
-        data,
-      );
-
+      const response = await axios.post("http://localhost:8090/api/carts", data)
+        
       console.log(response.data);
-
       alert("Item added to cart successfully!");
-
       setCart(response.data.items);
     } catch (error) {
-      console.log(error.response?.data);
-      alert(error.response?.data?.message || "Failed to add item.");
+      console.log(error);
+      alert("Failed to add item.");
     }
   };
 
@@ -116,11 +115,7 @@ const ViewRestaurent = () => {
                 <Col>
                   <div className="d-flex align-items-center">
                     <img
-                      src={
-                        // restaurent.images.length > 0 ?
-                        `http://localhost:8090/upload/${restaurent.images[0]}`
-                        // : "/an-unique-experiance.jpg"
-                      }
+                      src={`http://localhost:8090/upload/${restaurent.images[0]}`}
                       alt="Logo"
                       className="restaurant_logo"
                     />

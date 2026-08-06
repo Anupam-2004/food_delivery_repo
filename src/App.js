@@ -79,28 +79,7 @@ function App() {
                   aria-controls="offcanvasNavbar"
                   onClick={handleShow}
                 />
-                {/* <Navbar.Collapse id="basic-navbar-nav">
-                  <Nav className="mx-auto">
-                    <Nav.Link as={Link} to={"/"}>
-                      <CiHome />
-                      Home
-                    </Nav.Link>
-                    <Nav.Link as={Link} to={"/menu"}>
-                      <BiFoodMenu /> Menu
-                    </Nav.Link>
-                    <Nav.Link as={Link} to={"/restaurents"}>
-                      <IoRestaurant /> Restaurents
-                    </Nav.Link>
-                    <Nav.Link as={Link} to={"/cart"}>
-                      <PiShoppingCartSimpleThin /> Cart
-                    </Nav.Link>
-
-                    <Nav.Link href="#offers">
-                      <BiSolidOffer />
-                      Offer
-                    </Nav.Link>
-                  </Nav>
-                </Navbar.Collapse> */}
+              
                 <Navbar.Offcanvas id="offcanvasNavbar" placement="start">
                   <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Foodie</Offcanvas.Title>
@@ -137,12 +116,12 @@ function App() {
                       id="dropdown-basic-button"
                       title={currentUser.firstName}
                     >
-                      {currentUser.roles[0] == "ROLE_ADMIN" ? (
+                      {currentUser.roles[0] === "ROLE_ADMIN" ? (
                         <Dropdown.Item as={Link} to={"/Dashboard"}>
                           Dashboard
                         </Dropdown.Item>
                       ) : (
-                        ""
+                        "  "
                       )}
                       <Dropdown.Item href="#/action-1">Account</Dropdown.Item>
 

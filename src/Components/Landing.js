@@ -339,7 +339,7 @@ const Landing = () => {
         >
           {foods.map((food, index) => {
             return (
-              <Col>
+              <Col key={index}>
                 <Card className="border-0">
                   <Card.Img variant="top" src={food.image} />
                   <Card.Body className="food_name text-center" >
@@ -373,7 +373,7 @@ const Landing = () => {
         >
           {products.map((product, index) => {
             return (
-              <Col>
+              <Col key={index}>
                 <Card className="border-0">
                   <Card.Img variant="top" src={product.image} />
                   <Card.Body className="food_name text-center">

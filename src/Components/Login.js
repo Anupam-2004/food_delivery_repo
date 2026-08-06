@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { login, register } from "./../slices/auth";
 import { clearMessage } from "./../slices/message";
-import { Col, Container, Row, Offcanvas, Button } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -60,9 +60,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-  const [successful, setSuccessful] = useState(false);
+  // const [successful, setSuccessful] = useState(false);
 
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  // const { isLoggedIn } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
   useEffect(() => {
     if (message) {
@@ -127,7 +127,7 @@ const Login = () => {
                     .catch((error) => {
                       console.log("User Registration Failed!");
                       alert("User Registration Failed!");
-                      // handleClose();
+                      handleClose();
                     });
                 }}
               >
