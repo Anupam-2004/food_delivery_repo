@@ -72,7 +72,7 @@ const ViewRestaurent = () => {
             productId: food.id,
             quantity: 1,
             price: food.price,
-            restaurantId: food.restaurentId._id,
+            restaurentId: food.restaurentId._id,
           },
         ],
         active: true,
@@ -80,13 +80,19 @@ const ViewRestaurent = () => {
       console.log("Food:", food.restaurentId._id);
       console.log(data);
 
-      const response = await axios.post("http://localhost:8090/api/carts", data)
-        
+      const response = await axios.post(
+        "http://localhost:8090/api/carts",
+        data,
+      );
+
       console.log(response.data);
       alert("Item added to cart successfully!");
       setCart(response.data.items);
     } catch (error) {
       console.log(error);
+      console.log("Axios Error:", error);
+      console.log("Backend Error:", error.response?.data);
+
       alert("Failed to add item.");
     }
   };

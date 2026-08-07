@@ -45,6 +45,7 @@ const AddCart = () => {
       })
       .catch((error) => {
         console.log(error);
+        console.log("Backend Error:", error.response?.data);
       });
     console.log("Decrease:", productId);
   };
@@ -116,7 +117,9 @@ const AddCart = () => {
               <Col md={3}>
                 <h4 className="bold mb-2">{item.productDetails.foodName}</h4>
 
-                <p className="text-muted mb-0">{item.productDetails.description}</p>
+                <p className="text-muted mb-0">
+                  {item.productDetails.description}
+                </p>
               </Col>
 
               <Col md={2} className="text-center">
@@ -185,7 +188,12 @@ const AddCart = () => {
             <h3 className="fw-bold text-success">₹ {total}</h3>
           </div>
 
-          <Button variant="success" size="lg" className="w-100 fw-bold" href="/Address">
+          <Button
+            variant="success"
+            size="lg"
+            className="w-100 fw-bold"
+            href="/Address"
+          >
             Proceed To Checkout
           </Button>
         </Card.Body>

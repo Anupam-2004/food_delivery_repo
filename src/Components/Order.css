@@ -1,0 +1,810 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8f9fa;
+  color: #20242b;
+}
+
+.order-page {
+  min-height: 100vh;
+  background: white;
+}
+
+/* ================= NAVBAR ================= */
+
+.top-navbar {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 5%;
+  gap: 35px;
+  border-bottom: 1px solid #eee;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ff5a00;
+  white-space: nowrap;
+}
+
+.logo span {
+  margin-left: 5px;
+}
+
+.delivery-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #eee;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.delivery-location div {
+  display: flex;
+  flex-direction: column;
+}
+
+.delivery-location small {
+  color: #888;
+  font-size: 9px;
+}
+
+.search-box {
+  width: 250px;
+  padding: 10px 15px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  color: #888;
+  font-size: 12px;
+}
+
+.nav-icons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  font-size: 16px;
+}
+
+.nav-icons span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nav-icons small {
+  font-size: 9px;
+  margin-top: 3px;
+}
+
+.nav-icons .user {
+  flex-direction: row;
+  gap: 7px;
+  font-size: 12px;
+}
+
+/* ================= MENU ================= */
+
+.menu-bar {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 65px;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
+
+.menu-bar span {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.active-menu {
+  color: #ff5a00;
+  border-bottom: 2px solid #ff5a00;
+}
+
+/* ================= SUCCESS PAGE ================= */
+
+.success-container {
+  max-width: 700px;
+  text-align: center;
+  padding-top: 45px;
+  padding-bottom: 50px;
+}
+
+.success-icon {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: #20b45b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin: auto;
+}
+
+.success-container h1 {
+  margin-top: 20px;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.success-text {
+  color: #68707b;
+  line-height: 1.6;
+}
+
+/* Delivery Card */
+
+.delivery-card {
+  margin-top: 25px;
+  padding: 18px;
+  border: 1px solid #cdeed9;
+  background: #f3fff7;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.delivery-time {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-right: 1px solid #c9dfd0;
+}
+
+.delivery-time svg {
+  font-size: 25px;
+  color: #20b45b;
+}
+
+.delivery-card small {
+  color: #666;
+}
+
+.delivery-card h3 {
+  color: #16a34a;
+  font-size: 18px;
+  margin: 4px 0;
+}
+
+.order-id {
+  padding-left: 30px;
+}
+
+.order-id svg {
+  font-size: 13px;
+  margin-left: 5px;
+}
+
+/* Order details */
+
+.order-details {
+  margin-top: 18px;
+  padding: 18px 20px;
+  text-align: left;
+  border-radius: 8px;
+}
+
+.restaurant-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.restaurant-row img {
+  width: 55px;
+  height: 55px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.restaurant-row h5 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.restaurant-row p {
+  margin: 5px 0;
+  font-size: 11px;
+  color: #777;
+}
+
+.restaurant-row .total {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.total strong {
+  color: #ff5a00;
+}
+
+/* ================= STEPS ================= */
+
+.next-section {
+  text-align: left;
+  margin-top: 30px;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.step {
+  text-align: center;
+  width: 24%;
+  position: relative;
+}
+
+.step::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  background: #ddd;
+  width: 100%;
+  top: 22px;
+  left: 50%;
+  z-index: 0;
+}
+
+.step:last-child::after {
+  display: none;
+}
+
+.step-icon {
+  position: relative;
+  z-index: 1;
+  margin: auto;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background: #f4f5f7;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+}
+
+.step.active .step-icon {
+  background: #ff5a00;
+  color: white;
+  border-color: #ff5a00;
+}
+
+.step b {
+  display: block;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.step p {
+  font-size: 10px;
+  color: #777;
+}
+
+/* Buttons */
+
+.success-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.track-btn {
+  background: #ff5a00 !important;
+  border: none !important;
+  width: 200px;
+  padding: 12px;
+}
+
+.shopping-btn {
+  background: white !important;
+  color: #222 !important;
+  border: 1px solid #ddd !important;
+  width: 200px;
+}
+
+/* Bottom Features */
+
+.bottom-features {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #eee;
+  padding: 25px;
+  background: #fafafa;
+}
+
+.bottom-features div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bottom-features span {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  color: #666;
+}
+
+.bottom-features b {
+  color: #333;
+}
+
+/* ================= TRACK PAGE ================= */
+
+.track-container {
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
+.track-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.track-header h1 {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.track-header p {
+  color: #666;
+  font-size: 13px;
+}
+
+.copy-icon {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.support {
+  color: #ff5a00;
+}
+
+/* ================= STATUS ================= */
+
+.status-card {
+  padding: 20px;
+  min-height: 485px;
+}
+
+.status-card h5 {
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 15px;
+  min-height: 90px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 22px;
+  height: 80px;
+  width: 2px;
+  background: #ddd;
+}
+
+.timeline-item:last-child::before {
+  display: none;
+}
+
+.circle {
+  width: 21px;
+  height: 21px;
+  min-width: 21px;
+  border-radius: 50%;
+  background: #20b45b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  z-index: 1;
+}
+
+.timeline-item.current .circle {
+  background: #ff5a00;
+}
+
+.circle.empty {
+  background: white;
+  border: 2px solid #ddd;
+}
+
+.timeline-item b {
+  font-size: 11px;
+  display: block;
+}
+
+.timeline-item small {
+  display: block;
+  color: #777;
+  margin-top: 5px;
+  font-size: 9px;
+}
+
+.timeline-item p {
+  color: #777;
+  font-size: 9px;
+  margin-top: 5px;
+}
+
+/* ================= MAP ================= */
+
+.map-box {
+  height: 485px;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+
+  background:
+    linear-gradient(120deg, #edf1f2, #f8f8f8);
+  border: 1px solid #eee;
+}
+
+/* Fake roads */
+
+.map-box::before {
+  content: "";
+  position: absolute;
+  width: 150%;
+  height: 100%;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 35px,
+      rgba(200, 205, 210, 0.4) 36px,
+      transparent 38px
+    );
+}
+
+/* Route */
+
+.route-line {
+  position: absolute;
+  width: 60%;
+  height: 3px;
+  background: #19b65a;
+  top: 55%;
+  left: 25%;
+  transform: rotate(20deg);
+}
+
+/* Markers */
+
+.restaurant-marker {
+  position: absolute;
+  top: 80px;
+  left: 70px;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 3px 15px #bbb;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.restaurant-marker small {
+  display: block;
+  color: #777;
+  font-size: 9px;
+}
+
+.rider-marker {
+  position: absolute;
+  top: 280px;
+  left: 58%;
+  font-size: 35px;
+  z-index: 3;
+}
+
+.home-marker {
+  position: absolute;
+  right: 100px;
+  bottom: 100px;
+  font-size: 35px;
+  z-index: 3;
+}
+
+.location-box {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 3px 15px #ccc;
+  font-size: 11px;
+  z-index: 3;
+}
+
+.location-box span {
+  color: #16a34a;
+}
+
+.map-controls {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: white;
+  padding: 10px;
+  border-radius: 7px;
+  text-align: center;
+  z-index: 3;
+}
+
+.map-controls hr {
+  margin: 8px -10px;
+  border: 0;
+  border-top: 1px solid #ddd;
+}
+
+/* ================= BOTTOM CARDS ================= */
+
+.bottom-cards {
+  margin-top: 15px;
+}
+
+.partner-card,
+.summary-card {
+  padding: 20px;
+  min-height: 245px;
+}
+
+.partner-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.partner-image {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
+
+.partner-info h5 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.partner-info p {
+  font-size: 10px;
+  color: #777;
+}
+
+.rating {
+  color: #16a34a;
+  margin-left: 10px;
+  font-size: 11px;
+}
+
+.vehicle {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.vehicle-number {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.partner-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.partner-buttons button {
+  width: 50%;
+  background: white;
+  color: #ff5a00;
+  border: 1px solid #ff5a00;
+}
+
+/* Summary */
+
+.summary-product {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary-product img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.summary-product div {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.summary-product small {
+  color: #777;
+  font-size: 10px;
+}
+
+.summary-product strong {
+  font-size: 12px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin: 8px 0;
+}
+
+.discount {
+  color: #16a34a;
+}
+
+.final-price {
+  display: flex;
+  justify-content: space-between;
+}
+
+.final-price strong {
+  color: #ff5a00;
+}
+
+/* ================= TRACKING BOTTOM ================= */
+
+.tracking-bottom {
+  border-top: 1px solid #eee;
+  padding: 15px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cancel-btn {
+  background: white !important;
+  color: red !important;
+  border: 1px solid #ffcccc !important;
+}
+
+.live-delivery {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.live-delivery span {
+  display: flex;
+  flex-direction: column;
+  font-size: 10px;
+  color: #777;
+}
+
+.live-delivery span b {
+  color: #ff5a00;
+  font-size: 14px;
+  text-align: right;
+}
+
+.live-delivery strong {
+  color: #16a34a;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 992px) {
+
+  .top-navbar {
+    gap: 15px;
+  }
+
+  .search-box {
+    display: none;
+  }
+
+  .menu-bar {
+    gap: 25px;
+  }
+
+  .status-card {
+    margin-bottom: 15px;
+  }
+
+  .map-box {
+    height: 400px;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .top-navbar {
+    height: auto;
+    padding: 15px;
+    flex-wrap: wrap;
+  }
+
+  .delivery-location {
+    display: none;
+  }
+
+  .nav-icons {
+    gap: 10px;
+  }
+
+  .menu-bar {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-left: 15px;
+  }
+
+  .steps {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .step {
+    width: 100%;
+  }
+
+  .step::after {
+    display: none;
+  }
+
+  .bottom-features {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .track-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .bottom-cards {
+    gap: 15px;
+  }
+
+}

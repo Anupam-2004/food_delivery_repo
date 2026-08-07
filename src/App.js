@@ -18,7 +18,7 @@ import Restaurents from "./Components/Restaurents";
 import AddRestaurent from "./Components/AddRestaurent";
 import AdminRestaurents from "./Components/AdminRestaurents";
 import ViewRestaurent from "./Components/ViewRestaurent";
-import FoodCategory from "./Components/FoodCategory";
+import FoodCategory from "./Components/Categories";
 import AddfoodCategory from "./Components/AddfoodCategory";
 import Foods from "./Components/Foods";
 import Register from "./Components/Register";
@@ -44,6 +44,8 @@ import { CiHome } from "react-icons/ci";
 import { BiFoodMenu } from "react-icons/bi";
 import Address from "./Components/Address";
 import RestaurentOrder from "./Components/RestaurentOrder";
+import TrackOrder from "./Components/TrackOrder";
+import Categories from "./Components/Categories";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -58,6 +60,13 @@ function App() {
       console.log(currentUser);
     }
   }, [currentUser]);
+    useEffect(() => {
+      if (!currentUser) {
+        navigate("/");
+      } else {
+        console.log(currentUser);
+      }
+    }, [currentUser, navigate]);
   const handleLogout = () => {
     dispatch(logout());
     window.location.reload();
@@ -91,8 +100,8 @@ function App() {
                         {" "}
                         <CiHome /> Home
                       </Nav.Link>
-                       <Nav.Link as={Link} to={"/menu"}>
-                      <BiFoodMenu /> Menu
+                       <Nav.Link as={Link} to={"/Category"}>
+                      <BiFoodMenu /> Categories
                     </Nav.Link>
                       <Nav.Link href="/Restaurents">
                         {" "}
@@ -167,7 +176,7 @@ function App() {
           path="/ViewRestaurent/:restaurentId"
           element={<ViewRestaurent />}
         />
-        <Route path="/FoodCategory" element={<FoodCategory />} />
+        <Route path="/Category" element={<Categories />} />
         <Route path="/AddfoodCategory" element={<AddfoodCategory />} />
         {/* <Route path="/About" element={<About />} /> */}
         <Route path="/menu" element={<Foods />} />
@@ -185,6 +194,7 @@ function App() {
         <Route path="/cart" element={<AddCart />} />
         <Route path="/Address" element={<Address />} />
         <Route path="/RestaurentOrder" element={<RestaurentOrder/>}/>
+        <Route path="/track-order" element={<TrackOrder />} />
       </Routes>
     </div>
   );
