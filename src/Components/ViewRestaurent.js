@@ -66,7 +66,8 @@ const ViewRestaurent = () => {
     try {
       const data = {
         userId: currentUser.id,
-
+          // addressId: selectedAddress,
+      active: true,
         items: [
           {
             productId: food.id,
@@ -82,7 +83,7 @@ const ViewRestaurent = () => {
 
       const response = await axios.post(
         "http://localhost:8090/api/carts",
-        data,
+        data
       );
 
       console.log(response.data);

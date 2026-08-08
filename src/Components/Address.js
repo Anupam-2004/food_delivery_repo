@@ -60,7 +60,6 @@ const addressSchema = Yup.object().shape({
     "Enter a valid email address",
   ),
   
-
   addressType: Yup.string().required("Required"),
 
 });
@@ -199,6 +198,7 @@ const Address = () => {
 
       items: cart.items.map((item) => ({
         productId: item.productId,
+        restaurentId: item.restaurentId,
         quantity: item.quantity,
         price: item.price,
       })),

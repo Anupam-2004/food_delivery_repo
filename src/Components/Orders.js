@@ -24,7 +24,7 @@ function OrderSuccess() {
 
       <Container className="success-container">
 
-        {/* Success Icon */}
+       
         <div className="success-icon">
           <FaCheck />
         </div>
@@ -37,7 +37,7 @@ function OrderSuccess() {
           and it will be delivered soon.
         </p>
 
-        {/* Delivery Time */}
+      
         <Card className="delivery-card">
           <Row>
             <Col md={6} className="delivery-time">
@@ -59,7 +59,7 @@ function OrderSuccess() {
           </Row>
         </Card>
 
-        {/* Order Details */}
+        
         <Card className="order-details">
 
           <h5>Order Details</h5>

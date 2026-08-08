@@ -141,6 +141,7 @@ const AddRestaurent = () => {
   }, [currentUser, navigate]);
   const [subCategories, setSubCategories] = useState([]);
   //  const [subCategories, setSubCategories] = useState(categories["Veg"]);
+  
 
   return (
     <Container>
@@ -184,7 +185,6 @@ const AddRestaurent = () => {
                     formData.append(key, values[key]);
                   }
                 });
-
                 values.images.forEach((file) => {
                   formData.append("images", file);
                 });
@@ -206,11 +206,11 @@ const AddRestaurent = () => {
                   .post("http://localhost:8090/api/auth/signup", data)
                   .then((response) => {
                     console.log("User Successfully Registered");
-                    // alert("User Successfully Registered");
+                    alert("User Successfully Registered");
                   })
                   .catch((error) => {
                     console.log("User Registration Failed!");
-                    // alert("User Registration Failed!");
+                    alert("User Registration Failed!");
                     // handleClose();
                   });
 
