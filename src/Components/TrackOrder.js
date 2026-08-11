@@ -17,46 +17,6 @@ import "./Order.css";
 function TrackOrder() {
   return (
     <div className="order-page">
-
-      {/* Navbar */}
-      <div className="top-navbar">
-
-        <div className="logo">
-          🍴 <span>Foodie</span>
-        </div>
-
-        <div className="delivery-location">
-          📍
-          <div>
-            <small>Deliver to</small>
-            <b>Home - 123, Green Street, Lucknow</b>
-          </div>
-          ▼
-        </div>
-
-        <div className="search-box">
-          🔍 Search for restaurant or food
-        </div>
-
-        <div className="nav-icons">
-          <span>♧<small>Offers</small></span>
-          <span>❔<small>Help</small></span>
-          <span>🛒<small>Cart</small></span>
-          <span className="user">👨🏻 Hi, Anupam ▼</span>
-        </div>
-
-      </div>
-
-      {/* Menu */}
-      <div className="menu-bar">
-        <span>Home</span>
-        <span>Restaurants</span>
-        <span>Categories</span>
-        <span>Top Rated</span>
-        <span>Offers</span>
-        <span className="active-menu">Track Order</span>
-      </div>
-
       <Container className="track-container">
 
         {/* Header */}

@@ -135,7 +135,12 @@ body {
   font-size: 30px;
   margin: auto;
 }
-
+.order-img {
+  width: 150px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 15px;
+}
 .success-container h1 {
   margin-top: 20px;
   font-size: 25px;

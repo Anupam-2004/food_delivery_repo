@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -8,25 +7,33 @@ import {
   Table,
   Modal,
   Button,
+  Accordion,
 } from "react-bootstrap";
 import axios from "axios";
 
 import Sidebar from "./Sidebar";
-import { Link } from "react-router";
-import { FaFilePdf } from "react-icons/fa";
-import { FaEye } from "react-icons/fa";
+import { FaFilePdf, FaEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { useEffect } from "react";
 
 const AdminOrders = () => {
-  const [orders, setOrders] = useState(false);
+  // Orders ke liye array
+  const [orders, setOrders] = useState([]);
 
-  const handleClose = () => setOrders(false);
-  const handleShow = () => setOrders(true);
- useEffect(() => {
+  // Modal ke liye
+  const [showModal, setShowModal] = useState(false);
+
+  // Jo order select hua hai
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const navigate = useNavigate();
+
+  const { user: currentUser } = useSelector((state) => state.auth);
+  console.log("Current User:", currentUser); // Debugging line
+  // Orders API
+  useEffect(() => {
     axios
-      .get("http://localhost:8090/api/restaurents")
+      .get("http://localhost:8090/api/orders")
       .then((response) => {
         console.log(response.data);
         setOrders(response.data);
@@ -37,36 +44,47 @@ const AdminOrders = () => {
         alert("Failed to fetch orders");
       });
   }, []);
-  let navigate = useNavigate();
-  const { user: currentUser } = useSelector((state) => state.auth);
+
+  // Admin authentication
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
     } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
       navigate("/");
-    } else {
-      console.log(currentUser);
     }
   }, [currentUser, navigate]);
+
+  // Eye button click
+  const handleShow = (order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
+  // Modal close
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedOrder(null);
+  };
+
   return (
     <Container>
       <Row>
         <Col md={1}>
           <Sidebar />
         </Col>
+
         <Col md={11}>
-          <h1>Orders(Admin)</h1>
+          <h1>Orders (Admin)</h1>
         </Col>
       </Row>
+
       <Row>
         <Col>
-          <Col md={11}>
-            <Breadcrumb>
-              <Breadcrumb.Item href="/Dashboard">Dashboard</Breadcrumb.Item>
+          <Breadcrumb>
+            <Breadcrumb.Item href="/Dashboard">Dashboard</Breadcrumb.Item>
 
-              <Breadcrumb.Item active>Orders(Admin)</Breadcrumb.Item>
-            </Breadcrumb>
-          </Col>
+            <Breadcrumb.Item active>Orders (Admin)</Breadcrumb.Item>
+          </Breadcrumb>
         </Col>
       </Row>
 
@@ -76,12 +94,11 @@ const AdminOrders = () => {
             <thead>
               <tr className="owner-order-table-header">
                 <th>#</th>
-                <th>Restaurent Name</th>
+                <th>Restaurant Name</th>
                 <th>Customer Name</th>
                 <th>Items</th>
-
                 <th>Total Price</th>
-                <th>Icon</th>
+                <th>View</th>
                 <th>Invoice</th>
               </tr>
             </thead>
@@ -89,46 +106,43 @@ const AdminOrders = () => {
               {orders.map((order, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{order.restaurentName}</td>
-                  <td>{order.CustomerName}</td>
 
-                  {/* <td>{order.totalPrice}</td> */}
                   <td>
-                    <ul key={index}>
-                      {order.items.map((item, index) => {
-                        return (
-                          <li>
-                            {item.itemName},₹ {item.price}
-                          </li>
-                        );
-                      })}
+                    {order.items[0]?.restaurentId?.restaurentName ||
+                      "Restaurant"}
+                  </td>
+
+                  <td>
+                    {order.userId?.firstName || ""}{" "}
+                    {order.userId?.lastName || ""}
+                  </td>
+
+                  <td>
+                    <ul>
+                      {order.items?.map((item, itemIndex) => (
+                        <li key={itemIndex}>
+                          {item.productId?.foodName || "Product"}
+                          {" - "}₹{item.price}
+                          {" × "}
+                          {item.quantity}
+                        </li>
+                      ))}
                     </ul>
                   </td>
-                  <td>{order.totalPrice}</td>
+
+                  <td>₹{order.totalAmount || 0}</td>
+
                   <td>
-                    <Button variant="primary" onClick={handleShow}>
+                    <Button variant="warning" onClick={() => handleShow(order)}>
                       <FaEye />
                     </Button>
-
-                    <Modal show={orders} onHide={handleClose}>
-                      <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                        Woohoo, you are reading this text in a modal!
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                          Close
-                        </Button>
-                        <Button variant="primary" onClick={handleClose}>
-                          Save Changes
-                        </Button>
-                      </Modal.Footer>
-                    </Modal>
                   </td>
+
+                  {/* Invoice */}
                   <td>
-                    <FaFilePdf />
+                    <Button variant="danger">
+                      <FaFilePdf />
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -136,6 +150,169 @@ const AdminOrders = () => {
           </Table>
         </Col>
       </Row>
+
+      {/* Modal */}
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title>Order Details</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {selectedOrder && (
+            <div>
+             
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>Restaurent details</Accordion.Header>
+                  <Accordion.Body>
+                    <p>
+                      <strong>restaurent Name:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.restaurentName}
+                    </p>
+
+                    <p>
+                      <strong>Food Type:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.foodType}
+                    </p>
+                    <p>
+                      <strong>Address1:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.addressLine1}
+                    </p>
+                    <p>
+                      <strong>Address2:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.addressLine2}
+                    </p>
+                    <p>
+                      <strong>Location:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.location}
+                    </p>
+
+                    <p>
+                      <strong>City:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.city}
+                    </p>
+                    
+                      <p>
+                        <strong>State:</strong>{" "}
+                        {selectedOrder.items[0]?.restaurentId?.state}
+                      </p>
+                      <p>
+                        <strong>Country:</strong>{" "}
+                        {selectedOrder.items[0]?.restaurentId?.country}
+                      </p>
+                      <p>
+                        <strong>Pincode:</strong>{" "}
+                        {selectedOrder.items[0]?.restaurentId?.pincode}
+                      </p>
+
+                      <p>
+                        <strong>Mobile Number:</strong>{" "}
+                        {selectedOrder.items[0]?.restaurentId?.mobileNumber}
+                      </p>
+                       <p>
+                      <strong>Email:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.email}
+                    </p>
+
+                    <p>
+                      <strong>Owner Name:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.ownerName}
+                    </p>
+                      <p>
+                        <strong>Website:</strong>{" "}
+                        {selectedOrder.items[0]?.restaurentId?.website}
+                      </p>
+                      <p>
+                        <strong>Descrption:</strong>{" "}
+                        {selectedOrder.items[0]?.restaurentId?.description}
+                      </p>
+                      <p>
+                        <strong>Image:</strong>{" "}
+                        {selectedOrder.items[0]?.restaurentId?.image}
+                      </p>
+
+                     
+
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>Order details</Accordion.Header>
+                  <Accordion.Body>
+                     <p>
+                      <strong>restaurent Name:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.restaurentName}
+                    </p>
+
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>Restaurent details</Accordion.Header>
+                  <Accordion.Body></Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>Restaurent details</Accordion.Header>
+                  <Accordion.Body></Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>Restaurent details</Accordion.Header>
+                  <Accordion.Body></Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>Restaurent details</Accordion.Header>
+                  <Accordion.Body></Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>Restaurent details</Accordion.Header>
+                  <Accordion.Body></Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>Restaurent details</Accordion.Header>
+                  <Accordion.Body></Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+
+              <p>
+                <strong>Customer:</strong> {selectedOrder.userId?.firstName}{" "}
+                {selectedOrder.userId?.lastName}
+              </p>
+
+              <p>
+                <strong>Total Price:</strong> ₹{selectedOrder.totalAmount}
+              </p>
+
+              <h5>Items</h5>
+
+              <ul>
+                {selectedOrder.items?.map((item, index) => (
+                  <li key={index}>
+                    {item.productId?.foodName} : ₹{item.price}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

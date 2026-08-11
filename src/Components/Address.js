@@ -100,31 +100,24 @@ const Address = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentUser) {
-      getAddresses();
-      getCart();
-    }
-  }, [currentUser]);
-
   const getAddresses = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8090/api/addresses/user/${currentUser.id}`,
-      );
+  try {
+    const response = await axios.get(
+      `http://localhost:8090/api/addresses/user/${currentUser.id}`
+    );
+    setAddresses(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-      setAddresses(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    if (currentUser) {
-      getAddresses();
-    }
-  }, [currentUser]);
-
+useEffect(() => {
+  if (!currentUser?.id) {
+    return;
+  }
+  getAddresses();
+  getCart();
+}, [currentUser?.id]);
   
   const handleShow = () => {
     setEditAddress(null);

@@ -46,6 +46,8 @@ import Address from "./Components/Address";
 import RestaurentOrder from "./Components/RestaurentOrder";
 import TrackOrder from "./Components/TrackOrder";
 import Categories from "./Components/Categories";
+import AdminInvoice from "./Components/AdminInvoice";
+
 
 function App() {
   const [show, setShow] = useState(false);
@@ -195,6 +197,8 @@ function App() {
         <Route path="/Address" element={<Address />} />
         <Route path="/RestaurentOrder" element={<RestaurentOrder/>}/>
         <Route path="/track-order" element={<TrackOrder />} />
+        <Route path="/AdminInvoice" element={<AdminInvoice />} />
+
       </Routes>
     </div>
   );
