@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import axios from "axios";
 
-
 import {
   Container,
   Row,
@@ -15,12 +14,15 @@ import {
 } from "react-bootstrap";
 import { AiFillEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
+import { FaEye } from "react-icons/fa";
 import Sidebar from "./Sidebar";
 
 import { Link } from "react-router";
 
 const AdminRestaurents = () => {
   const [restaurents, setRestaurents] = useState([]);
+  
+ 
 
   useEffect(() => {
     axios
@@ -36,24 +38,26 @@ const AdminRestaurents = () => {
       });
   }, []);
 
- const handleDelete = async (id) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this restaurent?"
-  );
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this restaurent?",
+    );
 
-  if (!confirmDelete) return;
+    if (!confirmDelete) return;
 
-  try {
-    await axios.delete(`http://localhost:8090/api/restaurents/${id}`);
+    try {
+      await axios.delete(`http://localhost:8090/api/restaurents/${id}`);
 
-    setRestaurents(restaurents.filter((restaurents) => restaurents.id !== id));
+      setRestaurents(
+        restaurents.filter((restaurents) => restaurents.id !== id),
+      );
 
-    alert("Restaurant deleted successfully");
-  } catch (error) {
-    console.log(error);
-    alert("Something went wrong");
-  }
-};
+      alert("Restaurant deleted successfully");
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong");
+    }
+  };
 
   let navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -85,7 +89,9 @@ const AdminRestaurents = () => {
 
       <Row>
         <Col>
-          <Link to={'/AddRestaurent'} className="btn btn-success">Add</Link> 
+          <Link to={"/AddRestaurent"} className="btn btn-success">
+            Add
+          </Link>
         </Col>
       </Row>
       <Row>
@@ -96,10 +102,12 @@ const AdminRestaurents = () => {
                 <th>Name</th>
                 <th>Food Type</th>
                 <th>City</th>
-                <th>Location</th>
+                {/* <th>Location</th> */}
                 <th>Owner</th>
-                <th>Mobile</th>
+                {/* <th>Mobile</th> */}
+                <th>View</th>
                 <th>Edit</th>
+
                 <th>Delete</th>
               </tr>
             </thead>
@@ -109,17 +117,29 @@ const AdminRestaurents = () => {
                   <td>{restaurent.restaurentName}</td>
                   <td>{restaurent.foodType}</td>
                   <td>{restaurent.city}</td>
-                  <td>{restaurent.location}</td>
+                  {/* <td>{restaurent.location}</td> */}
                   <td>{restaurent.ownerName}</td>
-                  <td>{restaurent.mobileNumber}</td>
+                  {/* <td>{restaurent.mobileNumber}</td> */}
+                  <td className="view-btn">
+                    <Link to={`/RestaurentOrders/${restaurent.id}`} className="btn btn-success">
+                      <FaEye />
+                    </Link>
+                    {/* <Button variant="success">
+                      <FaEye />
+                    </Button> */}
+                  </td>
                   <td className="edit-btn">
-                    <Button variant="warning" size="sm" >
+                    <Button variant="warning" size="sm">
                       <AiFillEdit />
                     </Button>
                   </td>
 
                   <td className="delete-btn">
-                    <Button variant="danger" size="sm"  onClick={() => handleDelete(restaurent.id)}>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDelete(restaurent.id)}
+                    >
                       <MdDelete />
                     </Button>
                   </td>

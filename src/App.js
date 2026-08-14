@@ -47,6 +47,8 @@ import RestaurentOrder from "./Components/RestaurentOrder";
 import TrackOrder from "./Components/TrackOrder";
 import Categories from "./Components/Categories";
 import AdminInvoice from "./Components/AdminInvoice";
+import OrdersHistory from "./Components/OrdersHistory";
+
 
 
 function App() {
@@ -134,7 +136,7 @@ function App() {
                       ) : (
                         "  "
                       )}
-                      <Dropdown.Item href="#/action-1">Account</Dropdown.Item>
+                      <Dropdown.Item as={Link} to={"/Account"}>Account</Dropdown.Item>
 
                       <Dropdown.Item as={Link} to={"/Order"}>
                         Orders
@@ -195,9 +197,11 @@ function App() {
         <Route path="/Account" element={<Account />} />
         <Route path="/cart" element={<AddCart />} />
         <Route path="/Address" element={<Address />} />
-        <Route path="/RestaurentOrder" element={<RestaurentOrder/>}/>
-        <Route path="/track-order" element={<TrackOrder />} />
-        <Route path="/AdminInvoice" element={<AdminInvoice />} />
+        <Route path="/RestaurentOrders/:restaurentId" element={<RestaurentOrder/>}/>
+      <Route path="/track-order/:orderId" element={<TrackOrder />} />
+        <Route path="/AdminInvoice/:orderId" element={<AdminInvoice />} />
+        <Route path="/OrdersHistory/:orderId" element={<OrdersHistory />} />
+
 
       </Routes>
     </div>

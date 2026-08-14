@@ -15,6 +15,7 @@ import Sidebar from "./Sidebar";
 import { FaFilePdf, FaEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 const AdminOrders = () => {
   // Orders ke liye array
@@ -138,9 +139,12 @@ const AdminOrders = () => {
                     </Button>
                   </td>
 
-                  {/* Invoice */}
                   <td>
-                    <Button variant="danger">
+                    <Button
+                      variant="success"
+                      as={Link}
+                      to={`/AdminInvoice/${order.id}`}
+                    >
                       <FaFilePdf />
                     </Button>
                   </td>
@@ -151,18 +155,36 @@ const AdminOrders = () => {
         </Col>
       </Row>
 
-      {/* Modal */}
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton className="bg-danger text-white">
           <Modal.Title>Order Details</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
+        
           {selectedOrder && (
+           
             <div>
-             
+              <div>  <p>
+            <strong>Customer:</strong> {selectedOrder.userId?.firstName}{" "}
+            {selectedOrder.userId?.lastName}
+          </p>
+
+          <p>
+            <strong>Total Price:</strong> ₹{selectedOrder.totalAmount}
+          </p>
+
+          <h5>Items</h5>
+
+          <ul>
+            {selectedOrder.items?.map((item, index) => (
+              <li key={index}>
+                {item.productId?.foodName} : ₹{item.price}
+              </li>
+            ))}
+          </ul></div>
               <Accordion>
-                <Accordion.Item>
+                <Accordion.Item eventKey="0">
                   <Accordion.Header>Restaurent details</Accordion.Header>
                   <Accordion.Body>
                     <p>
@@ -191,25 +213,25 @@ const AdminOrders = () => {
                       <strong>City:</strong>{" "}
                       {selectedOrder.items[0]?.restaurentId?.city}
                     </p>
-                    
-                      <p>
-                        <strong>State:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.state}
-                      </p>
-                      <p>
-                        <strong>Country:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.country}
-                      </p>
-                      <p>
-                        <strong>Pincode:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.pincode}
-                      </p>
 
-                      <p>
-                        <strong>Mobile Number:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.mobileNumber}
-                      </p>
-                       <p>
+                    <p>
+                      <strong>State:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.state}
+                    </p>
+                    <p>
+                      <strong>Country:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.country}
+                    </p>
+                    <p>
+                      <strong>Pincode:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.pincode}
+                    </p>
+
+                    <p>
+                      <strong>Mobile Number:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.mobileNumber}
+                    </p>
+                    <p>
                       <strong>Email:</strong>{" "}
                       {selectedOrder.items[0]?.restaurentId?.email}
                     </p>
@@ -218,91 +240,145 @@ const AdminOrders = () => {
                       <strong>Owner Name:</strong>{" "}
                       {selectedOrder.items[0]?.restaurentId?.ownerName}
                     </p>
-                      <p>
-                        <strong>Website:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.website}
-                      </p>
-                      <p>
-                        <strong>Descrption:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.description}
-                      </p>
-                      <p>
-                        <strong>Image:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.image}
-                      </p>
-
-                     
-
+                    <p>
+                      <strong>Website:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.website}
+                    </p>
+                    <p>
+                      <strong>Descrption:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.description}
+                    </p>
+                    <p>
+                      <strong>Image:</strong>{" "}
+                      {/* {selectedOrder.items[0]?.restaurentId?.image} */}
+                      <img
+                        src={`http://localhost:8090/upload/${selectedOrder.items[0]?.restaurentId?.images[0]}`}
+                        alt={selectedOrder.items[0]?.restaurentId?.foodName}
+                        className="view_image"
+                      />
+                    </p>
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>
               <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Order details</Accordion.Header>
+                <Accordion.Item eventKey="1">
+                  <Accordion.Header>user details</Accordion.Header>
                   <Accordion.Body>
-                     <p>
-                      <strong>restaurent Name:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.restaurentName}
+                    <p>
+                      <strong>User Name:</strong>{" "}
+                      {selectedOrder.userId?.firstName}{" "}
+                      {selectedOrder.userId?.lastName}
+                    </p>
+                    <p>
+                      <strong>id:</strong> {selectedOrder.userId?._id}
+                    </p>
+                    <p>
+                      <strong>Phone Number:</strong>{" "}
+                      {selectedOrder.userId?.mobileNumber}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {selectedOrder.userId?.email}
+                    </p>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+              <Accordion>
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>Product details</Accordion.Header>
+                  <Accordion.Body>
+                    <p>
+                      <strong>product Id:</strong>{" "}
+                      {selectedOrder.items[0]?.productId?._id}
                     </p>
 
+                    <p>
+                      <strong>User Id:</strong>{" "}
+                      {selectedOrder.items[0]?.productId?.userId}
+                    </p>
+                    <p>
+                      <strong>RestaurentId:</strong>{" "}
+                      {selectedOrder.items[0]?.productId?.restaurentId}
+                    </p>
+                    <p>
+                      <strong>Food Type:</strong>{" "}
+                      {selectedOrder.items[0]?.productId?.foodType}
+                    </p>
+                    <p>
+                      <strong>Food Name:</strong>{" "}
+                      {selectedOrder.items[0]?.productId?.foodName}
+                    </p>
+
+                    <p>
+                      <strong>Price</strong>{" "}
+                      {selectedOrder.items[0]?.productId?.price}
+                    </p>
+
+                    <p>
+                      <strong>Description:</strong>{" "}
+                      {selectedOrder.items[0]?.productId?.description}
+                    </p>
+                    <p>
+                      <strong>image:</strong>{" "}
+                      {/* {selectedOrder.items[0]?.productId?.imaege} */}
+                      <img
+                        src={`http://localhost:8090/upload/${selectedOrder.items[0]?.productId?.images[0]}`}
+                        alt={selectedOrder.items[0]?.productId?.foodName}
+                        className="view_image"
+                      />
+                    </p>
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>
               <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
+                <Accordion.Item eventKey="3">
+                  <Accordion.Header>Address details</Accordion.Header>
+                  <Accordion.Body>
+                    <p>
+                      <strong>User Name:</strong>{" "}
+                      {selectedOrder.addressId?.name}
+                    </p>
+                    <p>
+                      <strong>id:</strong> {selectedOrder.addressId?._id}
+                    </p>
+                    <p>
+                      <strong>user Id:</strong>{" "}
+                      {selectedOrder.addressId?.userId}
+                    </p>
+                    <p>
+                      <strong>Address Line 1:</strong>{" "}
+                      {selectedOrder.addressId?.addressLine1}
+                    </p>
+                    <p>
+                      <strong>Address Line 2:</strong>{" "}
+                      {selectedOrder.addressId?.addressLine2}
+                    </p>
+                    <p>
+                      <strong>City:</strong> {selectedOrder.addressId?.city}
+                    </p>
+                    <p>
+                      <strong>District:</strong>{" "}
+                      {selectedOrder.addressId?.district}
+                    </p>
+                    <p>
+                      <strong>State:</strong> {selectedOrder.addressId?.state}
+                    </p>
+                    <p>
+                      <strong>Pin code:</strong> {selectedOrder.addressId?.pin}
+                    </p>
+                    <p>
+                      <strong>Phone Number:</strong>{" "}
+                      {selectedOrder.addressId?.mobileNumber}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {selectedOrder.addressId?.email}
+                    </p>
+                    <p>
+                      <strong>Address Type:</strong>{" "}
+                      {selectedOrder.addressId?.addressType}
+                    </p>
+                  </Accordion.Body>
                 </Accordion.Item>
               </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-
-              <p>
-                <strong>Customer:</strong> {selectedOrder.userId?.firstName}{" "}
-                {selectedOrder.userId?.lastName}
-              </p>
-
-              <p>
-                <strong>Total Price:</strong> ₹{selectedOrder.totalAmount}
-              </p>
-
-              <h5>Items</h5>
-
-              <ul>
-                {selectedOrder.items?.map((item, index) => (
-                  <li key={index}>
-                    {item.productId?.foodName} : ₹{item.price}
-                  </li>
-                ))}
-              </ul>
             </div>
           )}
         </Modal.Body>

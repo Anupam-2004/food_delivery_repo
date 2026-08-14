@@ -1,32 +1,109 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   FaCheck,
   FaMotorcycle,
-  FaHome,
   FaPhone,
   FaComments,
   FaCopy,
-  FaMapMarkerAlt,
-  FaClock,
-  FaTrash
+  FaTrash,
 } from "react-icons/fa";
 
 import "./Order.css";
 
 function TrackOrder() {
+  const { orderId } = useParams();
+
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getOrder();
+  }, []);
+  const handleCancelOrder = async (orderId) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8090/api/orders/${orderId}`,
+        {
+          orderStatus: "Cancelled",
+        },
+      );
+
+      console.log("Order cancelled:", response.data);
+      alert("cancel");
+    } catch (error) {
+      console.log("Cancel order error:", error);
+      alert("cancel error");
+    }
+  };
+
+  const getOrder = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8090/api/orders/${orderId}`,
+      );
+      setOrder(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center mt-5">
+        <h4>Loading Order...</h4>
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="text-center mt-5">
+        <h4>Order not found</h4>
+      </div>
+    );
+  }
+
+  const restaurant = order.items?.[0]?.restaurentId;
+
+  const itemTotal =
+    order.itemTotal ||
+    order.items?.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const deliveryFee = order.deliveryFee || 0;
+  const packagingFee = order.packagingFee || 0;
+  const discount = order.discount || 0;
+
+  const total =
+    order.totalAmount || itemTotal + deliveryFee + packagingFee - discount;
+
+  const currentStatus = order.status || "Confirmed";
+
+  const statuses = [
+    "Confirmed",
+    "Preparing",
+    "Picked Up",
+    "On the Way",
+    "Delivered",
+  ];
+
+  const currentIndex = statuses.indexOf(currentStatus);
+
   return (
     <div className="order-page">
       <Container className="track-container">
-
         {/* Header */}
-        <div className="track-header">
 
+        <div className="track-header">
           <div>
             <h1>Track Order</h1>
 
             <p>
-              Order ID: #FD123456789
+              Order ID: #{order.id || order._id}
               <FaCopy className="copy-icon" />
             </p>
           </div>
@@ -35,183 +112,145 @@ function TrackOrder() {
             Need help?
             <span className="support"> Contact Support</span>
           </div>
-
         </div>
 
         <Row>
+          {/* Timeline */}
 
-          {/* Order Status */}
           <Col md={4}>
-
             <Card className="status-card">
-
               <h5>Order Status</h5>
 
               <div className="timeline">
+                {statuses.map((status, index) => (
+                  <div
+                    key={index}
+                    className={`timeline-item ${
+                      index < currentIndex
+                        ? "completed"
+                        : index === currentIndex
+                          ? "current"
+                          : ""
+                    }`}
+                  >
+                    <div className="circle">
+                      {index <= currentIndex ? (
+                        index === currentIndex && status === "On the Way" ? (
+                          <FaMotorcycle />
+                        ) : (
+                          <FaCheck />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </div>
 
-                <div className="timeline-item completed">
+                    <div>
+                      <b>{status}</b>
 
-                  <div className="circle">
-                    <FaCheck />
+                      <small>{order.updatedAt?.slice(0, 10)}</small>
+
+                      <p>
+                        {status === "Confirmed" &&
+                          "Your order has been confirmed"}
+
+                        {status === "Preparing" &&
+                          "Restaurant is preparing your order"}
+
+                        {status === "Picked Up" &&
+                          "Delivery partner picked up your order"}
+
+                        {status === "On the Way" && "Your order is on the way"}
+
+                        {status === "Delivered" &&
+                          "Order delivered successfully"}
+                      </p>
+                    </div>
                   </div>
-
-                  <div>
-                    <b>Order Confirmed</b>
-                    <small>27 May, 11:30 AM</small>
-                    <p>Your order has been confirmed</p>
-                  </div>
-
-                </div>
-
-                <div className="timeline-item completed">
-
-                  <div className="circle">
-                    <FaCheck />
-                  </div>
-
-                  <div>
-                    <b>Restaurant Preparing</b>
-                    <small>27 May, 11:35 AM</small>
-                    <p>The restaurant is preparing your order</p>
-                  </div>
-
-                </div>
-
-                <div className="timeline-item completed">
-
-                  <div className="circle">
-                    <FaCheck />
-                  </div>
-
-                  <div>
-                    <b>Rider Picked Up</b>
-                    <small>27 May, 11:50 AM</small>
-                    <p>Your order has been picked up by the delivery partner</p>
-                  </div>
-
-                </div>
-
-                <div className="timeline-item current">
-
-                  <div className="circle">
-                    <FaMotorcycle />
-                  </div>
-
-                  <div>
-                    <b>On the Way</b>
-                    <small>27 May, 11:55 AM</small>
-                    <p>Your order is on the way</p>
-                  </div>
-
-                </div>
-
-                <div className="timeline-item">
-
-                  <div className="circle empty"></div>
-
-                  <div>
-                    <b>Delivered</b>
-                    <small>Estimated: 12:15 PM</small>
-                    <p>Your order will be delivered soon</p>
-                  </div>
-
-                </div>
-
+                ))}
               </div>
-
             </Card>
-
           </Col>
 
           {/* Map */}
+
           <Col md={8}>
-
             <div className="map-box">
-
               <div className="restaurant-marker">
                 🍔
                 <div>
-                  <b>Burger King</b>
-                  <small>Preparing your order</small>
+                  <b>{restaurant?.restaurentName}</b>
+
+                  <small>{currentStatus}</small>
                 </div>
               </div>
 
               <div className="route-line"></div>
 
-              <div className="rider-marker">
-                🛵
-              </div>
+              <div className="rider-marker">🛵</div>
 
-              <div className="home-marker">
-                🏠
-              </div>
+              <div className="home-marker">🏠</div>
 
               <div className="location-box">
                 <b>Your Location</b>
                 <br />
-                <span>123, Green Street, Lucknow</span>
+
+                <span>
+                  {order.addressId?.addressLine1},{order.addressId?.city},
+                  {order.addressId?.state},{order.addressId?.pincode}
+                </span>
               </div>
 
               <div className="map-controls">
                 +
                 <hr />
                 −
-                <hr />
-                ◉
+                <hr />◉
               </div>
-
             </div>
-
           </Col>
-
         </Row>
 
-        {/* Bottom cards */}
-
         <Row className="bottom-cards">
-
           {/* Delivery Partner */}
+
           <Col md={5}>
-
             <Card className="partner-card">
-
               <h5>Delivery Partner</h5>
 
               <div className="partner-info">
-
-                <div className="partner-image">
-                  👨🏻
-                </div>
+                <div className="partner-image">👨🏻</div>
 
                 <div>
                   <h5>
-                    Rahul Kumar
-                    <span className="rating">★ 4.8</span>
+                    {order.deliveryPartner?.name || "Delivery Partner"}
+
+                    <span className="rating">
+                      ★ {order.deliveryPartner?.rating || "4.8"}
+                    </span>
                   </h5>
 
-                  <p>500+ Deliveries</p>
+                  <p>
+                    {order.deliveryPartner?.deliveries || "500+"} Deliveries
+                  </p>
                 </div>
-
               </div>
 
               <hr />
 
               <div className="vehicle">
-
                 <span>
                   Vehicle
                   <br />
-                  <b>Bike</b>
+                  <b>{order.deliveryPartner?.vehicleType || "Bike"}</b>
                 </span>
 
                 <span className="vehicle-number">
-                  🛵 &nbsp; BR01 XX 1234
+                  🛵 {order.deliveryPartner?.vehicleNumber || "BR01 XX 1234"}
                 </span>
-
               </div>
 
               <div className="partner-buttons">
-
                 <Button>
                   <FaPhone /> Call Rider
                 </Button>
@@ -219,93 +258,119 @@ function TrackOrder() {
                 <Button>
                   <FaComments /> Chat
                 </Button>
-
               </div>
-
             </Card>
-
           </Col>
 
           {/* Order Summary */}
+
           <Col md={7}>
-
             <Card className="summary-card">
-
               <h5>Order Summary</h5>
 
-              <div className="summary-product">
+              {order.items?.map((item, index) => (
+                <div key={index}>
+                  <div className="summary-product">
+                    <img
+                      src={
+                        item.productId?.images?.[0]
+                          ? `http://localhost:8090/uploads/${item.productId.images[0]}`
+                          : "https://via.placeholder.com/80"
+                      }
+                      alt={item.productId?.productName}
+                    />
 
-                <img
-                  src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200"
-                  alt="Burger"
-                />
+                    <div>
+                      <b>{item.productId?.productName}</b>
 
-                <div>
-                  <b>Burger King</b>
-                  <small>2 Items</small>
+                      <small>Qty: {item.quantity}</small>
+                    </div>
+
+                    <strong>₹{item.price * item.quantity}</strong>
+                  </div>
+
+                  <hr />
                 </div>
-
-                <strong>₹567.00</strong>
-
-              </div>
-
-              <hr />
+              ))}
 
               <div className="price-row">
                 <span>Item Total</span>
-                <span>₹478.00</span>
+                <span>₹{itemTotal}</span>
               </div>
 
               <div className="price-row">
                 <span>Delivery Fee</span>
-                <span>₹29.00</span>
+                <span>₹{deliveryFee}</span>
               </div>
 
               <div className="price-row">
                 <span>Packaging Fee</span>
-                <span>₹20.00</span>
+                <span>₹{packagingFee}</span>
               </div>
 
               <div className="price-row discount">
                 <span>Coupon Discount</span>
-                <span>- ₹60.00</span>
+                <span>- ₹{discount}</span>
               </div>
 
               <hr />
 
               <div className="final-price">
                 <b>Total Amount</b>
-                <strong>₹567.00</strong>
+
+                <strong>₹{total}</strong>
               </div>
-
             </Card>
-
           </Col>
-
         </Row>
 
+        {/* Customer Details */}
+
+        <Row className="mt-4">
+          <Col>
+            <Card className="summary-card">
+              <h5>Customer Details</h5>
+
+              <p>
+                <b>Name:</b> {order.userId?.firstName}
+                {order.userId?.lastName}
+              </p>
+
+              <p>
+                <b>Email:</b> {order.userId?.email}
+              </p>
+
+              <p>
+                <b>Mobile:</b> {order.userId?.mobileNumber}
+              </p>
+            </Card>
+          </Col>
+        </Row>
       </Container>
 
-      {/* Bottom bar */}
-      <div className="tracking-bottom">
+      {/* Bottom Bar */}
 
-        <Button className="cancel-btn">
-          <FaTrash /> Cancel Order
-        </Button>
+      <div className="tracking-bottom">
+        {currentStatus !== "Delivered" && (
+          <Button
+            variant="danger"
+            className="cancel-btn"
+            onClick={() => handleCancelOrder(order.id)}
+            href="/"
+          >
+            <FaTrash /> Cancel Order
+          </Button>
+        )}
 
         <div className="live-delivery">
-
           <span>
             Estimated Delivery
-            <b>12 mins</b>
+            <b>{order.estimatedTime || "15 mins"}</b>
           </span>
 
           <strong>🟢 LIVE</strong>
-
         </div>
-
       </div>
-
     </div>
   );
 }

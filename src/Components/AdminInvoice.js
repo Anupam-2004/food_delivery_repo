@@ -29,7 +29,7 @@ const AdminInvoice = () => {
         console.log(response.data);
         setOrder(response.data);
       } catch (error) {
-        console.log("Order fetch error:", error);
+        console.log(error);
       } finally {
         setLoading(false);
       }
@@ -55,22 +55,17 @@ const AdminInvoice = () => {
       </Container>
     );
   }
-
   const restaurant = order.items?.[0]?.restaurentId;
-
-  const customer = order.addressId;
-
-  const subtotal =
-    order.items?.reduce(
-      (total, item) => total + item.quantity * item.price,
-      0,
-    ) || 0;
 
   const handlePrint = () => {
     window.print();
   };
   const handleBack = () => {
-    navigate("/admin/orders");
+    navigate("/AdminOrders");
+  };
+  const handleDownloadPDF = () => {
+    // Implement PDF download functionality here
+    window.alert("PDF download functionality not implemented");
   };
 
   return (
@@ -91,7 +86,7 @@ const AdminInvoice = () => {
               Print Invoice
             </Button>
 
-            <Button variant="dark">
+            <Button variant="dark" onClick={handleDownloadPDF}>
               <FaDownload className="me-2" />
               Download PDF
             </Button>
@@ -106,24 +101,17 @@ const AdminInvoice = () => {
                   <div className="restaurant-logo">🍴</div>
 
                   <div>
-                    <h2>{restaurant?.restaurentName}</h2>
+                      <h2>{restaurant?.restaurentName}</h2>
 
-                    <p>
-                      {restaurant?.addressLine1}
-                      {restaurant?.addressLine2 &&
-                        `, ${restaurant.addressLine2}`}
+                    {/* <p>
+                      <strong>Address:</strong> {restaurant?.addressLine1},{" "}
+                      {restaurant?.addressLine2}, {restaurant?.city},{" "}
+                      {restaurant?.state} - {restaurant?.pincode}
                     </p>
 
                     <p>
-                      {restaurant?.city}, {restaurant?.state} -{" "}
-                      {restaurant?.pincode}
-                    </p>
-
-                    <p>
-                      Phone: {restaurant?.mobileNumber}
-                      {" | "}
-                      {restaurant?.email}
-                    </p>
+                      Phone: {restaurant?.mobileNumber} | {restaurant?.email}
+                    </p> */}
                   </div>
                 </div>
               </Col>
@@ -133,9 +121,7 @@ const AdminInvoice = () => {
 
                 <p className="invoice-number">#{order.id}</p>
 
-                <p className="invoice-date">
-                  Date: {new Date(order.createdAt).toLocaleDateString()}
-                </p>
+                <p className="invoice-date">Date: {order.createdAt}</p>
               </Col>
             </Row>
           </div>
@@ -146,22 +132,22 @@ const AdminInvoice = () => {
                 <div className="info-box">
                   <h6>BILL TO</h6>
 
-                  <h5>{customer?.name}</h5>
+                  <h5>{order.addressId.name}</h5>
 
                   <p>
-                    <strong>Phone:</strong> {customer?.mobile}
+                    <strong>Phone:</strong> {order.addressId.mobile}
                   </p>
 
                   <p>
-                    <strong>Email:</strong> {customer?.email}
+                    <strong>Email:</strong> {order.addressId.email}
                   </p>
 
                   <p>
-                    <strong>Address:</strong> {customer?.addressLine1}
-                    {customer?.addressLine2 && `, ${customer.addressLine2}`},{" "}
-                    {customer?.city}, {customer?.state}
+                    <strong>Address:</strong> {order.addressId.addressLine1}
+                    {order.addressId.addressLine2}, {order.addressId.city},{" "}
+                    {order.addressId.state}
                     {" - "}
-                    {customer?.pin}
+                    {order.addressId.pin}
                   </p>
                 </div>
               </Col>
@@ -174,14 +160,6 @@ const AdminInvoice = () => {
 
                   <p>
                     <strong>Order ID:</strong> #{order.id}
-                  </p>
-
-                  <p>
-                    <strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-
-                  <p>
-                    <strong>Time:</strong> {new Date(order.createdAt).toLocaleTimeString()}
                   </p>
 
                   <p>
@@ -199,8 +177,6 @@ const AdminInvoice = () => {
             </Row>
           </div>
 
-         
-
           <div className="status-row">
             <div>
               <span>Order Status</span>
@@ -215,7 +191,6 @@ const AdminInvoice = () => {
             </div>
           </div>
 
-         
           <div className="invoice-items">
             <h5>Order Items</h5>
 
@@ -250,7 +225,7 @@ const AdminInvoice = () => {
 
                       <td className="text-end">₹{item.price}</td>
 
-                      <td className="text-end fw-bold">₹{itemTotal}</td>
+                      <td className="text-end fw-bold">₹{item.totalAmount}</td>
                     </tr>
                   );
                 })}
@@ -258,17 +233,13 @@ const AdminInvoice = () => {
             </Table>
           </div>
 
-          {/* =========================
-              SUMMARY
-          ========================= */}
-
           <Row className="justify-content-end">
             <Col md={5}>
               <div className="price-summary">
                 <div className="summary-row">
                   <span>Subtotal</span>
 
-                  <strong>₹{subtotal}</strong>
+                  {/* <strong>₹{subtotal}</strong> */}
                 </div>
 
                 <div className="summary-row">
@@ -299,8 +270,6 @@ const AdminInvoice = () => {
               </div>
             </Col>
           </Row>
-
-        
 
           <div className="invoice-footer">
             <div>

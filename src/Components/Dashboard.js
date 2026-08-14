@@ -257,7 +257,7 @@ const Dashboard = () => {
           </Row>
           <Row>
             <Col className="dashboard_cards">
-              <Link to={"/Restaurents"}>
+              <Link to={"/AdminRestaurents"}>
                 <Card className="dashboard_card">
                   <h4>
                     {numberofrestaurents

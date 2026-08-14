@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-} from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
 import {
   FaCheck,
@@ -28,27 +22,19 @@ function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { user: currentUser } = useSelector(
-    (state) => state.auth
-  );
+  const { user: currentUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (!currentUser?.id) {
       setLoading(false);
       return;
     }
-
     axios
-      .get(
-        `http://localhost:8090/api/orders/user/${currentUser.id}`
-      )
+      .get(`http://localhost:8090/api/orders/user/${currentUser.id}`)
       .then((response) => {
         console.log("ORDER DATA:", response.data);
-
         setOrders(
-          Array.isArray(response.data)
-            ? response.data
-            : [response.data]
+          Array.isArray(response.data) ? response.data : [response.data],
         );
       })
       .catch((error) => {
@@ -75,10 +61,7 @@ function Orders() {
         <Container className="text-center py-5">
           <h4>Please login to view your orders</h4>
 
-          <Button
-            className="track-btn mt-3"
-            onClick={() => navigate("/login")}
-          >
+          <Button className="track-btn mt-3" onClick={() => navigate("/login")}>
             Login
           </Button>
         </Container>
@@ -96,14 +79,9 @@ function Orders() {
 
           <h2>No Orders Found</h2>
 
-          <p>
-            You haven't placed any orders yet.
-          </p>
+          <p>You haven't placed any orders yet.</p>
 
-          <Button
-            className="shopping-btn"
-            onClick={() => navigate("/")}
-          >
+          <Button className="shopping-btn" onClick={() => navigate("/")}>
             Continue Shopping
           </Button>
         </Container>
@@ -115,17 +93,12 @@ function Orders() {
 
   return (
     <div className="order-page">
-
       <Container className="success-container">
-
-
         <div className="success-icon">
           <FaCheck />
         </div>
 
-        <h1>
-          Order Placed Successfully!
-        </h1>
+        <h1>Order Placed Successfully!</h1>
 
         <p className="success-text">
           Thank you for your order. We have received your order
@@ -133,56 +106,32 @@ function Orders() {
           and it will be delivered soon.
         </p>
 
-
         <Card className="delivery-card">
-
           <Row>
-            <Col
-              md={6}
-              className="delivery-time"
-            >
+            <Col md={6} className="delivery-time">
               <FaClock />
 
               <div>
-                <small>
-                  Estimated Delivery Time
-                </small>
+                <small>Estimated Delivery Time</small>
 
-                <h3>
-                  25 - 30 mins
-                </h3>
+                <h3>25 - 30 mins</h3>
               </div>
             </Col>
 
-          
-
-            <Col
-              md={6}
-              className="order-id"
-            >
+            <Col md={6} className="order-id">
               <div>
-
-                <small>
-                  Order ID
-                </small>
+                <small>Order ID</small>
 
                 <h3>
                   <FaCopy /> {latestOrder.id}
                 </h3>
-
               </div>
             </Col>
-
           </Row>
-
         </Card>
 
-
         {orders.map((order) => {
-
-          const orderDate = new Date(
-            order.createdAt
-          ).toLocaleString("en-IN", {
+          const orderDate = new Date(order.createdAt).toLocaleString("en-IN", {
             day: "2-digit",
             month: "short",
             year: "numeric",
@@ -191,314 +140,174 @@ function Orders() {
           });
 
           return (
-            <Card
-              key={order.id}
-              className="order-details"
-            >
-
-              <h5>
-                Order Details
-              </h5>
-
+            <Card key={order.id} className="order-details">
+              <h5>Order Details</h5>
 
               <div className="restaurant-row">
-
                 <div>
-                  <h5>
-                    Order #{order.id}
-                  </h5>
+                  <h5>Order #{order.id}</h5>
 
-                  <p>
-                    Order placed on {orderDate}
-                  </p>
-
+                  <p>Order placed on {orderDate}</p>
                 </div>
 
                 <div className="total">
+                  <small>Total Amount</small>
 
-                  <small>
-                    Total Amount
-                  </small>
-
-                  <strong>
-                    ₹{order.totalAmount?.toFixed(2)}
-                  </strong>
-
+                  <strong>₹{order.totalAmount?.toFixed(2)}</strong>
                 </div>
-
               </div>
 
-
               <div className="order-items">
-
                 {order.items?.map((item) => {
+                  const product = item.productId;
 
-                  const product =
-                    item.productId;
-
-                  const restaurant =
-                    item.restaurentId;
-
-                  
+                  const restaurant = item.restaurentId;
 
                   return (
-                    <div
-                      className="order-item"
-                      key={item._id}
-                    >
-
-                  
+                    <div className="order-item" key={item._id}>
                       <img
-                        src={
-                          product?.images?.length
-                            ? `http://localhost:8090/upload/${product.images[0]}`
-                            : "/no-image.png"
-                        }
-                        alt={
-                          product?.foodName ||
-                          "Food"
-                        }
+                        src={`http://localhost:8090/upload/${product.images[0]}`}
+                        alt={product?.foodName}
                         className="order-img"
                       />
 
-              
-
                       <div className="item-info">
-
-                        <h6>
-                          Food Name - 
-                           {product?.foodName ||
-                            "Food Item"}
-                        </h6>
+                        <h6>Food Name -{product?.foodName || "Food Item"}</h6>
 
                         <p>
-                          Restaurant Name - 
-                           {restaurant?.restaurentName ||
-                            "Restaurant"}
+                          Restaurant Name -
+                          {restaurant?.restaurentName || "Restaurant"}
                         </p>
 
-                        <small>
-                          Quantity:{" "}
-                          {item.quantity}
-                        </small>
-
+                        <small>Quantity: {item.quantity}</small>
                       </div>
-
-          
 
                       <div className="item-price">
+                        <span>₹{item.price?.toFixed(2)}</span>
 
-                        <span>
-                          ₹
-                          {item.price?.toFixed(2)}
-                        </span>
-
-                        <small>
-                          × {item.quantity}
-                        </small>
+                        <small>× {item.quantity}</small>
 
                         <strong>
-                          ₹
-                          {(
-                            item.price *
-                            item.quantity
-                          ).toFixed(2)}
+                          ₹{(item.price * item.quantity).toFixed(2)}
                         </strong>
-
                       </div>
-
                     </div>
                   );
                 })}
-
               </div>
 
-
               <div className="payment-info">
-
                 <div>
-                  <small>
-                    Payment Status
-                  </small>
+                  <small>Payment Status</small>
 
-                  <strong
-                    className={
-                      order.paymentStatus
-                    }
-                  >
+                  <strong className={order.paymentStatus}>
                     {order.paymentStatus}
                   </strong>
                 </div>
 
                 <div>
-                  <small>
-                    Order Status
-                  </small>
+                  <small>Order Status</small>
 
-                  <strong>
-                    {order.orderStatus}
-                  </strong>
+                  <strong>{order.orderStatus}</strong>
                 </div>
-
               </div>
-
             </Card>
           );
         })}
 
-
         <div className="next-section">
-
-          <h5>
-            What's Next?
-          </h5>
+          <h5>What's Next?</h5>
 
           <div className="steps">
+          
 
-            {/* Confirmed */}
-
-            <div
-              className={`step ${
-                latestOrder.orderStatus
-                  ? "active"
-                  : ""
-              }`}
-            >
-
+            <div className={`step ${latestOrder.orderStatus ? "active" : ""}`}>
               <div className="step-icon">
                 <FaBox />
               </div>
 
-              <b>
-                Order Confirmed
-              </b>
+              <b>Order Confirmed</b>
 
               <p>
                 We have received
                 <br />
                 your order
               </p>
-
             </div>
-
-          
 
             <div
               className={`step ${
-                ["processing", "shipped", "delivered"]
-                  .includes(
-                    latestOrder.orderStatus
-                  )
-                    ? "active"
-                    : ""
+                ["processing", "shipped", "delivered"].includes(
+                  latestOrder.orderStatus,
+                )
+                  ? "active"
+                  : ""
               }`}
             >
-
               <div className="step-icon">
                 <FaBox />
               </div>
 
-              <b>
-                Being Prepared
-              </b>
+              <b>Being Prepared</b>
 
               <p>
                 The restaurant is
                 <br />
                 preparing your food
               </p>
-
             </div>
-
-            
 
             <div
               className={`step ${
-                ["shipped", "delivered"].includes(
-                  latestOrder.orderStatus
-                )
+                ["shipped", "delivered"].includes(latestOrder.orderStatus)
                   ? "active"
                   : ""
               }`}
             >
-
               <div className="step-icon">
                 <FaMotorcycle />
               </div>
 
-              <b>
-                Out for Delivery
-              </b>
+              <b>Out for Delivery</b>
 
               <p>
                 Our delivery partner
                 <br />
                 is on the way
               </p>
-
             </div>
-
-            
 
             <div
               className={`step ${
-                latestOrder.orderStatus ===
-                "delivered"
-                  ? "active"
-                  : ""
+                latestOrder.orderStatus === "delivered" ? "active" : ""
               }`}
             >
-
               <div className="step-icon">
                 <FaHome />
               </div>
 
-              <b>
-                Delivered
-              </b>
+              <b>Delivered</b>
 
-              <p>
-                Enjoy your food.
-              </p>
-
+              <p>Enjoy your food.</p>
             </div>
-
           </div>
-
         </div>
-
-      
 
         <div className="success-buttons">
-
           <Button
             className="track-btn"
-            onClick={() =>
-              navigate(
-                `/track-order/${latestOrder.id}`
-              )
-            }
+            onClick={() => navigate(`/track-order/${latestOrder.id}`)}
           >
-            <FaMapMarkerAlt />
-            {" "}Track Order
+            <FaMapMarkerAlt /> Track Order
           </Button>
 
-          <Button
-            className="shopping-btn"
-            onClick={() =>
-              navigate("/")
-            }
-          >
+          <Button className="shopping-btn" onClick={() => navigate("/")}>
             Continue Shopping
           </Button>
-
         </div>
-
       </Container>
 
-
       <div className="bottom-features">
-
         <div>
           🔒
           <span>
@@ -518,8 +327,7 @@ function Orders() {
         <div>
           ⭐
           <span>
-            <b>Best Offers</b>
-            & Discounts
+            <b>Best Offers</b>& Discounts
           </span>
         </div>
 
@@ -530,9 +338,7 @@ function Orders() {
             Policy
           </span>
         </div>
-
       </div>
-
     </div>
   );
 }

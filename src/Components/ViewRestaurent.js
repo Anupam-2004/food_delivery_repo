@@ -37,10 +37,6 @@ const ViewRestaurent = () => {
     axios
       .get(`http://localhost:8090/api/restaurents/${restaurentId}`)
       .then((response) => {
-        // setRestaurent({
-        //   ...response.data,
-        //   images: response.data.images || [],
-        // });
         setRestaurent(response.data);
         console.log("Restaurant Data:", response.data);
       })
@@ -67,7 +63,7 @@ const ViewRestaurent = () => {
       const data = {
         userId: currentUser.id,
         //  addressId:addressId.id;
-      active: true,
+        active: true,
         items: [
           {
             productId: food.id,
@@ -83,7 +79,7 @@ const ViewRestaurent = () => {
 
       const response = await axios.post(
         "http://localhost:8090/api/carts",
-        data
+        data,
       );
 
       console.log(response.data);

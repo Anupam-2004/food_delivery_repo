@@ -617,3 +617,7 @@ label {
  text-align: center;
  padding-left: 10px;
 }
+.view_image{
+  height: 220px;
+  width: 200px;
+}

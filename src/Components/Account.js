@@ -1,7 +1,19 @@
 import React, { useState } from "react";
-import { Col, Container, Row, Button, Modal, Form } from "react-bootstrap";
+import {
+  Col,
+  Container,
+  Row,
+  Button,
+  Modal,
+  Form,
+  Offcanvas,
+  Nav,
+} from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { FaUser } from "react-icons/fa";
+import { FaBars } from "react-icons/fa6";
 
 const Account = () => {
   const formik = useFormik({
@@ -32,11 +44,37 @@ const Account = () => {
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
+
+   const [showButton,setShowButton]=useState(false);
+  const handleButtonShow = () => setShowButton(true);
+  const handleButtonClose = () => setShowButton(false);
+
   return (
     <Container className="mt-5">
       <Row className="justify-content-center">
         <Col md={6} className="account_card">
           <h3 className="text-center mb-4">My Account</h3>
+          <div>
+            <Button variant="info" onClick={handleButtonShow}>
+              <FaBars />
+            </Button>
+
+            <Offcanvas show={showButton} onHide={handleButtonClose}>
+              <Offcanvas.Header closeButton>
+                <Offcanvas.Title>Account</Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <Nav defaultActiveKey="/home" className="flex-column">
+                  <Nav.Link as={Link} to={"/OrdersHistory"}>Orders history</Nav.Link>
+                  <Nav.Link eventKey="link-1"></Nav.Link>
+                  <Nav.Link eventKey="link-2">Link</Nav.Link>
+                  <Nav.Link eventKey="disabled" disabled>
+                    Disabled
+                  </Nav.Link>
+                </Nav>
+              </Offcanvas.Body>
+            </Offcanvas>
+          </div>
 
           <div className="account_section">
             <span className="label">First Name:</span>
@@ -127,7 +165,6 @@ const Account = () => {
                   Submit
                 </Button>
               </div>
-              {/* </Modal.Footer> */}
             </Modal>
           </div>
         </Col>

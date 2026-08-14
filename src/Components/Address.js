@@ -51,17 +51,13 @@ const addressSchema = Yup.object().shape({
     .required("PIN code is required")
     .matches(/^[1-9][0-9]{5}$/, "Enter a valid 6-digit PIN code"),
 
-  mobile: Yup.string().matches(
-    /^[6-9]\d{9}$/,
-    "enter valid 10 digit numbers",
-  ),
+  mobile: Yup.string().matches(/^[6-9]\d{9}$/, "enter valid 10 digit numbers"),
   email: Yup.string().matches(
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     "Enter a valid email address",
   ),
-  
-  addressType: Yup.string().required("Required"),
 
+  addressType: Yup.string().required("Required"),
 });
 
 const emptyAddress = {
@@ -101,24 +97,24 @@ const Address = () => {
   };
 
   const getAddresses = async () => {
-  try {
-    const response = await axios.get(
-      `http://localhost:8090/api/addresses/user/${currentUser.id}`
-    );
-    setAddresses(response.data);
-  } catch (error) {
-    console.log(error);
-  }
-};
+    try {
+      const response = await axios.get(
+        `http://localhost:8090/api/addresses/user/${currentUser.id}`,
+      );
+      setAddresses(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-useEffect(() => {
-  if (!currentUser?.id) {
-    return;
-  }
-  getAddresses();
-  getCart();
-}, [currentUser?.id]);
-  
+  useEffect(() => {
+    if (!currentUser?.id) {
+      return;
+    }
+    getAddresses();
+    getCart();
+  }, [currentUser?.id]);
+
   const handleShow = () => {
     setEditAddress(null);
     setShow(true);
@@ -129,12 +125,10 @@ useEffect(() => {
     setEditAddress(null);
   };
 
-  
   const handleEdit = (item) => {
     setEditAddress(item);
     setShow(true);
   };
-
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this address?")) {
@@ -158,7 +152,7 @@ useEffect(() => {
 
     try {
       if (editAddress) {
-        console.log(editAddress)
+        console.log(editAddress);
         await axios.put(
           `http://localhost:8090/api/addresses/${editAddress.id}`,
           data,
@@ -210,7 +204,9 @@ useEffect(() => {
 
       console.log(response.data);
 
-      await axios.delete(`http://localhost:8090/api/carts/user/${currentUser.id}`);
+      await axios.delete(
+        `http://localhost:8090/api/carts/user/${currentUser.id}`,
+      );
 
       navigate("/orders");
     } catch (error) {
@@ -254,7 +250,7 @@ useEffect(() => {
                 <h5>No Address Found</h5>
 
                 <Button className="mt-3" onClick={handleShow}>
-                 + Add Address
+                  + Add Address
                 </Button>
               </Card.Body>
             </Card>
@@ -321,7 +317,6 @@ useEffect(() => {
           ))
         )}
       </Row>
-    
 
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
