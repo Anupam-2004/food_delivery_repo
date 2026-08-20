@@ -331,12 +331,12 @@ const AddRestaurent = () => {
                     </Col>
                     <Col md={9}>
                       <Field as="select" name="location">
-                        <option value="selectcity">Select Location</option>
-                        <option value="Jamshedpur">Sakchi</option>
-                        <option value="bokaro">Bistupur</option>
-                        <option value="ranchi">Kadma</option>
-                        <option value="dhanbad">Adityapur</option>
-                        <option value="dhanbad">Ghamhriya</option>
+                        <option value="select location">Select Location</option>
+                        <option value="Sakchi">Sakchi</option>
+                        <option value="Bistupur">Bistupur</option>
+                        <option value="Kadma">Kadma</option>
+                        <option value="adityapur">Adityapur</option>
+                        <option value="ghamariya">Ghamhriya</option>
                       </Field>
                     </Col>
                   </Row>

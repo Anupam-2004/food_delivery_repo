@@ -48,8 +48,9 @@ import TrackOrder from "./Components/TrackOrder";
 import Categories from "./Components/Categories";
 import AdminInvoice from "./Components/AdminInvoice";
 import OrdersHistory from "./Components/OrdersHistory";
-
-
+import UserOrdersHistory from "./Components/UserOrdersHistory";
+import AdminOrderHistory from "./Components/AdminOrderHistory";
+import RestaurentOrderHistory from "./Components/RestaurentOrderHistory";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -64,13 +65,13 @@ function App() {
       console.log(currentUser);
     }
   }, [currentUser]);
-    useEffect(() => {
-      if (!currentUser) {
-        navigate("/");
-      } else {
-        console.log(currentUser);
-      }
-    }, [currentUser, navigate]);
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/");
+    } else {
+      console.log(currentUser);
+    }
+  }, [currentUser, navigate]);
   const handleLogout = () => {
     dispatch(logout());
     window.location.reload();
@@ -92,7 +93,7 @@ function App() {
                   aria-controls="offcanvasNavbar"
                   onClick={handleShow}
                 />
-              
+
                 <Navbar.Offcanvas id="offcanvasNavbar" placement="start">
                   <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Foodie</Offcanvas.Title>
@@ -104,9 +105,9 @@ function App() {
                         {" "}
                         <CiHome /> Home
                       </Nav.Link>
-                       <Nav.Link as={Link} to={"/Category"}>
-                      <BiFoodMenu /> Categories
-                    </Nav.Link>
+                      <Nav.Link as={Link} to={"/Category"}>
+                        <BiFoodMenu /> Categories
+                      </Nav.Link>
                       <Nav.Link href="/Restaurents">
                         {" "}
                         <IoRestaurant /> Restaurants
@@ -115,9 +116,9 @@ function App() {
                         {" "}
                         <BiSolidOffer /> Offers
                       </Nav.Link>
-                     <Nav.Link as={Link} to={"/cart"}>
-                      <PiShoppingCartSimpleThin /> Cart
-                    </Nav.Link>
+                      <Nav.Link as={Link} to={"/cart"}>
+                        <PiShoppingCartSimpleThin /> Cart
+                      </Nav.Link>
                     </Nav>
                   </Offcanvas.Body>
                 </Navbar.Offcanvas>
@@ -136,7 +137,9 @@ function App() {
                       ) : (
                         "  "
                       )}
-                      <Dropdown.Item as={Link} to={"/Account"}>Account</Dropdown.Item>
+                      <Dropdown.Item as={Link} to={"/Account"}>
+                        Account
+                      </Dropdown.Item>
 
                       <Dropdown.Item as={Link} to={"/Order"}>
                         Orders
@@ -197,12 +200,19 @@ function App() {
         <Route path="/Account" element={<Account />} />
         <Route path="/cart" element={<AddCart />} />
         <Route path="/Address" element={<Address />} />
-        <Route path="/RestaurentOrders/:restaurentId" element={<RestaurentOrder/>}/>
-      <Route path="/track-order/:orderId" element={<TrackOrder />} />
+        <Route
+          path="/RestaurentOrders/:restaurentId"
+          element={<RestaurentOrder />}
+        />
+        <Route path="/track-order/:orderId" element={<TrackOrder />} />
         <Route path="/AdminInvoice/:orderId" element={<AdminInvoice />} />
-        <Route path="/OrdersHistory/:orderId" element={<OrdersHistory />} />
-
-
+        <Route path="/OrdersHistory" element={<OrdersHistory />} />
+        <Route path="/UserOrdersHistory" element={<UserOrdersHistory />} />
+        <Route path="/AdminOrderHistory" element={<AdminOrderHistory />} />
+        <Route
+          path="/RestaurentOrderHistory"
+          element={<RestaurentOrderHistory />}
+        />
       </Routes>
     </div>
   );

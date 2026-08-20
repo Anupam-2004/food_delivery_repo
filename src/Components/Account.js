@@ -65,7 +65,13 @@ const Account = () => {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav defaultActiveKey="/home" className="flex-column">
-                  <Nav.Link as={Link} to={"/OrdersHistory"}>Orders history</Nav.Link>
+                  {/* <Nav.Link as={Link} to={"/OrdersHistory"}>Orders history</Nav.Link> */}
+                  <Nav.Link as={Link} to={"/UserOrdersHistory"}> User Orders History</Nav.Link>
+                  <Nav.Link as={Link} to={"/AdminOrderHistory"}> Admin Orders History</Nav.Link>
+                  <Nav.Link as={Link} to={"/RestaurentOrderHistory"}>Restaurent Orders History</Nav.Link>
+
+
+
                   <Nav.Link eventKey="link-1"></Nav.Link>
                   <Nav.Link eventKey="link-2">Link</Nav.Link>
                   <Nav.Link eventKey="disabled" disabled>
