@@ -3,24 +3,10 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Sidebar from "./Sidebar";
 import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
-import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import axios from "axios";
-const categories = {
-  "Select Food Type...": ["Select Category"],
-  Veg: [
-    "Main Course",
-    "Breads",
-    "Rice",
-    "Starters",
-    "Snacks",
-    "Desserts",
-    "Beverages",
-  ],
-  "Non-Veg": ["Chicken", "Mutton", "Fish", "Egg", "Rice", "Breads", "Starters"],
-};
 const SignupSchema = Yup.object({
   foodType: Yup.string().required("Select food type"),
   restaurentId: Yup.string().required("Select Restaurent"),
@@ -64,11 +50,23 @@ const SignupSchema = Yup.object({
 export default function AddProduct() {
   let navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
+  const [submitError, setSubmitError] = useState("");
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
-    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+    }
+    if (!currentUser) {
       navigate("/");
+      return;
+    }
+
+    if (
+      currentUser.roles &&
+      !currentUser.roles.includes("ROLE_OWNER") &&
+      !currentUser.roles.includes("ROLE_ADMIN")
+    ) {
+      navigate("/");
+      return;
     } else {
       console.log(currentUser);
     }
@@ -77,7 +75,6 @@ export default function AddProduct() {
   //   categories["Select Food Type..."],
   // );
   const [restaurents, setRestaurents] = useState([]);
-  
 
   useEffect(() => {
     axios
@@ -113,7 +110,7 @@ export default function AddProduct() {
 
       <Formik
         initialValues={{
-          foodType: "Select Food Type...",
+          foodType: "",
           restaurentId: "",
           category: "Main Course",
           foodName: "",
@@ -123,6 +120,7 @@ export default function AddProduct() {
         }}
         validationSchema={SignupSchema}
         onSubmit={async (values, { resetForm }) => {
+          setSubmitError("");
           const formData = new FormData();
           formData.append("userId", currentUser.id);
           Object.keys(values).forEach((key) => {
@@ -148,9 +146,14 @@ export default function AddProduct() {
             );
             console.log(res);
             alert("Food Added successfully!");
+            resetForm();
           } catch (err) {
-            console.error("Food added  failed");
-            alert("Food added  failed");
+            const message =
+              err.response?.data?.message ||
+              err.response?.data?.error ||
+              "Food add nahi hua. Backend server aur form details check karein.";
+            console.error("Food add failed:", err.response?.data || err.message);
+            setSubmitError(message);
           }
         }}
       >
@@ -164,11 +167,11 @@ export default function AddProduct() {
             <label>Choose Restaurent</label>
 
             <Field as="select" name="restaurentId" className="form-control">
-                <option value="">choose restaurent</option>
+              <option value="">choose restaurent</option>
               {restaurents
                 ? restaurents.map((restaurent, index) => {
                     return (
-                      <option value={restaurent.id} key={index}>
+                      <option value={restaurent._id || restaurent.id} key={restaurent._id || restaurent.id || index}>
                         {restaurent.restaurentName}
                       </option>
                     );
@@ -282,10 +285,11 @@ export default function AddProduct() {
             />
 
             <ErrorMessage
-              name="files"
+              name="images"
               component="div"
               className="text-danger"
             />
+            {submitError && <div className="text-danger mt-2">{submitError}</div>}
             <Row>
               {values.images.map((image, index) => (
                 <Col md={3} key={index}>

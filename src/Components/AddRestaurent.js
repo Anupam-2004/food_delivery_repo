@@ -135,7 +135,8 @@ const AddRestaurent = () => {
       navigate("/");
     } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
       navigate("/");
-    } else {
+    } 
+    else {
       console.log(currentUser);
     }
   }, [currentUser, navigate]);

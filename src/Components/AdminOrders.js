@@ -12,13 +12,12 @@ import {
 import axios from "axios";
 
 import Sidebar from "./Sidebar";
-import { FaFilePdf, FaEye } from "react-icons/fa";
+import { FaFilePdf, FaEye, FaExchangeAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 const AdminOrders = () => {
-  // Orders ke liye array
   const [orders, setOrders] = useState([]);
 
   // Modal ke liye
@@ -26,6 +25,10 @@ const AdminOrders = () => {
 
   // Jo order select hua hai
   const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const [statusModal, setStatusModal] = useState(false);
+  const [selectedStatusOrder, setSelectedStatusOrder] = useState(null);
+  const [newStatus, setNewStatus] = useState("");
 
   const navigate = useNavigate();
 
@@ -55,16 +58,56 @@ const AdminOrders = () => {
     }
   }, [currentUser, navigate]);
 
-  // Eye button click
   const handleShow = (order) => {
     setSelectedOrder(order);
     setShowModal(true);
   };
-
-  // Modal close
   const handleClose = () => {
     setShowModal(false);
     setSelectedOrder(null);
+  };
+
+  const handleStatusShow = (order) => {
+    setSelectedStatusOrder(order);
+    setNewStatus(order.orderStatus || "processing");
+    setStatusModal(true);
+  };
+
+  const handleStatusClose = () => {
+    setStatusModal(false);
+    setSelectedStatusOrder(null);
+    setNewStatus("");
+  };
+
+  const handleStatusUpdate = async () => {
+    if (!selectedStatusOrder) return;
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8090/api/orders/${selectedStatusOrder.id}`,
+        {
+          orderStatus: newStatus,
+        },
+      );
+
+      console.log("Status updated:", response.data);
+
+      // UI me bhi immediately update
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === selectedStatusOrder._id
+            ? { ...order, orderStatus: newStatus }
+            : order,
+        ),
+      );
+
+      handleStatusClose();
+
+      alert("Order status updated successfully");
+    } catch (error) {
+      console.log("Status update failed:", error);
+      alert("Failed to update order status");
+    }
   };
 
   return (
@@ -100,6 +143,8 @@ const AdminOrders = () => {
                 <th>Items</th>
                 <th>Total Price</th>
                 <th>View</th>
+                <th>Status</th>
+                <th>Show Status</th>
                 <th>Invoice</th>
               </tr>
             </thead>
@@ -141,6 +186,18 @@ const AdminOrders = () => {
 
                   <td>
                     <Button
+                      variant="info"
+                      onClick={() => handleStatusShow(order)}
+                      title="Change Order Status"
+                    >
+                      <FaExchangeAlt />
+                    </Button>
+                  </td>
+
+                  <td>{order.orderStatus}</td>
+
+                  <td>
+                    <Button
                       variant="success"
                       as={Link}
                       to={`/AdminInvoice/${order.id}`}
@@ -161,28 +218,26 @@ const AdminOrders = () => {
         </Modal.Header>
 
         <Modal.Body>
-        
           {selectedOrder && (
-           
             <div>
-              <div>  <p>
-            <strong>Customer:</strong> {selectedOrder.userId?.firstName}{" "}
-            {selectedOrder.userId?.lastName}
-          </p>
-
-          <p>
-            <strong>Total Price:</strong> ₹{selectedOrder.totalAmount}
-          </p>
-
-          <h5>Items</h5>
-
-          <ul>
-            {selectedOrder.items?.map((item, index) => (
-              <li key={index}>
-                {item.productId?.foodName} : ₹{item.price}
-              </li>
-            ))}
-          </ul></div>
+              <div>
+                {" "}
+                <p>
+                  <strong>Customer:</strong> {selectedOrder.userId?.firstName}{" "}
+                  {selectedOrder.userId?.lastName}
+                </p>
+                <p>
+                  <strong>Total Price:</strong> ₹{selectedOrder.totalAmount}
+                </p>
+                <h5>Items</h5>
+                <ul>
+                  {selectedOrder.items?.map((item, index) => (
+                    <li key={index}>
+                      {item.productId?.foodName} : ₹{item.price}
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <Accordion>
                 <Accordion.Item eventKey="0">
                   <Accordion.Header>Restaurent details</Accordion.Header>
@@ -386,6 +441,57 @@ const AdminOrders = () => {
         <Modal.Footer>
           <Button variant="danger" onClick={handleClose}>
             Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={statusModal} onHide={handleStatusClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Change Order Status</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {selectedStatusOrder && (
+            <>
+              <p>
+                <strong>Order ID:</strong> {selectedStatusOrder._id}
+              </p>
+
+              <p>
+                <strong>Customer:</strong>{" "}
+                {selectedStatusOrder.userId?.firstName}{" "}
+                {selectedStatusOrder.userId?.lastName}
+              </p>
+
+              <p>
+                <strong>Current Status:</strong>{" "}
+                {selectedStatusOrder.orderStatus}
+              </p>
+
+              <label className="mb-2">
+                <strong>Select New Status</strong>
+              </label>
+
+              <select
+                className="form-select"
+                value={newStatus}
+                onChange={(e) => setNewStatus(e.target.value)}
+              >
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </>
+          )}
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleStatusClose}>
+            Close
+          </Button>
+
+          <Button variant="success" onClick={handleStatusUpdate}>
+            Update Status
           </Button>
         </Modal.Footer>
       </Modal>

@@ -13,7 +13,7 @@ import {
 import { FaLocationDot } from "react-icons/fa6";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { GiChickenLeg } from "react-icons/gi";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -30,7 +30,6 @@ const ViewRestaurent = () => {
   // const{user:currentUser}=useSelector((state)=>state.auth);
 
   const [foods, setFoods] = useState([]);
-  const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -72,7 +71,6 @@ const ViewRestaurent = () => {
             restaurentId: food.restaurentId._id,
           },
         ],
-        active: true,
       };
       console.log("Food:", food.restaurentId._id);
       console.log(data);
@@ -84,7 +82,6 @@ const ViewRestaurent = () => {
 
       console.log(response.data);
       alert("Item added to cart successfully!");
-      setCart(response.data.items);
     } catch (error) {
       console.log(error);
       console.log("Axios Error:", error);
@@ -109,7 +106,7 @@ const ViewRestaurent = () => {
           <div className="restaurant_banner">
             <img
               src={`http://localhost:8090/upload/${restaurent.images[0]}`}
-              alt={restaurent?.restaurantName}
+              alt={restaurent?.restaurentName}
               className="restaurant_banner_img"
             />
 
@@ -125,7 +122,7 @@ const ViewRestaurent = () => {
 
                     <div className="ms-4">
                       <h2 className="text-white">
-                        {restaurent.restaurantName}
+                        {restaurent.restaurentName}
 
                         <Button
                           variant="success"

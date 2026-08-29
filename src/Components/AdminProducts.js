@@ -9,12 +9,12 @@ import {
   Button,
   Table,
 } from "react-bootstrap";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { useSelector } from "react-redux";
 import { AiFillEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const AdminProduct = () => {

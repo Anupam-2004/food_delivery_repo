@@ -3,18 +3,12 @@ import React from "react";
 // import "react-multi-carousel/lib/styles.css";
 import MultiCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import {Link} from "react";
 import {
   Col,
   Row,
   Container,
-  Navbar,
-  Nav,
-  NavDropdown,
   InputGroup,
-  ButtonToolbar,
   Form,
-  Button,
   Image,
   Card,
   Carousel,
@@ -470,7 +464,7 @@ const Landing = () => {
       </Row>
       <Row className="footer">
         <Col className="logo_list" md={3}>
-          <img src="logo_2.png" />
+          <img src="logo_2.png" alt="Foodi Logo" />
           <p>
             Delicious food delivered to your <br></br>doorstep. Fast ,Fresh and
             alwayes <br></br> Reliable
@@ -490,16 +484,16 @@ const Landing = () => {
           <h5>Follow Us</h5>
           <ul className="list-unstyled d-flex justify-content-between">
             <li>
-              <img src="/footer_images/download-removebg-preview.png"></img>
+              <img src="/footer_images/download-removebg-preview.png" alt="Apple Store" />
             </li>
             <li>
-              <img src="/footer_images/facebook-removebg-preview.png"></img>
+              <img src="/footer_images/facebook-removebg-preview.png" alt="Facebook" />
             </li>
             <li>
-              <img src="/footer_images/twitter-removebg-preview.png"></img>
+              <img src="/footer_images/twitter-removebg-preview.png" alt="Twitter" />
             </li>
             <li>
-              <img src="/footer_images/youtube.png"></img>
+              <img src="/footer_images/youtube.png" alt="YouTube" />
             </li>
           </ul>
         </Col>
@@ -576,29 +570,29 @@ const Landing = () => {
         </Col>
         <Col className="contact_us" md={2}>
           <h5>CONTACT US</h5>
-          <a href="">
+          <div>
             <FaLocationDot />
             84005 Foodi Street,<br></br>Jamshedpur,Jharkhand
-          </a>
+          </div>
           <br></br>
-          <a href="">
+          <div>
             <IoIosCall />
             +917070166211
-          </a>
-          <a href="">
+          </div>
+          <div>
             <MdEmail />
             support@foodie.com
-          </a>
-          <a href="">
+          </div>
+          <div>
             <CiStopwatch />
             Mon-Sun
-          </a>
+          </div>
           <p>8:00 AM-11:00 PM</p>
         </Col>
         <Col className="download" md={2}>
           <h5>DOWNLOAD APP</h5>
           <p>Get the Foodie app for a better experience. </p>
-          <img src="/footer_images/burger_fries-removebg-preview.png"></img>
+          <img src="/footer_images/burger_fries-removebg-preview.png" alt="Burger and Fries" />
         </Col>
       </Row>
     </Container>

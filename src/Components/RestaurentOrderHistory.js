@@ -16,31 +16,44 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-
 import "./Orders_history.css";
 
 const RestaurentOrderHistory = () => {
-      const { restaurentId } = useParams();
-    
+  // const { restaurentId } = useParams();
+
   const [orders, setOrders] = useState([]);
+  const [restaurent, setRestaurent] = useState("");
 
   const { user: currentUser } = useSelector((state) => state.auth);
 
   const userId = currentUser?._id || currentUser?.id;
-  console.log(currentUser.username)
+  console.log(currentUser.username);
   //6a85b77c4f0ed8f723c367c0
   useEffect(() => {
     axios
-      // .get( `http://localhost:8090/api/orders/restaurent/${restaurentId}`)
-      .get( `http://localhost:8090/api/orders/restaurent/6a85b77c4f0ed8f723c367c0`)
+      .get(
+        `http://localhost:8090/api/restaurents/mobile/${currentUser.username}`,
+      )
       .then((response) => {
-        console.log("Orders:", response.data);
-        setOrders(Array.isArray(response.data) ? response.data : []);
+        setRestaurent(response.data[0].id);
+        console.log(response.data[0].id);
+        axios
+          // .get( `http://localhost:8090/api/orders/restaurent/${restaurentId}`)
+          .get(
+            `http://localhost:8090/api/orders/restaurent/${response.data[0].id}`
+          )
+          .then((response) => {
+            console.log("Orders:", response.data);
+            setOrders(Array.isArray(response.data) ? response.data : []);
+          })
+          .catch((error) => {
+            console.log("Error fetching orders:", error);
+          });
       })
       .catch((error) => {
-        console.log("Error fetching orders:", error);
+        console.log(error);
       });
-  }, [restaurentId]);
+  }, [currentUser]);
 
   return (
     <div className="orders-history-page">
@@ -193,10 +206,8 @@ const RestaurentOrderHistory = () => {
                       )}
                     </div>
                   </div>
-
-                
                 </div>
-              </div> 
+              </div>
 
               <div className="order-card-footer">
                 <div className="item-count">

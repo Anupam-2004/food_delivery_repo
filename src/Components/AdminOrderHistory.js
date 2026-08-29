@@ -15,10 +15,13 @@ import {
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import "./Orders_history.css";
 
 const AdminOrderHistory = () => {
+   const navigate = useNavigate();
+  
   const [orders, setOrders] = useState([]);
 
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -38,6 +41,19 @@ const AdminOrderHistory = () => {
       .catch((error) => {
         console.log("Error fetching orders:", error);
       });
+       if (!currentUser) {
+      navigate("/");
+      return;
+    }
+
+    if (
+      currentUser.roles &&
+      !currentUser.roles.includes("ROLE_ADMIN")
+    ) {
+      navigate("/");
+      return;
+    }
+
   }, []);
 
   return (

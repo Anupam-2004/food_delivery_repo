@@ -12,8 +12,9 @@ import {
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FaUser } from "react-icons/fa";
+// import { FaUser } from "react-icons/fa";
 import { FaBars } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const Account = () => {
   const formik = useFormik({
@@ -41,13 +42,14 @@ const Account = () => {
     },
   });
   const [show, setShow] = useState(false);
-
+  const { user: currentUser } = useSelector((state) => state.auth);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
-   const [showButton,setShowButton]=useState(false);
+  const [showButton, setShowButton] = useState(false);
   const handleButtonShow = () => setShowButton(true);
   const handleButtonClose = () => setShowButton(false);
+  // const userInfo
 
   return (
     <Container className="mt-5">
@@ -66,17 +68,27 @@ const Account = () => {
               <Offcanvas.Body>
                 <Nav defaultActiveKey="/home" className="flex-column">
                   {/* <Nav.Link as={Link} to={"/OrdersHistory"}>Orders history</Nav.Link> */}
-                  <Nav.Link as={Link} to={"/UserOrdersHistory"}> User Orders History</Nav.Link>
-                  <Nav.Link as={Link} to={"/AdminOrderHistory"}> Admin Orders History</Nav.Link>
-                  <Nav.Link as={Link} to={"/RestaurentOrderHistory"}>Restaurent Orders History</Nav.Link>
-
-
-
-                  <Nav.Link eventKey="link-1"></Nav.Link>
-                  <Nav.Link eventKey="link-2">Link</Nav.Link>
-                  <Nav.Link eventKey="disabled" disabled>
-                    Disabled
-                  </Nav.Link>
+                  {currentUser.roles[0] === "ROLE_ADMIN" ? (
+                    <Nav.Link as={Link} to={"/AdminOrderHistory"}>
+                    Admin Order History
+                    </Nav.Link>
+                  ) : (
+                    "  "
+                  )}
+                  {currentUser.roles[0] === "ROLE_OWNER" ? (
+                    <Nav.Link as={Link} to={"/RestaurentOrderHistory"}>
+                      Restaurant Order History
+                    </Nav.Link>
+                  ) : (
+                    "  "
+                  )}
+                  {currentUser.roles[0] === "ROLE_USER" ? (
+                    <Nav.Link as={Link} to={"/UserOrdersHistory"}>
+                      User Order History
+                    </Nav.Link>
+                  ) : (
+                    "  "
+                  )}
                 </Nav>
               </Offcanvas.Body>
             </Offcanvas>
@@ -84,17 +96,17 @@ const Account = () => {
 
           <div className="account_section">
             <span className="label">First Name:</span>
-            <span className="value">Smriti</span>
+            <span className="value">{}</span>
           </div>
 
           <div className="account_section">
             <span className="label">Last Name:</span>
-            <span className="value">Kumari</span>
+            <span className="value">{}</span>
           </div>
 
           <div className="account_section">
             <span className="label">Mobile:</span>
-            <span className="value">9905615168</span>
+            <span className="value">{}</span>
           </div>
 
           <div className="text-center mt-4">
@@ -167,7 +179,7 @@ const Account = () => {
                 </Form.Group>
               </Form>
               <div className="change_password_btn text-center">
-                <Button variant="danger" type="submit">
+                <Button variant="danger" type="submit" onClick={handleClose}>
                   Submit
                 </Button>
               </div>

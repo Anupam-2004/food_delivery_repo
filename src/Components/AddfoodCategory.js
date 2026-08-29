@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';

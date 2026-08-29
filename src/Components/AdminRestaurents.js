@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 
@@ -88,9 +88,14 @@ const AdminRestaurents = () => {
       </Row>
 
       <Row>
-        <Col>
+        <Col md={6}>
           <Link to={"/AddRestaurent"} className="btn btn-success">
-            Add
+            Add Restaurent
+          </Link>
+        </Col>
+         <Col md={6}>
+          <Link to={"/AddProduct"} className="btn btn-success">
+            Add product
           </Link>
         </Col>
       </Row>
@@ -121,7 +126,7 @@ const AdminRestaurents = () => {
                   <td>{restaurent.ownerName}</td>
                   {/* <td>{restaurent.mobileNumber}</td> */}
                   <td className="view-btn">
-                    <Link to={`/RestaurentOrders/${restaurent.id}`} className="btn btn-success">
+                    <Link to={"/AdminOrders"} className="btn btn-success">
                       <FaEye />
                     </Link>
                     {/* <Button variant="success">

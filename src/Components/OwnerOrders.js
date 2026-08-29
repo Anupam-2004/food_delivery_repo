@@ -14,7 +14,7 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaFilePdf, FaEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const OwnerOrders = () => {
   // Orders ke liye array
@@ -43,6 +43,18 @@ const OwnerOrders = () => {
         console.log(error);
         alert("Failed to fetch orders");
       });
+        if (!currentUser) {
+      navigate("/");
+      return;
+    }
+
+    if (
+      currentUser.roles &&
+      !currentUser.roles.includes("ROLE_OWNER")
+    ) {
+      navigate("/");
+      return;
+    }
   }, []);
 
   // Admin authentication
@@ -160,7 +172,6 @@ const OwnerOrders = () => {
         <Modal.Body>
           {selectedOrder && (
             <div>
-             
               <Accordion>
                 <Accordion.Item>
                   <Accordion.Header>Restaurent details</Accordion.Header>
@@ -191,25 +202,25 @@ const OwnerOrders = () => {
                       <strong>City:</strong>{" "}
                       {selectedOrder.items[0]?.restaurentId?.city}
                     </p>
-                    
-                      <p>
-                        <strong>State:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.state}
-                      </p>
-                      <p>
-                        <strong>Country:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.country}
-                      </p>
-                      <p>
-                        <strong>Pincode:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.pincode}
-                      </p>
 
-                      <p>
-                        <strong>Mobile Number:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.mobileNumber}
-                      </p>
-                       <p>
+                    <p>
+                      <strong>State:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.state}
+                    </p>
+                    <p>
+                      <strong>Country:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.country}
+                    </p>
+                    <p>
+                      <strong>Pincode:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.pincode}
+                    </p>
+
+                    <p>
+                      <strong>Mobile Number:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.mobileNumber}
+                    </p>
+                    <p>
                       <strong>Email:</strong>{" "}
                       {selectedOrder.items[0]?.restaurentId?.email}
                     </p>
@@ -218,21 +229,18 @@ const OwnerOrders = () => {
                       <strong>Owner Name:</strong>{" "}
                       {selectedOrder.items[0]?.restaurentId?.ownerName}
                     </p>
-                      <p>
-                        <strong>Website:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.website}
-                      </p>
-                      <p>
-                        <strong>Descrption:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.description}
-                      </p>
-                      <p>
-                        <strong>Image:</strong>{" "}
-                        {selectedOrder.items[0]?.restaurentId?.image}
-                      </p>
-
-                     
-
+                    <p>
+                      <strong>Website:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.website}
+                    </p>
+                    <p>
+                      <strong>Descrption:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.description}
+                    </p>
+                    <p>
+                      <strong>Image:</strong>{" "}
+                      {selectedOrder.items[0]?.restaurentId?.image}
+                    </p>
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>
@@ -240,11 +248,10 @@ const OwnerOrders = () => {
                 <Accordion.Item>
                   <Accordion.Header>Order details</Accordion.Header>
                   <Accordion.Body>
-                     <p>
+                    <p>
                       <strong>restaurent Name:</strong>{" "}
                       {selectedOrder.items[0]?.restaurentId?.restaurentName}
                     </p>
-
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>

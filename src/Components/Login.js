@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login, register } from "./../slices/auth";
+import { login } from "./../slices/auth";
 import { clearMessage } from "./../slices/message";
 import { Col, Container, Row } from "react-bootstrap";
-import { useFormik } from "formik";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -59,7 +58,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
   // const [successful, setSuccessful] = useState(false);
 
   // const { isLoggedIn } = useSelector((state) => state.auth);
@@ -79,7 +77,6 @@ const Login = () => {
 
   const handleLogin = (formValue) => {
     const { username, password } = formValue;
-    setLoading(true);
     console.log(formValue);
     dispatch(login({ username, password }))
       .unwrap()
@@ -87,7 +84,7 @@ const Login = () => {
         navigate("/");
       })
       .catch(() => {
-        setLoading(false);
+        // handle error
       });
   };
 
@@ -122,7 +119,7 @@ const Login = () => {
                     .then((response) => {
                       console.log("User Successfully Registered");
                       alert("User Successfully Registered");
-                      setShow=(false);
+                      setShow(false);
                     })
                     .catch((error) => {
                       console.log("User Registration Failed!");
@@ -154,7 +151,7 @@ const Login = () => {
                       <div>{errors.email}</div>
                     ) : null}
                     <label htmlFor="password">Password:</label>
-                    <Field name="password" />
+                    <Field name="password" type="password"  />
                     {errors.password && touched.password ? (
                       <div>{errors.password}</div>
                     ) : null}{" "}

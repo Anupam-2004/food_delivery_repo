@@ -11,7 +11,7 @@ import {
 // import { Link } from "react-router";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import axios from "axios";

@@ -14,6 +14,8 @@ import {
 } from "react-bootstrap";
 import { Routes, Route, Link } from "react-router-dom";
 import Landing from "./Components/Landing";
+import About from "./Components/About";
+
 import Restaurents from "./Components/Restaurents";
 import AddRestaurent from "./Components/AddRestaurent";
 import AdminRestaurents from "./Components/AdminRestaurents";
@@ -51,6 +53,7 @@ import OrdersHistory from "./Components/OrdersHistory";
 import UserOrdersHistory from "./Components/UserOrdersHistory";
 import AdminOrderHistory from "./Components/AdminOrderHistory";
 import RestaurentOrderHistory from "./Components/RestaurentOrderHistory";
+import OwnerDashboard from "./Components/OwnerDashboard";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -137,11 +140,18 @@ function App() {
                       ) : (
                         "  "
                       )}
+                      {currentUser.roles[0] === "ROLE_OWNER" ? (
+                        <Dropdown.Item as={Link} to={"/OwnerDashboard"}>
+                          OwnerDashboard
+                        </Dropdown.Item>
+                      ) : (
+                        "  "
+                      )}
                       <Dropdown.Item as={Link} to={"/Account"}>
                         Account
                       </Dropdown.Item>
 
-                      <Dropdown.Item as={Link} to={"/Order"}>
+                      <Dropdown.Item as={Link} to={"/Orders"}>
                         Orders
                       </Dropdown.Item>
 
@@ -185,7 +195,7 @@ function App() {
         />
         <Route path="/Category" element={<Categories />} />
         <Route path="/AddfoodCategory" element={<AddfoodCategory />} />
-        {/* <Route path="/About" element={<About />} /> */}
+        <Route path="/About" element={<About />} />
         <Route path="/menu" element={<Foods />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/AddProduct" element={<AddProduct />} />
@@ -209,6 +219,7 @@ function App() {
         <Route path="/OrdersHistory" element={<OrdersHistory />} />
         <Route path="/UserOrdersHistory" element={<UserOrdersHistory />} />
         <Route path="/AdminOrderHistory" element={<AdminOrderHistory />} />
+         <Route path="/OwnerDashboard" element={<OwnerDashboard/>} />
         <Route
           path="/RestaurentOrderHistory"
           element={<RestaurentOrderHistory />}
