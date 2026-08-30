@@ -15,7 +15,8 @@ import * as Yup from "yup";
 // import { FaUser } from "react-icons/fa";
 import { FaBars } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-
+import { useEffect } from "react";
+import axios from "axios";
 const Account = () => {
   const formik = useFormik({
     initialValues: {
@@ -43,13 +44,14 @@ const Account = () => {
   });
   const [show, setShow] = useState(false);
   const { user: currentUser } = useSelector((state) => state.auth);
+  console.log(currentUser);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
   const [showButton, setShowButton] = useState(false);
   const handleButtonShow = () => setShowButton(true);
   const handleButtonClose = () => setShowButton(false);
-  // const userInfo
+ 
 
   return (
     <Container className="mt-5">
@@ -96,17 +98,17 @@ const Account = () => {
 
           <div className="account_section">
             <span className="label">First Name:</span>
-            <span className="value">{}</span>
+            <span className="value">{currentUser.firstName}</span>
           </div>
 
           <div className="account_section">
             <span className="label">Last Name:</span>
-            <span className="value">{}</span>
+            <span className="value">{currentUser.LastName}</span>
           </div>
 
           <div className="account_section">
             <span className="label">Mobile:</span>
-            <span className="value">{}</span>
+            <span className="value">{currentUser.mobileNumber}</span>
           </div>
 
           <div className="text-center mt-4">

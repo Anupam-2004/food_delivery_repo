@@ -284,7 +284,7 @@ const Dashboard = () => {
               <Link to={"/Dashboard"}>
                 <Card className="dashboard_card">
                   <h4>60</h4>
-                  <h5>Performance</h5>
+                  <h5>  Total Revenue</h5>
                 </Card>
               </Link>
             </Col>
@@ -301,11 +301,11 @@ const Dashboard = () => {
               </Link>
             </Col>
           </Row>
-          <Row>
+          {/* <Row>
             <Col>
               <Bar options={options} data={data} />
             </Col>
-          </Row>
+          </Row> */}
         </Col>
       </Row>
       <Row className="mt-4">
@@ -328,7 +328,7 @@ const Dashboard = () => {
               />
               <ChartsReferenceLine
                 y={9800}
-                label="Max"
+                label="total orders "
                 lineStyle={{ stroke: "red" }}
               />
               <ChartsXAxis />
