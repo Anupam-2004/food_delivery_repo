@@ -7,6 +7,7 @@ import { ChartsReferenceLine } from "@mui/x-charts/ChartsReferenceLine";
 import { LinePlot } from "@mui/x-charts/LineChart";
 import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
 import { ChartsYAxis } from "@mui/x-charts/ChartsYAxis";
+import { ChartsLegend } from "@mui/x-charts/ChartsLegend";
 
 import { Col, Container, Row, Card, Breadcrumb } from "react-bootstrap";
 import {
@@ -168,22 +169,78 @@ export const data2 = {
 };
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const { user: currentUser } = useSelector((state) => state.auth);
+
+  const [numberofusers, setNumberofUsers] = useState(null);
+  const [numberofrestaurents, setNumberofRestaurents] = useState(null);
+
+  const [orders, setOrders] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+
+  const [loading, setLoading] = useState(true);
   const [numberofproducts, setNumberofProducts] = useState();
   useEffect(() => {
     axios
       .get("http://localhost:8090/api/products/count")
       .then((response) => {
-        console.log(response.data);
         setNumberofProducts(response.data);
       })
       .catch((error) => {
-        console.log("Failed to all fetch products");
-        console.log(error);
-        alert("Failed to all fetch products");
+        console.log("Failed to fetch products count", error);
       });
-  }, []);
-  const [numberofusers, setNumberofUsers] = useState();
-  useEffect(() => {
+
+    axios
+      .get("http://localhost:8090/api/auth/usercount")
+      .then((response) => {
+        setNumberofUsers(response.data);
+      })
+      .catch((error) => {
+        console.log("Failed to fetch users count", error);
+      });
+
+    axios
+      .get("http://localhost:8090/api/restaurents/count")
+      .then((response) => {
+        setNumberofRestaurents(response.data);
+      })
+      .catch((error) => {
+        console.log("Failed to fetch restaurants count", error);
+      });
+
+    /* ORDERS */
+
+    axios
+      .get("http://localhost:8090/api/orders")
+      .then((response) => {
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data.orders || [];
+
+        setOrders(data);
+      })
+      .catch((error) => {
+        console.log("Failed to fetch orders", error);
+      });
+
+    /* RESTAURANTS */
+
+    axios
+      .get("http://localhost:8090/api/restaurents")
+      .then((response) => {
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data.restaurents || [];
+
+        setRestaurants(data);
+      })
+      .catch((error) => {
+        console.log("Failed to fetch restaurants", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
     axios
       .get("http://localhost:8090/api/auth/usercount")
       .then((response) => {
@@ -196,44 +253,32 @@ const Dashboard = () => {
         alert("Failed to all fetch users");
       });
   }, []);
-  const [numberofrestaurents, setNumberofRestaurents] = useState();
-  useEffect(() => {
-    axios
-      .get("http://localhost:8090/api/restaurents/count")
-      .then((response) => {
-        console.log(response.data);
-        setNumberofRestaurents(response.data);
-      })
-      .catch((error) => {
-        console.log("Failed to all fetch Restaurents");
-        console.log(error);
-        alert("Failed to all fetch Restaurents");
-      });
-  }, []);
-  let navigate = useNavigate();
-  const { user: currentUser } = useSelector((state) => state.auth);
+
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
     } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
       navigate("/");
-    }
-    
-     else {
+    } else {
       console.log(currentUser);
     }
   }, [currentUser, navigate]);
   const margin = { right: 24 };
-  const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-  const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+
+  const pendingData = [12, 18, 15, 22, 20, 25, 18];
+
+  const completedData = [30, 45, 40, 55, 60, 70, 65];
+
+  const cancelledData = [5, 8, 6, 10, 7, 12, 9];
+
   const xLabels = [
-    "Page A",
-    "Page B",
-    "Page C",
-    "Page D",
-    "Page E",
-    "Page F",
-    "Page G",
+    "01 May",
+    "05 May",
+    "10 May",
+    "15 May",
+    "20 May",
+    "25 May",
+    "30 May",
   ];
   return (
     <Container>
@@ -272,7 +317,6 @@ const Dashboard = () => {
             <Col>
               <Link to={"/Users"}>
                 <Card className="dashboard_card">
-                
                   <h4>{numberofusers ? numberofusers.totalUsers : ""} </h4>
 
                   <h5>Users</h5>
@@ -284,7 +328,7 @@ const Dashboard = () => {
               <Link to={"/Dashboard"}>
                 <Card className="dashboard_card">
                   <h4>60</h4>
-                  <h5>  Total Revenue</h5>
+                  <h5> Total Revenue</h5>
                 </Card>
               </Link>
             </Col>
@@ -310,34 +354,69 @@ const Dashboard = () => {
       </Row>
       <Row className="mt-4">
         <Col md={6}>
-          <Box sx={{ width: "100%", height: 300 }}>
-            <ChartsContainer
-              series={[
-                { data: pData, label: "pv", type: "line" },
-                { data: uData, label: "uv", type: "line" },
-              ]}
-              xAxis={[{ scaleType: "point", data: xLabels, height: 28 }]}
-              yAxis={[{ width: 50 }]}
-              margin={margin}
-            >
-              <LinePlot />
-              <ChartsReferenceLine
-                x="Page C"
-                label="Max PV PAGE"
-                lineStyle={{ stroke: "red" }}
-              />
-              <ChartsReferenceLine
-                y={9800}
-                label="total orders "
-                lineStyle={{ stroke: "red" }}
-              />
-              <ChartsXAxis />
-              <ChartsYAxis />
-            </ChartsContainer>
-          </Box>
-        </Col>
+  <Card className="dashboard-panel">
 
-        <Col>
+    <div className="panel-header">
+      <h5>Order Overview</h5>
+    </div>
+
+    <Box sx={{ width: "100%", height: 350 }}>
+
+      <ChartsContainer
+        series={[
+          {
+            data: pendingData,
+            label: "🟠 Pending Orders",
+            type: "line",
+            color: "#ff9800",
+          },
+          {
+            data: completedData,
+            label: "🟢 Completed Orders",
+            type: "line",
+            color: "#4caf50",
+          },
+          {
+            data: cancelledData,
+            label: "🔴 Cancelled Orders",
+            type: "line",
+            color: "#f44336",
+          },
+        ]}
+        xAxis={[
+          {
+            scaleType: "point",
+            data: xLabels,
+            height: 40,
+          },
+        ]}
+        yAxis={[
+          {
+            width: 45,
+          },
+        ]}
+        margin={margin}
+      >
+
+        {/* ऊपर Pending, Completed और Cancelled */}
+        <ChartsLegend />
+
+        {/* Graph Lines */}
+        <LinePlot />
+
+        {/* X Axis */}
+        <ChartsXAxis />
+
+        {/* Y Axis */}
+        <ChartsYAxis />
+
+      </ChartsContainer>
+
+    </Box>
+
+  </Card>
+</Col>
+        <Col md={6}>
           <Bar options={options} data={data} />
         </Col>
       </Row>

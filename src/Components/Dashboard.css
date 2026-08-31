@@ -1,0 +1,708 @@
+/* ===============================
+   MAIN DASHBOARD
+================================ */
+
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f5f7fb;
+  display: flex;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 25px 30px;
+  margin-left: 250px;
+}
+
+
+/* ===============================
+   HEADER
+================================ */
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.dashboard-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.dashboard-header p {
+  color: #6b7280;
+  margin-bottom: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+
+/* SEARCH */
+
+.search-box {
+  width: 250px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+
+  padding: 0 14px;
+
+  color: #6b7280;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+
+/* NOTIFICATION */
+
+.notification {
+  position: relative;
+  font-size: 20px;
+  color: #4b5563;
+}
+
+.notification span {
+  position: absolute;
+
+  top: -10px;
+  right: -12px;
+
+  width: 19px;
+  height: 19px;
+
+  background: #ef4444;
+
+  color: white;
+
+  font-size: 11px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}
+
+
+/* PROFILE */
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-weight: 600;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: #e5e7eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+
+  color: #374151;
+}
+
+
+/* ===============================
+   STATISTICS CARDS
+================================ */
+
+.stat-card {
+  border: none;
+
+  border-radius: 12px;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+
+  gap: 18px;
+
+  min-height: 125px;
+
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.stat-card p {
+  margin-bottom: 4px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+.stat-card h3 {
+  margin-bottom: 6px;
+
+  font-size: 25px;
+
+  font-weight: 700;
+}
+
+.stat-card small {
+  color: #4b5563;
+}
+
+.stat-card small svg {
+  color: #16a34a;
+}
+
+
+/* ICON */
+
+.stat-icon {
+  width: 62px;
+  height: 62px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  font-size: 25px;
+}
+
+.purple {
+  background: #635bce;
+}
+
+.green {
+  background: #2e9b65;
+}
+
+.orange {
+  background: #ff8a1f;
+}
+
+.blue {
+  background: #3b6fc4;
+}
+
+
+/* ===============================
+   PANELS
+================================ */
+
+.dashboard-panel {
+  border: none;
+
+  border-radius: 12px;
+
+  padding: 18px;
+
+  min-height: 280px;
+
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.panel-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 18px;
+}
+
+.panel-header h5 {
+  font-size: 17px;
+
+  font-weight: 600;
+
+  margin: 0;
+}
+
+.panel-header select {
+  border: 1px solid #e5e7eb;
+
+  padding: 8px 12px;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  color: #4b5563;
+}
+
+.view-all-btn {
+  border: none;
+
+  background: transparent;
+
+  color: #2563eb;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+
+/* ===============================
+   CHART
+================================ */
+
+.chart-container {
+  height: 250px;
+}
+
+
+/* ===============================
+   RECENT ORDERS
+================================ */
+
+.recent-orders {
+  overflow: hidden;
+}
+
+.recent-orders table {
+  margin-bottom: 0;
+}
+
+.recent-orders th {
+  color: #6b7280;
+
+  font-weight: 500;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.recent-orders td {
+  vertical-align: middle;
+
+  font-size: 13px;
+}
+
+
+/* STATUS */
+
+.status-delivered {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+
+  padding: 7px 12px;
+}
+
+.status-preparing {
+  background: #fef3c7 !important;
+  color: #d97706 !important;
+
+  padding: 7px 12px;
+}
+
+.status-way {
+  background: #dbeafe !important;
+  color: #2563eb !important;
+
+  padding: 7px 12px;
+}
+
+.status-cancelled {
+  background: #fee2e2 !important;
+  color: #dc2626 !important;
+
+  padding: 7px 12px;
+}
+
+.status-pending {
+  background: #f3f4f6 !important;
+  color: #6b7280 !important;
+
+  padding: 7px 12px;
+}
+
+
+/* ===============================
+   TOP RESTAURANTS
+================================ */
+
+.restaurant-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.restaurant-item:last-child {
+  border-bottom: none;
+}
+
+.restaurant-rank {
+  width: 25px;
+  height: 25px;
+
+  border-radius: 50%;
+
+  background: #f3f4f6;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 12px;
+}
+
+.restaurant-image {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  background: #f3f4f6;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.restaurant-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.restaurant-info {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.restaurant-info strong {
+  font-size: 14px;
+}
+
+.restaurant-info small {
+  color: #6b7280;
+
+  margin-top: 4px;
+}
+
+
+/* ===============================
+   SALES OVERVIEW
+================================ */
+
+.sales-chart {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-around;
+
+  min-height: 220px;
+}
+
+.doughnut-wrapper {
+  width: 190px;
+  height: 190px;
+
+  position: relative;
+}
+
+.doughnut-center {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  text-align: center;
+}
+
+.doughnut-center span {
+  display: block;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.doughnut-center strong {
+  font-size: 15px;
+}
+
+.sales-legend {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+.sales-legend div {
+  display: flex;
+
+  flex-direction: column;
+
+  font-size: 13px;
+}
+
+.sales-legend strong {
+  margin-top: 3px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  display: inline-block;
+
+  margin-right: 6px;
+}
+
+.purple-dot {
+  background: #635bce;
+}
+
+.orange-dot {
+  background: #ff9f1c;
+}
+
+.blue-dot {
+  background: #3b82f6;
+}
+
+
+/* ===============================
+   USER STATISTICS
+================================ */
+
+.user-stat {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 13px 0;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.user-stat:last-child {
+  border-bottom: none;
+}
+
+.user-stat-icon {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 10px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+}
+
+.user-stat small {
+  color: #6b7280;
+}
+
+.user-stat h4 {
+  margin: 3px 0 0;
+
+  font-size: 18px;
+}
+
+.growth {
+  margin-left: auto;
+
+  color: #16a34a;
+
+  font-size: 13px;
+}
+
+
+/* ===============================
+   RECENT RESTAURANTS
+================================ */
+
+.recent-restaurant-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  border: 1px solid #eeeeee;
+
+  padding: 10px;
+
+  border-radius: 10px;
+}
+
+.recent-image {
+  width: 70px;
+  height: 70px;
+
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  background: #f3f4f6;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.recent-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.recent-info {
+  display: flex;
+
+  flex-direction: column;
+
+  flex: 1;
+}
+
+.recent-info strong {
+  font-size: 14px;
+}
+
+.recent-info small {
+  color: #6b7280;
+
+  margin: 5px 0;
+}
+
+.recent-info .badge {
+  width: fit-content;
+}
+
+
+/* ===============================
+   LOADING
+================================ */
+
+.dashboard-loading {
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 991px) {
+
+  .dashboard-main {
+    margin-left: 0;
+
+    padding: 20px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 20px;
+  }
+
+  .header-actions {
+    width: 100%;
+
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    flex: 1;
+  }
+
+  .sales-chart {
+    flex-direction: column;
+
+    gap: 20px;
+  }
+
+}
+
+
+@media (max-width: 576px) {
+
+  .dashboard-main {
+    padding: 15px;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .admin-profile {
+    display: none;
+  }
+
+}
