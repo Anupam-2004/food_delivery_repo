@@ -31,7 +31,7 @@ import {
 import "./Restaurents.css";
 
 const Restaurents = () => {
-  const [restaurants, setRestaurants] = useState([]);
+  const [restaurents, setRestaurents] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -46,7 +46,7 @@ const Restaurents = () => {
     try {
       const response = await axios.get("http://localhost:8090/api/restaurents");
 
-      setRestaurants(response.data || []);
+      setRestaurents(response.data || []);
     } catch (error) {
       console.log(error);
       setError("Failed to load restaurants");
@@ -65,10 +65,10 @@ const Restaurents = () => {
   };
 
   // Search restaurants
-  const filteredRestaurants = restaurants.filter((restaurant) => {
-    const name = restaurant.restaurentName || "";
-    const foodType = restaurant.foodType || "";
-    const location = restaurant.location || "";
+  const filteredRestaurents = restaurents.filter((restaurent) => {
+    const name = restaurent.restaurentName || "";
+    const foodType = restaurent.foodType || "";
+    const location = restaurent.location || "";
 
     const text = `${name} ${foodType} ${location}`.toLowerCase();
 
@@ -152,10 +152,10 @@ const Restaurents = () => {
   
         {/* Restaurant Cards */}
         <Row className="restaurant-row">
-          {filteredRestaurants.length > 0 ? (
-            filteredRestaurants.map((restaurant) => {
-              const id = restaurant._id || restaurant.id;
-              const image = restaurant.images?.[0];
+          {filteredRestaurents.length > 0 ? (
+            filteredRestaurents.map((restaurent) => {
+              const id = restaurent._id || restaurent.id;
+              const image = restaurent.images?.[0];
               const favorite = favorites.includes(id);
 
               return (
@@ -166,7 +166,7 @@ const Restaurents = () => {
                       {image ? (
                         <img
                           src={`http://localhost:8090/upload/${image}`}
-                          alt={restaurant.restaurentName}
+                          alt={restaurent.restaurentName}
                           className="restaurant-image"
                         />
                       ) : (
@@ -188,7 +188,7 @@ const Restaurents = () => {
                       {/* Offer */}
                       <div className="offer-badge">
                         <FaFire />
-                        {restaurant.offer || "20% OFF up to ₹100"}
+                        {restaurent.offer || "20% OFF up to ₹100"}
                       </div>
                     </div>
 
@@ -197,12 +197,12 @@ const Restaurents = () => {
                       {/* Name + Rating */}
                       <div className="restaurant-title-section">
                         <Card.Title className="restaurant-name">
-                          {restaurant.restaurentName}
+                          {restaurent.restaurentName}
                         </Card.Title>
 
                         <div className="rating-box">
                           <FaStar />
-                          {restaurant.rating || "4.2"}
+                          {restaurent.rating || "4.2"}
                         </div>
                       </div>
 
@@ -211,37 +211,37 @@ const Restaurents = () => {
                         <FaMapMarkerAlt />
 
                         <span>
-                          {restaurant.addressLine1 || "Location not available"}
+                          {restaurent.addressLine1 || "Location not available"}
 
-                          {restaurant.location && `, ${restaurant.location}`}
+                          {restaurent.location && `, ${restaurent.location}`}
                         </span>
                       </div>
 
                       {/* Food Type */}
                       <p className="restaurant-cuisine">
-                        {restaurant.foodType || "Veg"}
+                        {restaurent.foodType || "Veg"}
                       </p>
 
                       {/* Details */}
                       <div className="restaurant-details">
                         <div className="detail-item">
                           <FaClock />
-                          {restaurant.deliveryTime || "25-30 min"}
+                          {restaurent.deliveryTime || "25-30 min"}
                         </div>
 
                         <div className="detail-item">
                           <FaMotorcycle />
 
-                          {restaurant.deliveryCharge === 0
+                          {restaurent.deliveryCharge === 0
                             ? "Free Delivery"
-                            : restaurant.deliveryCharge
-                              ? `₹${restaurant.deliveryCharge}`
+                            : restaurent.deliveryCharge
+                              ? `₹${restaurent.deliveryCharge}`
                               : "Free Delivery"}
                         </div>
 
                         {/* <div className="detail-item">
                           <FaUser />
-                          {restaurant.priceForTwo || "₹200 for two"}
+                          {restaurent.priceForTwo || "₹200 for two"}
                         </div>*/}
                       </div> 
 

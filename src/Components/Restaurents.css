@@ -210,11 +210,11 @@
 
 .restaurant-image {
   display: block;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  width: 300px ;
+  height: 300px ;
+  object-fit: cover ;
+  margin: 0 ;
+  padding: 0 ;
 }
 
 .restaurant-card:hover .restaurant-image {

@@ -186,11 +186,9 @@ const ViewRestaurent = () => {
               <Card className="food-card">
                 <div className="food-image-box">
                   <Card.Img
-                    src={
-                      // food.images && food.images.length ?
-                      `http://localhost:8090/upload/${food.images[0]}`
-                      // : "/REStaurent/an-unique-experiance.jpg"
-                    }
+                    src={`http://localhost:8090/upload/${food.images[0]}`
+                  
+                  }
                   />
 
                   <div className="heart-icon">
