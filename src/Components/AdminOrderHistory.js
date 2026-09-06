@@ -26,7 +26,7 @@ const AdminOrderHistory = () => {
 
   const { user: currentUser } = useSelector((state) => state.auth);
 
-  const userId = currentUser?._id || currentUser?.id;
+  const userId = currentUser?._id;
 
   useEffect(() => {
     // if (!AdminId) return;

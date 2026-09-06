@@ -12,12 +12,13 @@ import {
 } from "react-icons/fa";
 
 import "./Order.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
 function Orders() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -134,7 +135,7 @@ function Orders() {
           <Button
             variant="link"
             className="mt-3"
-            onClick={() => navigate("/orders-history")}
+            onClick={() => navigate("/OrdersHistory")}
           >
             View Order History
           </Button>
@@ -157,7 +158,11 @@ function Orders() {
     Only the latest active order is shown.
   */
 
-  const latestOrder = sortedOrders[0];
+  const placedOrderId = location.state?.placedOrderId;
+  const latestOrder =
+    sortedOrders.find(
+      (order) => (order.id || order._id) === placedOrderId
+    ) || sortedOrders[0];
 
   const orderDate = new Date(
     latestOrder.createdAt

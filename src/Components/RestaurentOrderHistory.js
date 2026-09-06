@@ -26,7 +26,7 @@ const RestaurentOrderHistory = () => {
 
   const { user: currentUser } = useSelector((state) => state.auth);
 
-  const userId = currentUser?._id || currentUser?.id;
+  const userId = currentUser?._id;
   console.log(currentUser.username);
   //6a85b77c4f0ed8f723c367c0
   useEffect(() => {

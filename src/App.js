@@ -54,6 +54,7 @@ import UserOrdersHistory from "./Components/UserOrdersHistory";
 import AdminOrderHistory from "./Components/AdminOrderHistory";
 import RestaurentOrderHistory from "./Components/RestaurentOrderHistory";
 import OwnerDashboard from "./Components/OwnerDashboard";
+import OwnerProducts from "./Components/OwnerProducts";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -220,6 +221,7 @@ function App() {
         <Route path="/UserOrdersHistory" element={<UserOrdersHistory />} />
         <Route path="/AdminOrderHistory" element={<AdminOrderHistory />} />
          <Route path="/OwnerDashboard" element={<OwnerDashboard/>} />
+         <Route path="/OwnerProducts" element={<OwnerProducts/>} />
         <Route
           path="/RestaurentOrderHistory"
           element={<RestaurentOrderHistory />}

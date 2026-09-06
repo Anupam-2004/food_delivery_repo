@@ -122,7 +122,7 @@ export default function AddProduct() {
         onSubmit={async (values, { resetForm }) => {
           setSubmitError("");
           const formData = new FormData();
-          formData.append("userId", currentUser.id);
+          formData.append("userId", currentUser.id || currentUser._id);
           Object.keys(values).forEach((key) => {
             if (key !== "images") {
               formData.append(key, values[key]);

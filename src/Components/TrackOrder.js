@@ -32,10 +32,11 @@ function TrackOrder() {
       );
 
       console.log("Order cancelled:", response.data);
-      alert("cancel");
+      setOrder(response.data);
+      alert("Order cancelled");
     } catch (error) {
       console.log("Cancel order error:", error);
-      alert("cancel error");
+      alert("Cancel order failed");
     }
   };
 
@@ -81,7 +82,21 @@ function TrackOrder() {
   const total =
     order.totalAmount || itemTotal + deliveryFee + packagingFee - discount;
 
-  const currentStatus = order.status || "Confirmed";
+  const statusMap = {
+    pending: "Confirmed",
+    processing: "Preparing",
+    preparing: "Preparing",
+    accepted: "Preparing",
+    shipped: "On the Way",
+    "out for delivery": "On the Way",
+    delivered: "Delivered",
+    cancelled: "Cancelled",
+    canceled: "Cancelled",
+  };
+
+  const rawStatus = order.orderStatus || order.status || "processing";
+  const currentStatus =
+    statusMap[String(rawStatus).toLowerCase()] || rawStatus;
 
   const statuses = [
     "Confirmed",
@@ -91,7 +106,7 @@ function TrackOrder() {
     "Delivered",
   ];
 
-  const currentIndex = statuses.indexOf(currentStatus);
+  const currentIndex = Math.max(statuses.indexOf(currentStatus), 0);
 
   return (
     <div className="order-page">
@@ -274,14 +289,14 @@ function TrackOrder() {
                     <img
                       src={
                         item.productId?.images?.[0]
-                          ? `http://localhost:8090/uploads/${item.productId.images[0]}`
+                          ? `http://localhost:8090/upload/${item.productId.images[0]}`
                           : "https://via.placeholder.com/80"
                       }
-                      alt={item.productId?.productName}
+                      alt={item.productId?.foodName || item.productId?.productName || "Food"}
                     />
 
                     <div>
-                      <b>{item.productId?.productName}</b>
+                      <b>{item.productId?.foodName || item.productId?.productName || "Food Item"}</b>
 
                       <small>Qty: {item.quantity}</small>
                     </div>
@@ -355,8 +370,7 @@ function TrackOrder() {
           <Button
             variant="danger"
             className="cancel-btn"
-            onClick={() => handleCancelOrder(order.id)}
-            href="/"
+            onClick={() => handleCancelOrder(order.id || order._id)}
           >
             <FaTrash /> Cancel Order
           </Button>

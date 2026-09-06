@@ -1,0 +1,338 @@
+/* =========================================
+OWNER PRODUCTS PAGE
+========================================= */
+
+.owner-products-page {
+min-height: 100vh;
+background: #f6f7fb;
+padding: 30px;
+}
+
+/* =========================================
+PAGE HEADER
+========================================= */
+
+.owner-products-header {
+margin-bottom: 30px;
+}
+
+.owner-products-header h2 {
+font-size: 30px;
+font-weight: 700;
+color: #222;
+margin-bottom: 6px;
+}
+
+.owner-products-header p {
+color: #777;
+font-size: 15px;
+margin-bottom: 0;
+}
+
+/* =========================================
+BACK BUTTON
+========================================= */
+
+.owner-back-btn {
+border-radius: 8px;
+padding: 8px 16px;
+font-weight: 500;
+transition: 0.3s ease;
+}
+
+.owner-back-btn:hover {
+transform: translateX(-3px);
+}
+
+/* =========================================
+ADD PRODUCT BUTTON
+========================================= */
+
+.owner-add-product-btn {
+border: none;
+border-radius: 8px;
+padding: 10px 20px;
+font-weight: 600;
+transition: all 0.3s ease;
+}
+
+.owner-add-product-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 15px rgba(220, 53, 69, 0.25);
+}
+
+/* =========================================
+RESTAURANT INFO CARD
+========================================= */
+
+.restaurant-info-card {
+border-radius: 14px;
+background: #ffffff;
+border: none;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.restaurant-info-card .card-body {
+padding: 25px;
+}
+
+.restaurant-info-name {
+font-size: 22px;
+font-weight: 700;
+color: #222;
+margin-bottom: 5px;
+}
+
+.restaurant-info-location {
+color: #777;
+font-size: 14px;
+}
+
+/* =========================================
+PRODUCTS CARD
+========================================= */
+
+.products-table-card {
+border: none;
+border-radius: 14px;
+overflow: hidden;
+background: #ffffff;
+box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.products-table-card .card-body {
+padding: 25px;
+}
+
+/* =========================================
+TABLE HEADER
+========================================= */
+
+.products-table-title {
+font-size: 21px;
+font-weight: 700;
+color: #222;
+}
+
+/* =========================================
+PRODUCTS TABLE
+========================================= */
+
+.owner-products-table {
+margin-bottom: 0;
+}
+
+.owner-products-table thead {
+background: #f8f9fa;
+}
+
+.owner-products-table thead th {
+border: none;
+padding: 16px;
+font-size: 13px;
+font-weight: 700;
+color: #666;
+text-transform: uppercase;
+white-space: nowrap;
+}
+
+.owner-products-table tbody td {
+padding: 16px;
+vertical-align: middle;
+border-color: #f0f0f0;
+font-size: 14px;
+}
+
+.owner-products-table tbody tr {
+transition: all 0.25s ease;
+}
+
+.owner-products-table tbody tr:hover {
+background: #fafafa;
+}
+
+/* =========================================
+PRODUCT IMAGE
+========================================= */
+
+.owner-product-image {
+width: 70px;
+height: 70px;
+object-fit: cover;
+border-radius: 10px;
+border: 1px solid #eeeeee;
+transition: all 0.3s ease;
+}
+
+.owner-product-image:hover {
+transform: scale(1.08);
+}
+
+/* =========================================
+NO IMAGE BOX
+========================================= */
+
+.no-product-image {
+width: 70px;
+height: 70px;
+background: #f1f3f5;
+color: #999;
+border-radius: 10px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+font-size: 11px;
+text-align: center;
+}
+
+/* =========================================
+PRODUCT NAME
+========================================= */
+
+.owner-product-name {
+font-size: 15px;
+font-weight: 600;
+color: #222;
+}
+
+/* =========================================
+CATEGORY
+========================================= */
+
+.owner-product-category {
+color: #666;
+font-size: 14px;
+}
+
+/* =========================================
+PRICE
+========================================= */
+
+.owner-product-price {
+color: #198754;
+font-size: 15px;
+font-weight: 700;
+}
+
+/* =========================================
+BADGES
+========================================= */
+
+.food-type-badge,
+.status-badge {
+padding: 7px 11px;
+border-radius: 20px;
+font-size: 12px;
+font-weight: 600;
+}
+
+/* =========================================
+ACTION BUTTONS
+========================================= */
+
+.product-edit-btn,
+.product-delete-btn {
+width: 36px;
+height: 36px;
+border-radius: 8px;
+
+display: inline-flex;
+align-items: center;
+justify-content: center;
+
+transition: all 0.25s ease;
+}
+
+.product-edit-btn:hover {
+transform: translateY(-2px);
+}
+
+.product-delete-btn:hover {
+transform: translateY(-2px);
+}
+
+/* =========================================
+EMPTY PRODUCTS
+========================================= */
+
+.no-products {
+padding: 70px 20px;
+text-align: center;
+}
+
+.no-products h5 {
+font-size: 20px;
+font-weight: 700;
+color: #333;
+margin-bottom: 10px;
+}
+
+.no-products p {
+color: #777;
+margin-bottom: 20px;
+}
+
+/* =========================================
+RESPONSIVE TABLET
+========================================= */
+
+@media (max-width: 991px) {
+
+.owner-products-page {
+padding: 20px;
+}
+
+.owner-products-header h2 {
+font-size: 26px;
+}
+
+.products-table-card .card-body {
+padding: 18px;
+}
+
+}
+
+/* =========================================
+MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+.owner-products-page {
+padding: 15px;
+}
+
+.owner-products-header h2 {
+font-size: 23px;
+}
+
+.owner-products-header p {
+font-size: 13px;
+}
+
+.restaurant-info-card .card-body {
+padding: 18px;
+}
+
+.products-table-card .card-body {
+padding: 15px;
+}
+
+.owner-product-image {
+width: 55px;
+height: 55px;
+}
+
+.no-product-image {
+width: 55px;
+height: 55px;
+}
+
+.owner-add-product-btn {
+width: 100%;
+margin-top: 10px;
+}
+
+}

@@ -60,7 +60,7 @@ const ViewRestaurent = () => {
   const AddToCart = async (food) => {
     try {
       const data = {
-        userId: currentUser.id,
+         userId: currentUser.id || currentUser._id,
         //  addressId:addressId.id;
         active: true,
         items: [

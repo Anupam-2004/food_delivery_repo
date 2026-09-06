@@ -35,7 +35,7 @@ const OrdersHistory = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const userId = currentUser?._id || currentUser?.id;
+  const userId = currentUser?._id;
 
   useEffect(() => {
     const getOrderHistory = async () => {

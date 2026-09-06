@@ -1,20 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-// import Sidebar from "./Sidebar";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { FaLocationDot } from "react-icons/fa6";
 
-const city = {
-  Aera: ["Jamshedpur", "Bokaro", "Dhanbad", "Ranchi", "Hazaribagh", "Giridih"],
-};
 const location = {
-  Jamshedpur: ["Sakschi", "Bistupur", "Kadma", "Adityapur", "Ghamhriya"],
+  Jamshedpur: ["Sakchi", "Bistupur", "Kadma", "Adityapur", "Ghamhriya"],
 
   Ranchi: [
     "Lalpur",
@@ -33,6 +26,7 @@ const location = {
     "Kantatoli",
     "Ratu Road",
   ],
+
   Bokaro: [
     "Chas",
     "Bokaro Steel City",
@@ -40,73 +34,68 @@ const location = {
     "Phusro",
     "Chandrapura",
   ],
-};
 
-const categories = {};
+  Dhanbad: [
+    "Bank More",
+    "Hirapur",
+    "Saraidhela",
+    "Sarai Dhela",
+    "Jharia",
+    "Sindri",
+  ],
+};
 
 const SignupSchema = Yup.object().shape({
   restaurentName: Yup.string()
-    .min(2, "restaurent name must be at least minimum 2 characters")
-    .max(50, "restaurent name must not exceed 50 characters")
-    .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
-    .required(" restaurent name is Required"),
+    .min(2, "Restaurant name must be at least 2 characters")
+    .max(50, "Restaurant name must not exceed 50 characters")
+    .required("Restaurant name is required"),
+
   foodType: Yup.string().required("Select food type"),
+
   addressLine1: Yup.string()
-    .min(2, "adressLine1  must be at least minimum 2 characters")
-    .max(50, "addressLine1 must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("addressLine1  is Mandatory"),
+    .min(2, "Address line 1 must be at least 2 characters")
+    .max(100, "Address line 1 must not exceed 100 characters")
+    .required("Address line 1 is required"),
+
   addressLine2: Yup.string()
-    .min(2, "addressLine2  must be at least minimum 2 characters")
-    .max(50, "addressLine2 must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("addressLine2  is Mandatory"),
-  location: Yup.string()
-    .min(2, "location  must be at least minimum 2 characters")
-    .max(50, "location must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("location  is Mandatory"),
-  city: Yup.string()
-    .min(2, "city  must be at least minimum 2 characters")
-    .max(50, "city must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("city  is Mandatory"),
-  state: Yup.string()
-    .min(2, "state  must be at least minimum 2 characters")
-    .max(50, "state must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("state  is Mandatory"),
-  country: Yup.string()
-    .min(2, "country  must be at least minimum 2 characters")
-    .max(50, "country must not exceed 50 characters")
-    .matches(/^[A-Za-z1-9_ .]+$/, "Name can only contain letters")
-    .required("country  is Mandatory"),
+    .max(100, "Address line 2 must not exceed 100 characters")
+    .required("Address line 2 is required"),
+
+  location: Yup.string().required("Location is required"),
+
+  city: Yup.string().required("City is required"),
+
+  state: Yup.string().required("State is required"),
+
+  country: Yup.string().required("Country is required"),
+
   pincode: Yup.string()
     .required("PIN code is required")
     .matches(/^[1-9][0-9]{5}$/, "Enter a valid 6-digit PIN code"),
 
-  mobileNumber: Yup.string().matches(
-    /^[6-9]\d{9}$/,
-    "enter valid 10 digit numbers",
-  ),
-  email: Yup.string().matches(
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    "Enter a valid email address",
-  ),
-  ownerName: Yup.string()
-    .min(2, "  ownerName must be at least minimum 2 characters")
-    .max(50, " ownerName must not exceed 50 characters")
-    .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
-    .required(" ownerName is Required"),
+  mobileNumber: Yup.string()
+    .required("Mobile number is required")
+    .matches(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number"),
 
-  website: Yup.string().url("Enter a valid URL").required("Required"),
+  email: Yup.string()
+    .email("Enter a valid email address")
+    .required("Email is required"),
+
+  ownerName: Yup.string()
+    .min(2, "Owner name must be at least 2 characters")
+    .max(50, "Owner name must not exceed 50 characters")
+    .required("Owner name is required"),
+
+  website: Yup.string()
+    .url("Enter a valid URL")
+    .required("Website is required"),
 
   description: Yup.string()
-    .min(20, "description must be atleast 20 characters")
-    .max(2000, "description must not exceed 2000 characters")
-    .matches(/^[A-Za-z_ .]+$/, "name can only contain letters")
-    .required(" description is Required"),
-  // categories: Yup.string(),
+    .min(20, "Description must be at least 20 characters")
+    .max(2000, "Description must not exceed 2000 characters")
+    .required("Description is required"),
+
   images: Yup.array()
     .min(1, "Please select at least one image")
     .max(5, "Maximum 5 images are allowed")
@@ -127,38 +116,47 @@ const SignupSchema = Yup.object().shape({
       (files) => !files || files.every((file) => file.size <= 2 * 1024 * 1024),
     ),
 });
+
 const AddRestaurent = () => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+
   const { user: currentUser } = useSelector((state) => state.auth);
+
+  const [subCategories, setSubCategories] = useState([]);
+
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
-    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
-      navigate("/");
-    } 
-    else {
-      console.log(currentUser);
+      return;
     }
+
+    if (currentUser?.roles?.[0] !== "ROLE_ADMIN") {
+      navigate("/");
+      return;
+    }
+
+    console.log("Current Admin:", currentUser);
   }, [currentUser, navigate]);
-  const [subCategories, setSubCategories] = useState([]);
-  //  const [subCategories, setSubCategories] = useState(categories["Veg"]);
-  
 
   return (
     <Container>
       <Row>
-        <Col md={1}>{/* <Sidebar /> */}</Col>
+        <Col md={1}></Col>
+
         <Col md={11}>
-          <h1>Add Restaurent</h1>
+          <h1>Add Restaurant</h1>
+
           <Breadcrumb>
-            <Breadcrumb.Item href={"/dashboard"}>Dashboard</Breadcrumb.Item>
+            <Breadcrumb.Item href="/dashboard">Dashboard</Breadcrumb.Item>
+
             <Breadcrumb.Item active>Add Restaurant</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
       </Row>
+
       <Row>
         <Col>
-          <div className="add_restro">
+          <div className="add_restaurant">
             <Formik
               initialValues={{
                 restaurentName: "",
@@ -178,96 +176,131 @@ const AddRestaurent = () => {
                 images: [],
               }}
               validationSchema={SignupSchema}
-              onSubmit={async (values, { resetForm }) => {
-                const formData = new FormData();
-                formData.append("userId", currentUser.id);
-                Object.keys(values).forEach((key) => {
-                  if (key !== "images") {
-                    formData.append(key, values[key]);
-                  }
-                });
-                values.images.forEach((file) => {
-                  formData.append("images", file);
-                });
-
-                //////////////
-
+              onSubmit={(values, { resetForm }) => {
                 const nameSplit = values.ownerName.trim().split(/\s+/);
-                const data = {
+
+                const ownerData = {
                   firstName: nameSplit[0],
-                  lastName: nameSplit[1],
+                  lastName: nameSplit.slice(1).join(" ") || "",
                   mobileNumber: values.mobileNumber,
                   email: values.email,
                   password: String(values.mobileNumber),
                   username: values.mobileNumber,
-                  roles:["owner"]
+                  roles: ["owner"],
                 };
-                console.log(data);
+
+                console.log("Owner Data:", ownerData);
+
                 axios
-                  .post("http://localhost:8090/api/auth/signup", data)
+                  .post("http://localhost:8090/api/auth/signup", ownerData)
                   .then((response) => {
-                    console.log("User Successfully Registered");
-                    alert("User Successfully Registered");
-                  })
-                  .catch((error) => {
-                    console.log("User Registration Failed!");
-                    alert("User Registration Failed!");
-                    // handleClose();
-                  });
+                    console.log("Owner created successfully:", response.data);
 
-                /////////////////////
-                // error occured with form data image upload
-                try {
-                  const res = await axios.post(
-                    "http://localhost:8090/api/restaurents",
-                    formData,
-                    {
-                      headers: {
-                        "Content-Type": "multipart/form-data",
+                    // Get newly created owner ID
+                    const ownerId =
+                      response.data?._id ||
+                      response.data?.id ||
+                      response.data?.user?._id ||
+                      response.data?.user?.id;
+
+                    console.log("New Owner ID:", ownerId);
+
+                    if (!ownerId) {
+                      throw new Error("Owner ID not received from signup API");
+                    }
+
+                    const formData = new FormData();
+
+                    // IMPORTANT:
+                    // Restaurant belongs to NEW OWNER
+                    formData.append("userId", ownerId);
+
+                    Object.keys(values).forEach((key) => {
+                      if (key !== "images") {
+                        formData.append(key, values[key]);
+                      }
+                    });
+
+                    values.images.forEach((file) => {
+                      formData.append("images", file);
+                    });
+
+                    console.log("Restaurant FormData created");
+
+                    return axios.post(
+                      "http://localhost:8090/api/restaurents",
+                      formData,
+                      {
+                        headers: {
+                          "Content-Type": "multipart/form-data",
+                        },
                       },
-                    },
-                  );
-                  console.log(res);
-                  console.log(formData);
+                    );
+                  })
 
-                  alert("Restaurent registered successfully!");
-                } catch (err) {
-                  console.error("registration failed");
-                  alert("registration failed");
-                }
+                  .then((response) => {
+                    console.log(
+                      "Restaurant created successfully:",
+                      response.data,
+                    );
+
+                    alert("Owner and Restaurant registered successfully!");
+
+                    resetForm();
+
+                    setSubCategories([]);
+                  })
+
+                  .catch((error) => {
+                    console.error(
+                      "Registration failed:",
+                      error.response?.data || error.message,
+                    );
+
+                    alert(
+                      error.response?.data?.message ||
+                        "Owner/Restaurant registration failed!",
+                    );
+                  });
               }}
             >
               {({ errors, touched, values, setFieldValue }) => (
                 <Form>
-                  <Row>
+                  <Row className="mb-3">
                     <Col md={3}>
-                      <label htmlFor="restaurentName">Restaurent Name:</label>
+                      <label htmlFor="restaurentName">Restaurant Name:</label>
                     </Col>
+
                     <Col md={9}>
-                      <Field name="restaurentName" as="input" type="text" />
-                      {errors.restaurentName && touched.restaurentName ? (
-                        <div>{errors.restaurentName}</div>
-                      ) : null}
+                      <Field
+                        name="restaurentName"
+                        type="text"
+                        className="form-control"
+                      />
+
+                      <ErrorMessage
+                        name="restaurentName"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
                   </Row>
-                  <Row>
+
+                  <Row className="mb-3">
                     <Col md={3}>
-                      <label>Food Type</label>
+                      <label htmlFor="foodType">Food Type:</label>
                     </Col>
+
                     <Col md={9}>
                       <Field
                         as="select"
                         name="foodType"
                         className="form-control"
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setFieldValue("foodType", value);
-                          // setFieldValue("category", categories[value][0]);
-                          setSubCategories(categories[value]);
-                        }}
                       >
-                        <option value="FoodType">Food type</option>
+                        <option value="">Select Food Type</option>
+
                         <option value="Veg">Pure Veg</option>
+
                         <option value="Non-Veg">Veg & Non-Veg</option>
                       </Field>
 
@@ -279,175 +312,304 @@ const AddRestaurent = () => {
                     </Col>
                   </Row>
 
-                  <Row>
+                  {/* =========================
+                      ADDRESS LINE 1
+                  ========================= */}
+
+                  <Row className="mb-3">
                     <Col md={3}>
-                      <label htmlFor="addressLine1">Address line 1:</label>
+                      <label htmlFor="addressLine1">Address Line 1:</label>
                     </Col>
+
                     <Col md={9}>
-                      <Field name="addressLine1" as="input" type="text" />
-                      {errors.addressLine1 && touched.addressLine1 ? (
-                        <div>{errors.addressLine1}</div>
-                      ) : null}
+                      <Field
+                        name="addressLine1"
+                        type="text"
+                        className="form-control"
+                      />
+
+                      <ErrorMessage
+                        name="addressLine1"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
                   </Row>
-                  <Row>
+
+                  <Row className="mb-3">
                     <Col md={3}>
-                      <label htmlFor="addressLine2">Address line 2:</label>
+                      <label htmlFor="addressLine2">Address Line 2:</label>
                     </Col>
+
                     <Col md={9}>
-                      <Field name="addressLine2" as="input" type="text" />
-                      {errors.addressLine2 && touched.addressLine2 ? (
-                        <div>{errors.addressLine2}</div>
-                      ) : null}
+                      <Field
+                        name="addressLine2"
+                        type="text"
+                        className="form-control"
+                      />
+
+                      <ErrorMessage
+                        name="addressLine2"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
                   </Row>
-                  <Row>
+
+                  <Row className="mb-3">
                     <Col md={3}>
                       <label htmlFor="city">City:</label>
                     </Col>
+
                     <Col md={9}>
                       <Field
                         as="select"
                         name="city"
+                        className="form-control"
                         onChange={(e) => {
                           const value = e.target.value;
 
                           setFieldValue("city", value);
-                          setFieldValue("location", ""); // Reset location
 
+                          // Reset location
+                          setFieldValue("location", "");
+
+                          // Set location according to city
                           setSubCategories(location[value] || []);
                         }}
                       >
                         <option value="">Select City</option>
+
                         <option value="Jamshedpur">Jamshedpur</option>
+
                         <option value="Bokaro">Bokaro</option>
+
                         <option value="Ranchi">Ranchi</option>
+
                         <option value="Dhanbad">Dhanbad</option>
                       </Field>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md={3}>
-                      <label htmlFor="location">location :</label>
-                    </Col>
-                    <Col md={9}>
-                      <Field as="select" name="location">
-                        <option value="select location">Select Location</option>
-                        <option value="Sakchi">Sakchi</option>
-                        <option value="Bistupur">Bistupur</option>
-                        <option value="Kadma">Kadma</option>
-                        <option value="adityapur">Adityapur</option>
-                        <option value="ghamariya">Ghamhriya</option>
-                      </Field>
+
+                      <ErrorMessage
+                        name="city"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
                   </Row>
 
-                  <Row>
+                  <Row className="mb-3">
+                    <Col md={3}>
+                      <label htmlFor="location">Location:</label>
+                    </Col>
+
+                    <Col md={9}>
+                      <Field
+                        as="select"
+                        name="location"
+                        className="form-control"
+                      >
+                        <option value="">Select Location</option>
+
+                        {subCategories.map((item, index) => (
+                          <option key={index} value={item}>
+                            {item}
+                          </option>
+                        ))}
+                      </Field>
+
+                      <ErrorMessage
+                        name="location"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-3">
                     <Col md={3}>
                       <label htmlFor="state">State:</label>
                     </Col>
+
                     <Col md={9}>
-                      <Field as="select" name="state">
-                        <option value="selectstate">Select State</option>
-                        <option value="jharkhand">Jharkhand</option>
+                      <Field as="select" name="state" className="form-control">
+                        <option value="">Select State</option>
+
+                        <option value="Jharkhand">Jharkhand</option>
+
                         <option value="Bihar">Bihar</option>
 
                         <option value="Odisha">Odisha</option>
-                        <option value="UP">UP</option>
+
+                        <option value="UP">Uttar Pradesh</option>
                       </Field>
+
+                      <ErrorMessage
+                        name="state"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
                   </Row>
 
-                  <Row>
+                  <Row className="mb-3">
                     <Col md={3}>
-                      <label htmlFor="country">Country :</label>
+                      <label htmlFor="country">Country:</label>
                     </Col>
+
                     <Col md={9}>
-                      <Field as="select" name="country">
-                        <option value="selectcountry">Select Country</option>
+                      <Field
+                        as="select"
+                        name="country"
+                        className="form-control"
+                      >
+                        <option value="">Select Country</option>
+
                         <option value="India">India</option>
+
                         <option value="Nepal">Nepal</option>
                       </Field>
+
+                      <ErrorMessage
+                        name="country"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
                   </Row>
 
-                  <Row>
+                  <Row className="mb-3">
                     <Col md={3}>
                       <label htmlFor="pincode">Pincode:</label>
                     </Col>
+
                     <Col md={9}>
-                      <Field name="pincode" as="input" type="text" />
-                      {errors.pincode && touched.pincode ? (
-                        <div>{errors.pincode}</div>
-                      ) : null}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md={3}>
-                      <label htmlFor="mobileNumber">Mobile :</label>
-                    </Col>
-                    <Col md={9}>
-                      <Field name="mobileNumber" as="input" type="number" />
-                      {errors.mobileNumber && touched.mobileNumber ? (
-                        <div>{errors.mobileNumber}</div>
-                      ) : null}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md={3}>
-                      <label htmlFor="email">Email :</label>
-                    </Col>
-                    <Col md={9}>
-                      <Field name="email" as="input" type="email" />
-                      {errors.email && touched.email ? (
-                        <div>{errors.email}</div>
-                      ) : null}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md={3}>
-                      <label htmlFor="ownerName">Owner Name :</label>
-                    </Col>
-                    <Col md={9}>
-                      <Field name="ownerName" as="input" type="text" />
-                      {errors.ownerName && touched.ownerName ? (
-                        <div>{errors.ownerName}</div>
-                      ) : null}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md={3}>
-                      <label htmlFor="website">Website :</label>
-                    </Col>
-                    <Col md={9}>
-                      <Field name="website" as="input" type="text" />
-                      {errors.website && touched.website ? (
-                        <div>{errors.website}</div>
-                      ) : null}
+                      <Field
+                        name="pincode"
+                        type="text"
+                        className="form-control"
+                      />
+
+                      <ErrorMessage
+                        name="pincode"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
                   </Row>
 
-                  <Row>
+                  <Row className="mb-3">
                     <Col md={3}>
-                      <label htmlFor="description">Description :</label>
+                      <label htmlFor="mobileNumber">Mobile:</label>
                     </Col>
+
                     <Col md={9}>
-                      <Field name="description" as="textarea" />
-                      {errors.description && touched.description ? (
-                        <div>{errors.description}</div>
-                      ) : null}
+                      <Field
+                        name="mobileNumber"
+                        type="text"
+                        className="form-control"
+                      />
+
+                      <ErrorMessage
+                        name="mobileNumber"
+                        component="div"
+                        className="text-danger"
+                      />
                     </Col>
                   </Row>
-                  <Row>
+
+                  <Row className="mb-3">
                     <Col md={3}>
-                      <label>Images</label>
+                      <label htmlFor="email">Email:</label>
                     </Col>
+
+                    <Col md={9}>
+                      <Field
+                        name="email"
+                        type="email"
+                        className="form-control"
+                      />
+
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-3">
+                    <Col md={3}>
+                      <label htmlFor="ownerName">Owner Name:</label>
+                    </Col>
+
+                    <Col md={9}>
+                      <Field
+                        name="ownerName"
+                        type="text"
+                        className="form-control"
+                      />
+
+                      <ErrorMessage
+                        name="ownerName"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-3">
+                    <Col md={3}>
+                      <label htmlFor="website">Website:</label>
+                    </Col>
+
+                    <Col md={9}>
+                      <Field
+                        name="website"
+                        type="text"
+                        className="form-control"
+                        placeholder="https://example.com"
+                      />
+
+                      <ErrorMessage
+                        name="website"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-3">
+                    <Col md={3}>
+                      <label htmlFor="description">Description:</label>
+                    </Col>
+
+                    <Col md={9}>
+                      <Field
+                        name="description"
+                        as="textarea"
+                        rows="5"
+                        className="form-control"
+                      />
+
+                      <ErrorMessage
+                        name="description"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-3">
+                    <Col md={3}>
+                      <label htmlFor="images">Images:</label>
+                    </Col>
+
                     <Col md={9}>
                       <input
                         type="file"
                         multiple
                         className="form-control"
-                        accept="image/jpeg, image/jpg, image/png, image/webp"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
                         onChange={(event) => {
                           setFieldValue(
                             "images",
@@ -457,27 +619,30 @@ const AddRestaurent = () => {
                       />
 
                       <ErrorMessage
-                        name="files"
+                        name="images"
                         component="div"
                         className="text-danger"
                       />
                     </Col>
                   </Row>
 
-                  <Row>
+                  <Row className="mb-3">
                     {values.images.map((image, index) => (
-                      <Col md={3} key={index}>
+                      <Col md={3} key={index} className="mb-3">
                         <img
-                          key={index}
                           src={URL.createObjectURL(image)}
-                          alt="preview"
+                          alt={`preview-${index}`}
                           width="120"
                           height="120"
-                          style={{ objectFit: "cover", borderRadius: "5px" }}
+                          style={{
+                            objectFit: "cover",
+                            borderRadius: "5px",
+                          }}
                         />
                       </Col>
                     ))}
                   </Row>
+
                   <Row>
                     <Col>
                       <button className="addRestaurent_btn" type="submit">
