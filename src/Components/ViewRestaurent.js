@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
+
 import {
   FaRegStar,
   FaRegHeart,
@@ -9,10 +10,13 @@ import {
   FaShoppingCart,
   FaLeaf,
   FaCarAlt,
+  FaDrumstickBite,
 } from "react-icons/fa";
+
 import { FaLocationDot } from "react-icons/fa6";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { GiChickenLeg } from "react-icons/gi";
+
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -22,14 +26,17 @@ import "@smastrom/react-rating/style.css";
 
 const ViewRestaurent = () => {
   const { restaurentId } = useParams();
+
   const { user: currentUser } = useSelector((state) => state.auth);
 
   const [restaurent, setRestaurent] = useState({
     images: [],
   });
-  // const{user:currentUser}=useSelector((state)=>state.auth);
 
   const [foods, setFoods] = useState([]);
+
+  const [foodType, setFoodType] = useState("All");
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,10 +44,11 @@ const ViewRestaurent = () => {
       .get(`http://localhost:8090/api/restaurents/${restaurentId}`)
       .then((response) => {
         setRestaurent(response.data);
+
         console.log("Restaurant Data:", response.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("Restaurant Fetch Error:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -50,44 +58,71 @@ const ViewRestaurent = () => {
       .get(`http://localhost:8090/api/products/restaurant/${restaurentId}`)
       .then((response) => {
         setFoods(response.data);
-        console.log(response.data);
+
+        console.log("Foods:", response.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("Food Fetch Error:", error);
       });
   }, [restaurentId]);
-  console.log("Current User:", currentUser);
+
+  const filteredFoods = foods.filter((food) => {
+    if (foodType === "All") {
+      return true;
+    }
+
+    return food.foodType === foodType;
+  });
+
   const AddToCart = async (food) => {
     try {
+      
+      if (!currentUser) {
+        alert("Please login first!");
+        return;
+      }
+
+      const userId = currentUser.id || currentUser._id;
+
+      
+      const foodRestaurentId = food.restaurentId?._id || food.restaurentId;
+
+      if (!foodRestaurentId) {
+        alert("Restaurant ID not found!");
+        console.log("Food Data:", food);
+        return;
+      }
+
       const data = {
-         userId: currentUser.id || currentUser._id,
-        //  addressId:addressId.id;
+        userId: userId,
         active: true,
+
         items: [
           {
-            productId: food.id,
+            productId: food._id || food.id,
             quantity: 1,
             price: food.price,
-            restaurentId: food.restaurentId._id,
+            restaurentId: foodRestaurentId,
           },
         ],
       };
-      console.log("Food:", food.restaurentId._id);
-      console.log(data);
+
+      console.log("Cart Data:", data);
 
       const response = await axios.post(
         "http://localhost:8090/api/carts",
         data,
       );
 
-      console.log(response.data);
+      console.log("Cart Response:", response.data);
+
       alert("Item added to cart successfully!");
     } catch (error) {
-      console.log(error);
-      console.log("Axios Error:", error);
+      console.log("Add To Cart Error:", error);
+
       console.log("Backend Error:", error.response?.data);
 
-      alert("Failed to add item.");
+      alert(error.response?.data?.message || "Failed to add item.");
     }
   };
 
@@ -105,18 +140,26 @@ const ViewRestaurent = () => {
         <Col>
           <div className="restaurant_banner">
             <img
-              src={`http://localhost:8090/upload/${restaurent.images[0]}`}
+              src={
+                restaurent.images?.[0]
+                  ? `http://localhost:8090/upload/${restaurent.images[0]}`
+                  : "/placeholder.jpg"
+              }
               alt={restaurent?.restaurentName}
               className="restaurant_banner_img"
             />
 
             <div className="restaurant_overlay">
               <Row className="align-items-center w-100 px-5">
-                <Col>
+                <Col lg={8}>
                   <div className="d-flex align-items-center">
                     <img
-                      src={`http://localhost:8090/upload/${restaurent.images[0]}`}
-                      alt="Logo"
+                      src={
+                        restaurent.images?.[0]
+                          ? `http://localhost:8090/upload/${restaurent.images[0]}`
+                          : "/placeholder.jpg"
+                      }
+                      alt="Restaurant Logo"
                       className="restaurant_logo"
                     />
 
@@ -129,7 +172,7 @@ const ViewRestaurent = () => {
                           size="sm"
                           className="ms-3 rounded-pill"
                         >
-                          {restaurent.foodType}
+                          {restaurent.foodType || "Restaurant"}
                         </Button>
                       </h2>
 
@@ -143,7 +186,7 @@ const ViewRestaurent = () => {
 
                       <p className="text-white mb-0">
                         <FaLocationDot className="me-1" />
-                        {restaurent.address}
+                        {restaurent.address || restaurent.location}
                         &nbsp; | &nbsp;
                         <MdOutlineWatchLater className="me-1" />
                         {restaurent.openTime || "Open"}
@@ -173,22 +216,58 @@ const ViewRestaurent = () => {
         </Col>
       </Row>
 
+      <Row>
+        <Col>
+          <div className="category-section">
+            <Button
+              className={`category-btn ${
+                foodType === "All" ? "active-category" : ""
+              }`}
+              onClick={() => setFoodType("All")}
+            >
+              All
+            </Button>
+
+            <Button
+              className={`category-btn ${
+                foodType === "Veg" ? "active-category" : ""
+              }`}
+              onClick={() => setFoodType("Veg")}
+            >
+              <FaLeaf /> Veg
+            </Button>
+
+            <Button
+              className={`category-btn ${
+                foodType === "Non-Veg" ? "active-category" : ""
+              }`}
+              onClick={() => setFoodType("Non-Veg")}
+            >
+              <FaDrumstickBite /> Non-Veg
+            </Button>
+          </div>
+        </Col>
+      </Row>
+
       <Row className="mt-5">
-        {foods.length > 0 ? (
-          foods.map((food) => (
+        {filteredFoods.length > 0 ? (
+          filteredFoods.map((food) => (
             <Col
               lg={3}
               md={6}
               sm={12}
               className="mb-4"
-              key={food.id || food._id}
+              key={food._id || food.id}
             >
               <Card className="food-card">
                 <div className="food-image-box">
                   <Card.Img
-                    src={`http://localhost:8090/upload/${food.images[0]}`
-                  
-                  }
+                    src={
+                      food.images?.[0]
+                        ? `http://localhost:8090/upload/${food.images[0]}`
+                        : "/placeholder-food.jpg"
+                    }
+                    alt={food.foodName}
                   />
 
                   <div className="heart-icon">
@@ -201,11 +280,13 @@ const ViewRestaurent = () => {
                 </div>
 
                 <Card.Body>
-                  <div className="d-flex justify-content-between">
-                    <Card.Title>{food.foodName} </Card.Title>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <Card.Title>{food.foodName}</Card.Title>
 
                     <h5>₹{food.price}</h5>
                   </div>
+
+                  {/* FOOD TYPE */}
 
                   <div className="mb-2">
                     {food.foodType === "Veg" ? (
@@ -219,9 +300,15 @@ const ViewRestaurent = () => {
                     )}
                   </div>
 
+                  {/* CATEGORY */}
+
                   <small>{food.category}</small>
 
+                  {/* DESCRIPTION */}
+
                   <p className="mt-2">{food.description}</p>
+
+                  {/* DELIVERY + CART */}
 
                   <div className="d-flex justify-content-between align-items-center">
                     <span>

@@ -21,9 +21,7 @@ import "./OwnerProducts.css";
 
 const OwnerProducts = () => {
   const navigate = useNavigate();
-  /* =========================================
-STATES
-========================================= */
+ 
 const {user:currentUser} = useSelector((state) => state.auth);
   const userId = currentUser?._id;
   const [restaurent, setRestaurent] = useState(null);
@@ -57,9 +55,7 @@ const {user:currentUser} = useSelector((state) => state.auth);
       });
   }, [userId]);
 
-  /* =========================================
-FETCH PRODUCTS OF RESTAURANT
-========================================= */
+ 
 
   useEffect(() => {
     if (!userId) {
@@ -89,9 +85,7 @@ FETCH PRODUCTS OF RESTAURANT
       });
   }, [userId]);
 
-  /* =========================================
-LOADING
-========================================= */
+ 
 
   if (loading) {
     return (

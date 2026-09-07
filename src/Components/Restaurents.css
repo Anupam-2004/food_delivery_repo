@@ -381,9 +381,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
+  margin-top: 10px;
+}
+
+.restaurant-cuisine {
+  font-size: 14px;
+  color: #666;
+}
+
+.delivery-time {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: #666;
 }
 
 .detail-item {
@@ -393,6 +404,7 @@
   font-size: 16px;
   color: #374151;
   white-space: nowrap;
+  margin-bottom: 25px;
 }
 
 

@@ -35,10 +35,6 @@ import {
 
 import { MdRestaurantMenu } from "react-icons/md";
 
-/* =========================================
-   STATIC FRONTEND DATA
-========================================= */
-
 const fallbackReviews = [
   {
     name: "Rahul Sharma",
@@ -65,10 +61,6 @@ const fallbackReviews = [
     emoji: "🍛",
   },
 ];
-
-/* =========================================
-   COMPONENT
-========================================= */
 
 const OwnerDashboard = () => {
   const navigate = useNavigate();
@@ -117,7 +109,9 @@ const OwnerDashboard = () => {
     if (!restaurantId) return;
 
     Promise.all([
-      axios.get(`http://localhost:8090/api/products/restaurant/${restaurantId}`),
+      axios.get(
+        `http://localhost:8090/api/products/restaurant/${restaurantId}`,
+      ),
       axios.get(`http://localhost:8090/api/orders/restaurent/${restaurantId}`),
     ])
       .then(([productsResponse, ordersResponse]) => {
@@ -182,8 +176,6 @@ const OwnerDashboard = () => {
 
   return (
     <div className="owner-dashboard">
-      {/* ================= SIDEBAR ================= */}
-
       <div className="owner-sidebar">
         <div className="sidebar-logo">
           <FaUtensils />
@@ -293,8 +285,6 @@ const OwnerDashboard = () => {
           </div>
         </div>
 
-        {/* ================= SUMMARY CARDS ================= */}
-
         <Row className="g-3 mb-3 summary-row">
           <Col xl={4} md={6}>
             <Card className="summary-card">
@@ -338,8 +328,6 @@ const OwnerDashboard = () => {
             </Card>
           </Col>
         </Row>
-
-        {/* ================= TOP SELLING ================= */}
 
         <Row className="g-3 mb-4">
           <Col lg={6}>
@@ -393,8 +381,6 @@ const OwnerDashboard = () => {
               </div>
             </Card>
           </Col>
-
-          {/* ================= EARNINGS ================= */}
 
           <Col lg={6}>
             <Card className="panel-card h-100">
@@ -459,8 +445,6 @@ const OwnerDashboard = () => {
             </Card>
           </Col>
         </Row>
-
-        {/* ================= QUICK ACTIONS ================= */}
 
         <div className="section-title">
           <div>
@@ -570,7 +554,9 @@ const OwnerDashboard = () => {
                         <td>
                           <img
                             src={getImageUrl(product.images)}
-                            alt={product.foodName || product.productName || "Food"}
+                            alt={
+                              product.foodName || product.productName || "Food"
+                            }
                             style={{
                               width: "60px",
                               height: "60px",
@@ -616,8 +602,6 @@ const OwnerDashboard = () => {
             </Table>
           </Card.Body>
         </Card>
-
-        {/* ================= REVIEWS ================= */}
 
         <div className="section-title">
           <div>
@@ -751,7 +735,9 @@ const OwnerDashboard = () => {
                 ) : (
                   <tr>
                     <td colSpan="7" className="text-center">
-                      {loading ? "Loading dashboard data..." : "No orders available"}
+                      {loading
+                        ? "Loading dashboard data..."
+                        : "No orders available"}
                     </td>
                   </tr>
                 )}
