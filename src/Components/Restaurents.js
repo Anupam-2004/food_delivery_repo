@@ -35,6 +35,7 @@ const Restaurents = () => {
   const [error, setError] = useState("");
   const [favorites, setFavorites] = useState([]);
   const [foodType, setFoodType] = useState("All");
+
   console.log("Food Type:", foodType);
   // Get restaurants from backend
   useEffect(() => {
@@ -59,8 +60,10 @@ const Restaurents = () => {
   const toggleFavorite = (id) => {
     if (favorites.includes(id)) {
       setFavorites(favorites.filter((item) => item !== id));
+      console.log(setFavorites);
     } else {
       setFavorites([...favorites, id]);
+      console.log("error");
     }
   };
 
@@ -114,7 +117,7 @@ const Restaurents = () => {
         {/* Header Buttons */}
         <div className="header-actions">
           <div className="favorite-header">
-            <FaHeart />
+            <FaHeart onClick={toggleFavorite}/>
             Favorites
           </div>
 
@@ -145,15 +148,7 @@ const Restaurents = () => {
             <FaDrumstickBite /> Non-Veg
           </Button>
 
-          {/* <Button className="category-btn">🍛 Indian</Button>
-
-          <Button className="category-btn">🍜 Chinese</Button>
-
-          <Button className="category-btn">🍕 Pizza</Button>
-
-          <Button className="category-btn">🍔 Burger</Button>
-
-          <Button className="category-btn">🍗 Biryani</Button> */}
+         
         </div>
 
         {/* Sort */}

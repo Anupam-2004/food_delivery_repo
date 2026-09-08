@@ -53,7 +53,7 @@ export default function Sidebar() {
                     <Nav.Link as={Link} to={"/OwnerOrders"}>
                       Orders(Owner)
                     </Nav.Link>
-                      <Nav.Link as={Link} to={"/RestaurentOrders"}>
+                    <Nav.Link as={Link} to={"/RestaurentOrder"}>
                       Orders(Restaurent)
                     </Nav.Link>
                     <NavDropdown

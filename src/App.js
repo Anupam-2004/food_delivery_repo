@@ -212,7 +212,7 @@ function App() {
         <Route path="/cart" element={<AddCart />} />
         <Route path="/Address" element={<Address />} />
         <Route
-          path="/RestaurentOrders/:restaurentId"
+          path="/RestaurentOrder"
           element={<RestaurentOrder />}
         />
         <Route path="/track-order/:orderId" element={<TrackOrder />} />
