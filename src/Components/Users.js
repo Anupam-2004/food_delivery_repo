@@ -22,7 +22,7 @@ const Users = () => {
   let navigate = useNavigate();
   const [users, setUsers] = useState();
   const { user: currentUser } = useSelector((state) => state.auth);
-  const handleChange = async(id) => {
+  const handleChange = async (id) => {
     const confirmChange = window.confirm(
       "Are you sure you want to change the status?",
     );
@@ -33,8 +33,7 @@ const Users = () => {
       await axios.post(`http://localhost:8090/api/auth/changeStatus/${id}`);
 
       alert("status change successfully");
-          window.location.reload();
-
+      window.location.reload();
     } catch (error) {
       console.log(error);
       alert("Something went wrong");
@@ -75,9 +74,7 @@ const Users = () => {
       <Row>
         <Col>
           <Breadcrumb>
-            <Breadcrumb.Item href={"/Dashboard"}>
-              Dashboard
-            </Breadcrumb.Item>
+            <Breadcrumb.Item href={"/Dashboard"}>Dashboard</Breadcrumb.Item>
             <Breadcrumb.Item active>Users</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
@@ -105,7 +102,10 @@ const Users = () => {
                       <td>{user.mobileNumber}</td>
                       <td>{user.email}</td>
                       <td>
-                        <Button onClick={() => handleChange(user._id)}>
+                        <Button
+                          variant={user.status ?  "success" : "danger"}
+                          onClick={() => handleChange(user._id)}
+                        >
                           {user.status ? <FaCheckCircle /> : <RxCrossCircled />}
                         </Button>
                       </td>

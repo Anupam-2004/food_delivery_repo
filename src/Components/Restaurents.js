@@ -19,7 +19,6 @@ import {
   FaMapMarkerAlt,
   FaClock,
   FaMotorcycle,
-  FaUser,
   FaStar,
   FaLeaf,
   FaDrumstickBite,
@@ -35,9 +34,8 @@ const Restaurents = () => {
   const [error, setError] = useState("");
   const [favorites, setFavorites] = useState([]);
   const [foodType, setFoodType] = useState("All");
+  const [showFavorites, setShowFavorites] = useState(false);
 
-  console.log("Food Type:", foodType);
-  // Get restaurants from backend
   useEffect(() => {
     getRestaurants();
   }, []);
@@ -47,7 +45,6 @@ const Restaurents = () => {
       const response = await axios.get("http://localhost:8090/api/restaurents");
 
       setRestaurents(response.data || []);
-      console.log("Restaurants fetched:", response.data);
     } catch (error) {
       console.log(error);
       setError("Failed to load restaurants");
@@ -56,53 +53,57 @@ const Restaurents = () => {
     }
   };
 
-  // Add / Remove favorite
   const toggleFavorite = (id) => {
-    if (favorites.includes(id)) {
-      setFavorites(favorites.filter((item) => item !== id));
-      console.log(setFavorites);
-    } else {
-      setFavorites([...favorites, id]);
-      console.log("error");
-    }
+    setFavorites((previousFavorites) => {
+      if (previousFavorites.includes(id)) {
+        return previousFavorites.filter((favoriteId) => favoriteId !== id);
+      }
+
+      return [...previousFavorites, id];
+    });
   };
 
-  // Search restaurants
   const filteredRestaurents = restaurents.filter((restaurent) => {
     const name = restaurent.restaurentName || "";
-    const foodType = restaurent.foodType || "";
+    const restaurantFoodType = restaurent.foodType || "";
     const location = restaurent.location || "";
 
-    const text = `${name} ${foodType} ${location}`.toLowerCase();
+    const text = `${name} ${restaurantFoodType} ${location}`.toLowerCase();
 
-    return text.includes(search.toLowerCase());
+    const matchesSearch = text.includes(search.toLowerCase());
+
+    const matchesFoodType =
+      restaurent.foodType === foodType || foodType === "All";
+
+    const id = restaurent._id || restaurent.id;
+
+    const matchesFavorite = !showFavorites || favorites.includes(id);
+
+    return matchesSearch && matchesFoodType && matchesFavorite;
   });
 
-  // Loading
   if (loading) {
     return (
       <div className="restaurant-loading">
-        <Spinner animation="border" />
-        <p>Loading Restaurants...</p>
+        {" "}
+        <Spinner animation="border" /> <p>Loading Restaurants...</p>{" "}
       </div>
     );
   }
 
   return (
     <div className="restaurant-page">
-      {/* Header */}
+      {" "}
       <div className="restaurant-header">
-        {/* Location */}
+        {" "}
         <div className="location-box">
+          {" "}
           <FaMapMarkerAlt className="location-icon" />
-
           <div>
             <small>Deliver to</small>
             <h6>Jamshedpur</h6>
           </div>
         </div>
-
-        {/* Search */}
         <div className="restaurant-search">
           <FaSearch className="search-icon" />
 
@@ -113,199 +114,220 @@ const Restaurents = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-
-        {/* Header Buttons */}
         <div className="header-actions">
-          <div className="favorite-header">
-            <FaHeart onClick={toggleFavorite}/>
-            Favorites
-          </div>
+          <div
+            className={`favorite-header ${
+              showFavorites ? "active-favorite-header" : ""
+            }`}
+            onClick={() => setShowFavorites(!showFavorites)}
+            style={{ cursor: "pointer" }}
+          >
+            {showFavorites ? <FaHeart /> : <FaRegHeart />}
 
-          {/* <Button variant="outline-dark" className="filter-button">
-            Filters
-          </Button> */}
+            <span>Favorites ({favorites.length})</span>
+          </div>
         </div>
       </div>
-
       <Container fluid className="restaurant-container">
-        {/* Categories */}
         <div className="category-section">
           <Button
-            className="category-btn active-category"
+            className={`category-btn ${
+              foodType === "All" ? "active-category" : ""
+            }`}
             onClick={() => setFoodType("All")}
           >
             All
           </Button>
 
-          <Button className="category-btn" onClick={() => setFoodType("Veg")}>
+          <Button
+            className={`category-btn ${
+              foodType === "Veg" ? "active-category" : ""
+            }`}
+            onClick={() => setFoodType("Veg")}
+          >
             <FaLeaf /> Veg
           </Button>
 
           <Button
-            className="category-btn"
+            className={`category-btn ${
+              foodType === "Non-Veg" ? "active-category" : ""
+            }`}
             onClick={() => setFoodType("Non-Veg")}
           >
             <FaDrumstickBite /> Non-Veg
           </Button>
-
-         
         </div>
 
-        {/* Sort */}
+        {showFavorites && (
+          <div className="favorites-title">
+            <h3>
+              <FaHeart /> My Favorite Restaurants
+            </h3>
+          </div>
+        )}
 
-        {/* Restaurant Cards */}
+        {error && (
+          <div className="no-restaurants">
+            <h4>{error}</h4>
+          </div>
+        )}
+
         <Row className="restaurant-row">
           {filteredRestaurents.length > 0 ? (
-            filteredRestaurents
-              .filter(
-                (restaurent) =>
-                  restaurent.foodType === foodType || foodType === "All",
-              )
-              .map((restaurent) => {
-                const id = restaurent._id || restaurent.id;
-                const image = restaurent.images?.[0];
-                const favorite = favorites.includes(id);
+            filteredRestaurents.map((restaurent) => {
+              const id = restaurent._id || restaurent.id;
+              const image = restaurent.images?.[0];
+              const favorite = favorites.includes(id);
 
-                return (
-                  <Col md={3} key={id} className="mb-4">
-                    <Card className="restaurant-card">
-                      {/* Image */}
-                      <div className="restaurant-image-container">
-                        {image ? (
-                          <img
-                            src={`http://localhost:8090/upload/${image}`}
-                            alt={restaurent.restaurentName}
-                            className="restaurant-image"
-                            style={{ width: "100%", height: "100%" }}
-                          />
+              return (
+                <Col md={3} key={id} className="mb-4">
+                  <Card className="restaurant-card">
+                    <div className="restaurant-image-container">
+                      {image ? (
+                        <img
+                          src={`http://localhost:8090/upload/${image}`}
+                          alt={restaurent.restaurentName}
+                          className="restaurant-image"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <div className="no-image">No Image Available</div>
+                      )}
+
+                      <button
+                        className="favorite-btn"
+                        onClick={() => toggleFavorite(id)}
+                      >
+                        {favorite ? (
+                          <FaHeart className="favorite-active" />
                         ) : (
-                          <div className="no-image">No Image Available</div>
+                          <FaRegHeart />
                         )}
+                      </button>
 
-                        {/* Favorite */}
-                        <button
-                          className="favorite-btn"
-                          onClick={() => toggleFavorite(id)}
-                        >
-                          {favorite ? (
-                            <FaHeart className="favorite-active" />
-                          ) : (
-                            <FaRegHeart />
-                          )}
-                        </button>
+                      <div className="offer-badge">
+                        <FaFire />
+                        {restaurent.offer || "20% OFF up to ₹100"}
+                      </div>
+                    </div>
 
-                        {/* Offer */}
-                        <div className="offer-badge">
-                          <FaFire />
-                          {restaurent.offer || "20% OFF up to ₹100"}
+                    <Card.Body
+                      className="restaurant-body"
+                      style={{ padding: "10px" }}
+                    >
+                      <div className="restaurant-title-section">
+                        <Card.Title className="restaurant-name">
+                          {restaurent.restaurentName}
+                        </Card.Title>
+
+                        <div className="rating-box">
+                          <FaStar />
+                          {restaurent.rating || "4.2"}
                         </div>
                       </div>
 
-                      {/* Body */}
-                      <Card.Body
-                        className="restaurant-body"
-                        style={{ padding: "10px" }}
+                      <div className="restaurant-location">
+                        <FaMapMarkerAlt />
+
+                        <span>
+                          {restaurent.addressLine1 || "Location not available"}
+
+                          {restaurent.location && `, ${restaurent.location}`}
+                        </span>
+                      </div>
+
+                      <div className="restaurant-details">
+                        <span className="restaurant-cuisine">
+                          {restaurent.foodType || "Veg"}
+                        </span>
+
+                        <span className="delivery-time">
+                          <FaClock />
+                          {restaurent.deliveryTime || "25-30 min"}
+                        </span>
+                      </div>
+
+                      <div className="detail-item">
+                        <FaMotorcycle />
+
+                        {restaurent.deliveryCharge === 0
+                          ? "Free Delivery"
+                          : restaurent.deliveryCharge
+                            ? `₹${restaurent.deliveryCharge}`
+                            : "Free Delivery"}
+                      </div>
+
+                      <Button
+                        as={Link}
+                        to={`/ViewRestaurent/${id}`}
+                        className="view-menu-btn"
                       >
-                        {/* Name + Rating */}
-                        <div className="restaurant-title-section">
-                          <Card.Title className="restaurant-name">
-                            {restaurent.restaurentName}
-                          </Card.Title>
-
-                          <div className="rating-box">
-                            <FaStar />
-                            {restaurent.rating || "4.2"}
-                          </div>
-                        </div>
-
-                        {/* Location */}
-                        <div className="restaurant-location">
-                          <FaMapMarkerAlt />
-
-                          <span>
-                            {restaurent.addressLine1 ||
-                              "Location not available"}
-
-                            {restaurent.location && `, ${restaurent.location}`}
-                          </span>
-                        </div>
-                        <div className="restaurant-details">
-                          <span className="restaurant-cuisine">
-                            {restaurent.foodType || "Veg"}
-                          </span>
-
-                          <span className="delivery-time">
-                            <FaClock />
-                            {restaurent.deliveryTime || "25-30 min"}
-                          </span>
-                        </div>
-
-                        {/* Details */}
-                         <div className="detail-item">
-                            <FaMotorcycle />
-
-                            {restaurent.deliveryCharge === 0
-                              ? "Free Delivery"
-                              : restaurent.deliveryCharge
-                                ? `₹${restaurent.deliveryCharge}`
-                                : "Free Delivery"}
-                          </div>
-                      
-                        {/* View Menu */}
-                        <Button
-                          as={Link}
-                          to={`/ViewRestaurent/${id}`}
-                          className="view-menu-btn"
-                        >
-                          View Menu
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                );
-              })
+                        View Menu
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            })
           ) : (
             <Col>
               <div className="no-restaurants">
-                <h4>No Restaurants Found</h4>
-
-                <p>Try searching for another restaurant.</p>
+                {showFavorites ? (
+                  <>
+                    <FaRegHeart size={40} />
+                    <h4>No Favorite Restaurants</h4>
+                    <p>
+                      Click the heart icon on a restaurant to add it to your
+                      favorites.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h4>No Restaurants Found</h4>
+                    <p>Try searching for another restaurant.</p>
+                  </>
+                )}
               </div>
             </Col>
           )}
         </Row>
 
-        {/* Features */}
-        <div className="restaurant-features">
-          <div>
-            🚚
-            <h6>Fast Delivery</h6>
-            <p>Quick delivery at your doorstep</p>
-          </div>
+        {!showFavorites && (
+          <div className="restaurant-features">
+            <div>
+              🚚
+              <h6>Fast Delivery</h6>
+              <p>Quick delivery at your doorstep</p>
+            </div>
 
-          <div>
-            🏷️
-            <h6>Best Offers</h6>
-            <p>Enjoy exciting offers and discounts</p>
-          </div>
+            <div>
+              🏷️
+              <h6>Best Offers</h6>
+              <p>Enjoy exciting offers and discounts</p>
+            </div>
 
-          <div>
-            ⭐<h6>Top Rated</h6>
-            <p>Best restaurants recommended for you</p>
-          </div>
+            <div>
+              ⭐<h6>Top Rated</h6>
+              <p>Best restaurants recommended for you</p>
+            </div>
 
-          <div>
-            🛡️
-            <h6>Safe & Hygienic</h6>
-            <p>100% safe food packaging</p>
-          </div>
+            <div>
+              🛡️
+              <h6>Safe & Hygienic</h6>
+              <p>100% safe food packaging</p>
+            </div>
 
-          <div>
-            💳
-            <h6>Easy Payments</h6>
-            <p>Multiple payment options available</p>
+            <div>
+              💳
+              <h6>Easy Payments</h6>
+              <p>Multiple payment options available</p>
+            </div>
           </div>
-        </div>
+        )}
       </Container>
     </div>
   );

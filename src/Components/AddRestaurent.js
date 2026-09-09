@@ -6,43 +6,61 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const location = {
-  Jamshedpur: ["Sakchi", "Bistupur", "Kadma", "Adityapur", "Ghamhriya"],
+const locationData = {
+  Jharkhand: {
+    Jamshedpur: ["Sakchi", "Bistupur", "Mango", "Sonari", "Kadma", "Adityapur"],
+    Bokaro: [
+      "City Centre",
+      "Sector 4",
+      "Sector 9",
+      "Chas",
+      "Co-operative Colony",
+    ],
+    Ranchi: [
+      "Harmu",
+      "Lalpur",
+      "Morabadi",
+      "Kanke Road",
+      "Doranda",
+      "Main Road",
+    ],
+    Dhanbad: ["Bank More", "Saraidhela", "Hirapur", "Bartand", "Sarai Dhela"],
+  },
 
-  Ranchi: [
-    "Lalpur",
-    "Main Road",
-    "Morabadi",
-    "Harmu",
-    "Doranda",
-    "Bariatu",
-    "Hinoo",
-    "Kanke",
-    "Argora",
-    "Kadru",
-    "Circular Road",
-    "Firayalal Chowk",
-    "Booty More",
-    "Kantatoli",
-    "Ratu Road",
-  ],
+  Bihar: {
+    Patna: [
+      "Boring Road",
+      "Kankarbagh",
+      "Fraser Road",
+      "Rajendra Nagar",
+      "Patliputra Colony",
+      "Bailey Road",
+    ],
+    Gaya: ["Bodh Gaya", "Civil Lines", "Gaya Junction", "Swarajpuri Road"],
+    Muzaffarpur: ["Mithanpura", "Ramna", "Brahmpura", "Kalyani"],
+  },
 
-  Bokaro: [
-    "Chas",
-    "Bokaro Steel City",
-    "Bokaro Thermal",
-    "Phusro",
-    "Chandrapura",
-  ],
+  Odisha: {
+    Bhubaneswar: [
+      "Patia",
+      "Saheed Nagar",
+      "Kharavel Nagar",
+      "Jaydev Vihar",
+      "Nayapalli",
+    ],
+    Cuttack: ["Badambadi", "CDA", "College Square", "Link Road"],
+  },
 
-  Dhanbad: [
-    "Bank More",
-    "Hirapur",
-    "Saraidhela",
-    "Sarai Dhela",
-    "Jharia",
-    "Sindri",
-  ],
+  "Uttar Pradesh": {
+    Lucknow: [
+      "Gomti Nagar",
+      "Hazratganj",
+      "Aliganj",
+      "Indira Nagar",
+      "Alambagh",
+    ],
+    Varanasi: ["Lanka", "Sigra", "Bhelupur", "Assi", "Cantt"],
+  },
 };
 
 const SignupSchema = Yup.object().shape({
@@ -196,7 +214,6 @@ const AddRestaurent = () => {
                   .then((response) => {
                     console.log("Owner created successfully:", response.data);
 
-                    // Get newly created owner ID
                     const ownerId =
                       response.data?._id ||
                       response.data?.id ||
@@ -211,8 +228,6 @@ const AddRestaurent = () => {
 
                     const formData = new FormData();
 
-                    // IMPORTANT:
-                    // Restaurant belongs to NEW OWNER
                     formData.append("userId", ownerId);
 
                     Object.keys(values).forEach((key) => {
@@ -237,7 +252,6 @@ const AddRestaurent = () => {
                       },
                     );
                   })
-
                   .then((response) => {
                     console.log(
                       "Restaurant created successfully:",
@@ -250,7 +264,6 @@ const AddRestaurent = () => {
 
                     setSubCategories([]);
                   })
-
                   .catch((error) => {
                     console.error(
                       "Registration failed:",
@@ -264,7 +277,7 @@ const AddRestaurent = () => {
                   });
               }}
             >
-              {({ errors, touched, values, setFieldValue }) => (
+              {({ values, setFieldValue }) => (
                 <Form>
                   <Row className="mb-3">
                     <Col md={3}>
@@ -312,10 +325,6 @@ const AddRestaurent = () => {
                     </Col>
                   </Row>
 
-                  {/* =========================
-                      ADDRESS LINE 1
-                  ========================= */}
-
                   <Row className="mb-3">
                     <Col md={3}>
                       <label htmlFor="addressLine1">Address Line 1:</label>
@@ -358,6 +367,40 @@ const AddRestaurent = () => {
 
                   <Row className="mb-3">
                     <Col md={3}>
+                      <label htmlFor="state">State:</label>
+                    </Col>
+
+                    <Col md={9}>
+                      <Field
+                        as="select"
+                        name="state"
+                        className="form-control"
+                        onChange={(e) => {
+                          setFieldValue("state", e.target.value);
+
+                          setFieldValue("city", "");
+                          setFieldValue("location", "");
+                        }}
+                      >
+                        <option value="">Select State</option>
+
+                        {Object.keys(locationData).map((state) => (
+                          <option key={state} value={state}>
+                            {state}
+                          </option>
+                        ))}
+                      </Field>
+
+                      <ErrorMessage
+                        name="state"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-3">
+                    <Col md={3}>
                       <label htmlFor="city">City:</label>
                     </Col>
 
@@ -366,27 +409,23 @@ const AddRestaurent = () => {
                         as="select"
                         name="city"
                         className="form-control"
+                        disabled={!values.state}
                         onChange={(e) => {
-                          const value = e.target.value;
+                          setFieldValue("city", e.target.value);
 
-                          setFieldValue("city", value);
-
-                          // Reset location
                           setFieldValue("location", "");
-
-                          // Set location according to city
-                          setSubCategories(location[value] || []);
                         }}
                       >
                         <option value="">Select City</option>
 
-                        <option value="Jamshedpur">Jamshedpur</option>
-
-                        <option value="Bokaro">Bokaro</option>
-
-                        <option value="Ranchi">Ranchi</option>
-
-                        <option value="Dhanbad">Dhanbad</option>
+                        {values.state &&
+                          Object.keys(locationData[values.state] || {}).map(
+                            (city) => (
+                              <option key={city} value={city}>
+                                {city}
+                              </option>
+                            ),
+                          )}
                       </Field>
 
                       <ErrorMessage
@@ -407,44 +446,23 @@ const AddRestaurent = () => {
                         as="select"
                         name="location"
                         className="form-control"
+                        disabled={!values.city}
                       >
                         <option value="">Select Location</option>
 
-                        {subCategories.map((item, index) => (
-                          <option key={index} value={item}>
-                            {item}
-                          </option>
-                        ))}
+                        {values.state &&
+                          values.city &&
+                          (locationData[values.state]?.[values.city] || []).map(
+                            (item) => (
+                              <option key={item} value={item}>
+                                {item}
+                              </option>
+                            ),
+                          )}
                       </Field>
 
                       <ErrorMessage
                         name="location"
-                        component="div"
-                        className="text-danger"
-                      />
-                    </Col>
-                  </Row>
-
-                  <Row className="mb-3">
-                    <Col md={3}>
-                      <label htmlFor="state">State:</label>
-                    </Col>
-
-                    <Col md={9}>
-                      <Field as="select" name="state" className="form-control">
-                        <option value="">Select State</option>
-
-                        <option value="Jharkhand">Jharkhand</option>
-
-                        <option value="Bihar">Bihar</option>
-
-                        <option value="Odisha">Odisha</option>
-
-                        <option value="UP">Uttar Pradesh</option>
-                      </Field>
-
-                      <ErrorMessage
-                        name="state"
                         component="div"
                         className="text-danger"
                       />
@@ -611,10 +629,11 @@ const AddRestaurent = () => {
                         className="form-control"
                         accept="image/jpeg,image/jpg,image/png,image/webp"
                         onChange={(event) => {
-                          setFieldValue(
-                            "images",
-                            Array.from(event.currentTarget.files),
+                          const files = Array.from(
+                            event.currentTarget.files || [],
                           );
+
+                          setFieldValue("images", files);
                         }}
                       />
 
