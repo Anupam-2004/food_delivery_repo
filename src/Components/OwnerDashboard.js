@@ -62,6 +62,25 @@ const fallbackReviews = [
   },
 ];
 
+
+// const data = {
+//   labels: monthlyRevenue.map(item => {
+//     return new Date(2000, item.month - 1)
+//       .toLocaleString("en", { month: "short" });
+//   }),
+
+//   datasets: [
+//     {
+//       label: "Revenue",
+//       data: monthlyRevenue.map(item => item.revenue),
+//       borderColor: "#4F46E5",
+//       backgroundColor: "rgba(79, 70, 229, 0.15)",
+//       tension: 0.4,
+//       fill: true
+//     }
+//   ]
+// };
+
 const OwnerDashboard = () => {
   const navigate = useNavigate();
   const [restaurent, setRestaurent] = useState(null);
