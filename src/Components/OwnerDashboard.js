@@ -260,10 +260,10 @@ const OwnerDashboard = () => {
         </div>
       </div>
 
-      {/* ================= MAIN ================= */}
+     
 
       <div className="owner-main">
-        {/* ================= HEADER ================= */}
+       
 
         <div className="owner-header">
           <div>
