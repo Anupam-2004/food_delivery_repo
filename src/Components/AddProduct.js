@@ -42,8 +42,8 @@ const SignupSchema = Yup.object({
     )
     .test(
       "fileSize",
-      "Each image must be less than 2 MB",
-      (files) => !files || files.every((file) => file.size <= 2 * 1024 * 1024),
+      "Each image must be less than 5 MB",
+      (files) => !files || files.every((file) => file.size <= 5 * 1024 * 1024),
     ),
 });
 
@@ -152,7 +152,10 @@ export default function AddProduct() {
               err.response?.data?.message ||
               err.response?.data?.error ||
               "Food add nahi hua. Backend server aur form details check karein.";
-            console.error("Food add failed:", err.response?.data || err.message);
+            console.error(
+              "Food add failed:",
+              err.response?.data || err.message,
+            );
             setSubmitError(message);
           }
         }}
@@ -171,7 +174,10 @@ export default function AddProduct() {
               {restaurents
                 ? restaurents.map((restaurent, index) => {
                     return (
-                      <option value={restaurent._id || restaurent.id} key={restaurent._id || restaurent.id || index}>
+                      <option
+                        value={restaurent._id || restaurent.id}
+                        key={restaurent._id || restaurent.id || index}
+                      >
                         {restaurent.restaurentName}
                       </option>
                     );
@@ -205,24 +211,93 @@ export default function AddProduct() {
             {/* Category */}
 
             <label>Category</label>
-
             <Field as="select" name="category" className="form-control">
               <option value="">Choose Category</option>
 
-              {/* Veg Categories */}
-              <option value="Main Course">Main Course</option>
-              <option value="Breads">Breads</option>
-              <option value="Rice">Rice</option>
+              {/* Main Categories */}
+              <option value="Soups">Soups</option>
+              <option value="Salads">Salads</option>
               <option value="Starters">Starters</option>
-              <option value="Snacks">Snacks</option>
-              <option value="Desserts">Desserts</option>
-              <option value="Beverages">Beverages</option>
 
-              {/* Non-Veg Categories */}
+              <option value="Snacks">Snacks</option>
+              <option value="Chaat">Chaat</option>
+
+              {/* Indian Food */}
+              <option value="Main Course">Main Course</option>
+              <option value="North Indian">North Indian</option>
+              <option value="South Indian">South Indian</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Punjabi">Punjabi</option>
+
+              <option value="Rajasthani">Rajasthani</option>
+              <option value="Gujarati">Gujarati</option>
+
+              {/* Breads & Rice */}
+              <option value="Breads">Breads</option>
+              <option value="Roti">Roti</option>
+              <option value="Naan">Naan</option>
+              <option value="Paratha">Paratha</option>
+              <option value="Rice">Rice</option>
+              <option value="Biryani">Biryani</option>
+              <option value="Pulao">Pulao</option>
+
+              {/* Vegetarian */}
+              <option value="Vegetarian">Vegetarian</option>
+              <option value="Paneer">Paneer</option>
+              <option value="Vegetable Dishes">Vegetable Dishes</option>
+              <option value="Dal">Dal</option>
+
+              {/* Non-Vegetarian */}
               <option value="Chicken">Chicken</option>
               <option value="Mutton">Mutton</option>
               <option value="Fish">Fish</option>
+
               <option value="Egg">Egg</option>
+              <option value="Kebab">Kebab</option>
+
+              {/* Chinese & Asian */}
+              <option value="Chinese">Chinese</option>
+              <option value="Indo-Chinese">Indo-Chinese</option>
+              <option value="Noodles">Noodles</option>
+              <option value="Momos">Momos</option>
+              <option value="Manchurian">Manchurian</option>
+
+              {/* Italian & Continental */}
+              <option value="Pizza">Pizza</option>
+              <option value="Pasta">Pasta</option>
+              <option value="Burger">Burger</option>
+              <option value="Sandwich">Sandwich</option>
+
+              {/* Fast Food */}
+              <option value="Fast Food">Fast Food</option>
+              <option value="French Fries">French Fries</option>
+
+              <option value="Tacos">Tacos</option>
+              <option value="Rolls">Rolls</option>
+
+              {/* Desserts */}
+              <option value="Desserts">Desserts</option>
+              <option value="Ice Cream">Ice Cream</option>
+              <option value="Cakes">Cakes</option>
+              <option value="Pastries">Pastries</option>
+              <option value="Indian Sweets">Indian Sweets</option>
+
+              {/* Breakfast */}
+              <option value="Breakfast">Breakfast</option>
+              <option value="Idli">Idli</option>
+              <option value="Dosa">Dosa</option>
+              <option value="Poha">Poha</option>
+              <option value="Upma">Upma</option>
+              <option value="Paratha Breakfast">Paratha Breakfast</option>
+
+              {/* Beverages */}
+              <option value="Beverages">Beverages</option>
+              <option value="Tea">Tea</option>
+              <option value="Coffee">Coffee</option>
+              <option value="Juices">Juices</option>
+
+              <option value="Soft Drinks">Soft Drinks</option>
+              <option value="Lassi">Lassi</option>
             </Field>
 
             <ErrorMessage
@@ -289,7 +364,9 @@ export default function AddProduct() {
               component="div"
               className="text-danger"
             />
-            {submitError && <div className="text-danger mt-2">{submitError}</div>}
+            {submitError && (
+              <div className="text-danger mt-2">{submitError}</div>
+            )}
             <Row>
               {values.images.map((image, index) => (
                 <Col md={3} key={index}>

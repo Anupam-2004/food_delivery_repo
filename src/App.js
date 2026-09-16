@@ -20,7 +20,7 @@ import Restaurents from "./Components/Restaurents";
 import AddRestaurent from "./Components/AddRestaurent";
 import AdminRestaurents from "./Components/AdminRestaurents";
 import ViewRestaurent from "./Components/ViewRestaurent";
-import FoodCategory from "./Components/Categories";
+// import FoodCategory from "./Components/Categories";
 import AddfoodCategory from "./Components/AddfoodCategory";
 import Foods from "./Components/Foods";
 import Register from "./Components/Register";
@@ -29,7 +29,7 @@ import AddProduct from "./Components/AddProduct";
 import Dashboard from "./Components/Dashboard";
 import Orders from "./Components/Orders";
 import AdminOrders from "./Components/AdminOrders";
-import Products from "./Components/Products";
+// import Products from "./Components/Products";
 import AdminProducts from "./Components/AdminProducts";
 import OwnerOrders from "./Components/OwnerOrders";
 import Users from "./Components/Users";
@@ -55,6 +55,7 @@ import AdminOrderHistory from "./Components/AdminOrderHistory";
 import RestaurentOrderHistory from "./Components/RestaurentOrderHistory";
 import OwnerDashboard from "./Components/OwnerDashboard";
 import OwnerProducts from "./Components/OwnerProducts";
+import OwnerUsers from "./Components/OwnerUsers";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -204,7 +205,7 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Orders" element={<Orders />} />
         <Route path="/AdminOrders" element={<AdminOrders />} />
-        <Route path="/Products" element={<Products />} />
+        {/* <Route path="/Products" element={<Products />} /> */}
         <Route path="/AdminProducts" element={<AdminProducts />} />
         <Route path="/OwnerOrders" element={<OwnerOrders />} />
         <Route path="/Users" element={<Users />} />
@@ -222,6 +223,7 @@ function App() {
         <Route path="/AdminOrderHistory" element={<AdminOrderHistory />} />
          <Route path="/OwnerDashboard" element={<OwnerDashboard/>} />
          <Route path="/OwnerProducts" element={<OwnerProducts/>} />
+         <Route path="/OwnerUsers" element={<OwnerUsers/>} />
         <Route
           path="/RestaurentOrderHistory"
           element={<RestaurentOrderHistory />}

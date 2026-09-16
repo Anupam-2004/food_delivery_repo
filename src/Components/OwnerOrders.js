@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
   Container,
@@ -10,76 +11,79 @@ import {
   Accordion,
 } from "react-bootstrap";
 import axios from "axios";
-
 import Sidebar from "./Sidebar";
 import { FaFilePdf, FaEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const OwnerOrders = () => {
-  // Orders ke liye array
   const [orders, setOrders] = useState([]);
-
-  // Modal ke liye
+  const [restaurant, setRestaurant] = useState(null);
+  const [restaurantId, setRestaurantId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
-  // Jo order select hua hai
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const navigate = useNavigate();
 
   const { user: currentUser } = useSelector((state) => state.auth);
-  console.log("Current User:", currentUser); // Debugging line
-  // Orders API
+
+  const userId = currentUser?._id || currentUser?.id;
+
   useEffect(() => {
+    if (!userId) {
+      return;
+    }
+
     axios
-      .get("http://localhost:8090/api/orders")
+      .get(`http://localhost:8090/api/restaurents/user/${userId}`)
       .then((response) => {
-        console.log(response.data);
+        const restaurantData = response.data[0];
+
+        setRestaurant(restaurantData);
+        setRestaurantId(restaurantData.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [userId]);
+
+  useEffect(() => {
+    if (!restaurantId) {
+      return;
+    }
+
+    axios
+      .get(
+        `http://localhost:8090/api/orders/restaurent/${restaurantId}`
+      )
+      .then((response) => {
         setOrders(response.data);
       })
       .catch((error) => {
-        console.log("Failed to fetch orders");
         console.log(error);
-        alert("Failed to fetch orders");
       });
-        if (!currentUser) {
-      navigate("/");
-      return;
-    }
+  }, [restaurantId]);
 
-    if (
-      currentUser.roles &&
-      !currentUser.roles.includes("ROLE_OWNER")
-    ) {
-      navigate("/");
-      return;
-    }
-  }, []);
-
-  // Admin authentication
   useEffect(() => {
     if (!currentUser) {
       navigate("/");
-    } else if (currentUser.roles[0] !== "ROLE_ADMIN") {
+    } else if (currentUser.roles?.[0] !== "ROLE_OWNER") {
       navigate("/");
     }
   }, [currentUser, navigate]);
 
-  // Eye button click
   const handleShow = (order) => {
     setSelectedOrder(order);
     setShowModal(true);
   };
 
-  // Modal close
   const handleClose = () => {
     setShowModal(false);
     setSelectedOrder(null);
   };
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col md={1}>
           <Sidebar />
@@ -87,24 +91,20 @@ const OwnerOrders = () => {
 
         <Col md={11}>
           <h1>Orders (Owner)</h1>
-        </Col>
-      </Row>
 
-      <Row>
-        <Col>
           <Breadcrumb>
-            <Breadcrumb.Item href="/Dashboard">Dashboard</Breadcrumb.Item>
+            <Breadcrumb.Item href="/Dashboard">
+              Dashboard
+            </Breadcrumb.Item>
 
-            <Breadcrumb.Item active>Orders (Owner)</Breadcrumb.Item>
+            <Breadcrumb.Item active>
+              Orders (Owner)
+            </Breadcrumb.Item>
           </Breadcrumb>
-        </Col>
-      </Row>
 
-      <Row>
-        <Col>
-          <Table striped bordered hover>
+          <Table striped bordered hover responsive>
             <thead>
-              <tr className="owner-order-table-header">
+              <tr>
                 <th>#</th>
                 <th>Restaurant Name</th>
                 <th>Customer Name</th>
@@ -114,14 +114,14 @@ const OwnerOrders = () => {
                 <th>Invoice</th>
               </tr>
             </thead>
-            <tbody className="owner-order-table-body">
+
+            <tbody>
               {orders.map((order, index) => (
-                <tr key={index}>
+                <tr key={order._id || order.id || index}>
                   <td>{index + 1}</td>
 
                   <td>
-                    {order.items[0]?.restaurentId?.restaurentName ||
-                      "Restaurant"}
+                    {restaurant?.restaurentName || "Restaurant"}
                   </td>
 
                   <td>
@@ -133,10 +133,8 @@ const OwnerOrders = () => {
                     <ul>
                       {order.items?.map((item, itemIndex) => (
                         <li key={itemIndex}>
-                          {item.productId?.foodName || "Product"}
-                          {" - "}₹{item.price}
-                          {" × "}
-                          {item.quantity}
+                          {item.productId?.foodName || "Product"} - ₹
+                          {item.price} × {item.quantity}
                         </li>
                       ))}
                     </ul>
@@ -145,12 +143,14 @@ const OwnerOrders = () => {
                   <td>₹{order.totalAmount || 0}</td>
 
                   <td>
-                    <Button variant="warning" onClick={() => handleShow(order)}>
+                    <Button
+                      variant="warning"
+                      onClick={() => handleShow(order)}
+                    >
                       <FaEye />
                     </Button>
                   </td>
 
-                  {/* Invoice */}
                   <td>
                     <Button variant="danger">
                       <FaFilePdf />
@@ -163,7 +163,6 @@ const OwnerOrders = () => {
         </Col>
       </Row>
 
-      {/* Modal */}
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton className="bg-danger text-white">
           <Modal.Title>Order Details</Modal.Title>
@@ -173,143 +172,146 @@ const OwnerOrders = () => {
           {selectedOrder && (
             <div>
               <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>
+                    Restaurant Details
+                  </Accordion.Header>
+
                   <Accordion.Body>
                     <p>
-                      <strong>restaurent Name:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.restaurentName}
+                      <strong>Restaurant Name:</strong>{" "}
+                      {restaurant?.restaurentName}
                     </p>
 
                     <p>
                       <strong>Food Type:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.foodType}
+                      {restaurant?.foodType}
                     </p>
+
                     <p>
-                      <strong>Address1:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.addressLine1}
+                      <strong>Address 1:</strong>{" "}
+                      {restaurant?.addressLine1}
                     </p>
+
                     <p>
-                      <strong>Address2:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.addressLine2}
+                      <strong>Address 2:</strong>{" "}
+                      {restaurant?.addressLine2}
                     </p>
+
                     <p>
                       <strong>Location:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.location}
+                      {restaurant?.location}
                     </p>
 
                     <p>
-                      <strong>City:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.city}
+                      <strong>City:</strong> {restaurant?.city}
                     </p>
 
                     <p>
-                      <strong>State:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.state}
+                      <strong>State:</strong> {restaurant?.state}
                     </p>
+
                     <p>
                       <strong>Country:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.country}
+                      {restaurant?.country}
                     </p>
+
                     <p>
                       <strong>Pincode:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.pincode}
+                      {restaurant?.pincode}
                     </p>
 
                     <p>
                       <strong>Mobile Number:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.mobileNumber}
+                      {restaurant?.mobileNumber}
                     </p>
+
                     <p>
-                      <strong>Email:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.email}
+                      <strong>Email:</strong> {restaurant?.email}
                     </p>
 
                     <p>
                       <strong>Owner Name:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.ownerName}
+                      {restaurant?.ownerName}
                     </p>
+
                     <p>
                       <strong>Website:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.website}
+                      {restaurant?.website}
                     </p>
+
                     <p>
-                      <strong>Descrption:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.description}
-                    </p>
-                    <p>
-                      <strong>Image:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.image}
+                      <strong>Description:</strong>{" "}
+                      {restaurant?.description}
                     </p>
                   </Accordion.Body>
                 </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Order details</Accordion.Header>
+
+                <Accordion.Item eventKey="1">
+                  <Accordion.Header>
+                    Customer Details
+                  </Accordion.Header>
+
                   <Accordion.Body>
                     <p>
-                      <strong>restaurent Name:</strong>{" "}
-                      {selectedOrder.items[0]?.restaurentId?.restaurentName}
+                      <strong>Name:</strong>{" "}
+                      {selectedOrder.userId?.firstName || ""}{" "}
+                      {selectedOrder.userId?.lastName || ""}
+                    </p>
+
+                    <p>
+                      <strong>Email:</strong>{" "}
+                      {selectedOrder.userId?.email || "No Email"}
+                    </p>
+
+                    <p>
+                      <strong>Mobile:</strong>{" "}
+                      {selectedOrder.userId?.mobile ||
+                        selectedOrder.userId?.mobileNumber ||
+                        "No Mobile"}
                     </p>
                   </Accordion.Body>
                 </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion>
-                <Accordion.Item>
-                  <Accordion.Header>Restaurent details</Accordion.Header>
-                  <Accordion.Body></Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
 
-              <p>
-                <strong>Customer:</strong> {selectedOrder.userId?.firstName}{" "}
-                {selectedOrder.userId?.lastName}
-              </p>
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>
+                    Order Details
+                  </Accordion.Header>
 
-              <p>
-                <strong>Total Price:</strong> ₹{selectedOrder.totalAmount}
-              </p>
+                  <Accordion.Body>
+                    <p>
+                      <strong>Order ID:</strong>{" "}
+                      {selectedOrder._id || selectedOrder.id}
+                    </p>
 
-              <h5>Items</h5>
+                    <p>
+                      <strong>Payment Status:</strong>{" "}
+                      {selectedOrder.paymentStatus}
+                    </p>
 
-              <ul>
-                {selectedOrder.items?.map((item, index) => (
-                  <li key={index}>
-                    {item.productId?.foodName} : ₹{item.price}
-                  </li>
-                ))}
-              </ul>
+                    <p>
+                      <strong>Order Status:</strong>{" "}
+                      {selectedOrder.orderStatus}
+                    </p>
+
+                    <p>
+                      <strong>Total Price:</strong> ₹
+                      {selectedOrder.totalAmount || 0}
+                    </p>
+
+                    <h5>Items</h5>
+
+                    <ul>
+                      {selectedOrder.items?.map((item, index) => (
+                        <li key={index}>
+                          {item.productId?.foodName || "Product"} - ₹
+                          {item.price} × {item.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
             </div>
           )}
         </Modal.Body>
@@ -325,3 +327,4 @@ const OwnerOrders = () => {
 };
 
 export default OwnerOrders;
+

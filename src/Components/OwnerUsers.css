@@ -1,0 +1,105 @@
+
+.owner-users-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 30px 0;
+}
+
+.restaurant-info-card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.restaurant-info-card h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.restaurant-info-card p {
+  margin: 5px 0 0;
+  color: #777;
+}
+
+.owner-users-table-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.table-header {
+  margin-bottom: 20px;
+}
+
+.table-header h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.owner-users-table-card table {
+  margin-bottom: 0;
+}
+
+.owner-users-table-card th {
+  background: #f8f8f8;
+  font-weight: 600;
+}
+
+.owner-users-table-card td,
+.owner-users-table-card th {
+  padding: 14px;
+  vertical-align: middle;
+}
+
+.active-status {
+  background: #198754;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.no-users {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.no-users h5 {
+  margin-bottom: 10px;
+}
+
+.no-users p {
+  color: #777;
+}
+
+.owner-users-loading {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.owner-users-loading p {
+  margin-top: 15px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .owner-users-page {
+    padding: 20px 0;
+  }
+
+  .restaurant-info-card,
+  .owner-users-table-card {
+    padding: 15px;
+  }
+
+  .restaurant-info-card h3 {
+    font-size: 20px;
+  }
+}

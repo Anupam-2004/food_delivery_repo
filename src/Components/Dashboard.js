@@ -467,7 +467,11 @@ const Dashboard = () => {
                     <FaUsers />
                   </div>
 
-                  <div className="stat-card-body">
+                  <div className="stat-card-body"
+                  onClick={()=>navigate("/Users")}
+                  style={{cursor:"pointer"}}
+                  
+                  >
                     <p className="stat-card-title">Total Users</p>
 
                     <h4 className="stat-card-count">{totalUsers}</h4>
@@ -485,7 +489,7 @@ const Dashboard = () => {
                     <FaUtensils />
                   </div>
 
-                  <div className="stat-card-body">
+                  <div className="stat-card-body" onClick={()=>navigate("/AdminRestaurants")} style={{cursor:"pointer"}}>
                     <p className="stat-card-title">Total Restaurants</p>
 
                     <h4 className="stat-card-count">{totalRestaurants}</h4>
@@ -503,7 +507,7 @@ const Dashboard = () => {
                     <FaUserPlus />
                   </div>
 
-                  <div className="stat-card-body">
+                  <div className="stat-card-body" onClick={()=>navigate("/AdminOrders")} style={{cursor:"pointer"}}>
                     <p className="stat-card-title">Total Orders</p>
 
                     <h4 className="stat-card-count">{orders.length}</h4>
@@ -521,7 +525,7 @@ const Dashboard = () => {
                     <FaArrowUp />
                   </div>
 
-                  <div className="stat-card-body">
+                  <div className="stat-card-body" onClick={()=>navigate("/Revenue")} style={{cursor:"pointer"}}>
                     <p className="stat-card-title">Revenue</p>
 
                     <h4 className="stat-card-count">
