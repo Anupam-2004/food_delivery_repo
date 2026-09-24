@@ -189,25 +189,22 @@ const Dashboard = () => {
       });
   }, []);
   useEffect(() => {
-    axios
-      .get("http://localhost:8090/api/orders/analytics/top-restaurants")
-      .then((response) => {
-        console.log("Top Restaurants:", response.data);
+  axios
+    .get("http://localhost:8090/api/orders/analytics/top-restaurants")
+    .then((response) => {
+      console.log("TOP RESTAURANTS RESPONSE:", response.data);
 
-        if (Array.isArray(response.data)) {
-          setDisplayedRestaurants(response.data);
-        } else if (Array.isArray(response.data?.data)) {
-          setDisplayedRestaurants(response.data.data);
-        } else {
-          setDisplayedRestaurants([]);
-        }
-      })
-      .catch((error) => {
-        console.log("Failed to fetch Top Restaurants:", error);
-
+      if (Array.isArray(response.data)) {
+        setDisplayedRestaurants(response.data);
+      } else {
         setDisplayedRestaurants([]);
-      });
-  }, []);
+      }
+    })
+    .catch((error) => {
+      console.log("Failed to fetch Top Restaurants:", error);
+      setDisplayedRestaurants([]);
+    });
+}, []);
 
   const xLabels = [
     "01 May",
@@ -368,8 +365,7 @@ const Dashboard = () => {
     return fallback;
   };
 
-  const getOrderStatus = (order) =>
-    getSafeText(order?.orderStatus, "Pending");
+  const getOrderStatus = (order) => getSafeText(order?.orderStatus, "Pending");
 
   if (!currentUser) {
     return null;
@@ -390,8 +386,9 @@ const Dashboard = () => {
               <h1 className="dashboard-title">Dashboard</h1>
 
               <p className="dashboard-subtitle">
-                Welcome back, <b>{getSafeText(currentUser?.firstName, "Admin")}</b>! Here's what's
-                happening today.
+                Welcome back,{" "}
+                <b>{getSafeText(currentUser?.firstName, "Admin")}</b>! Here's
+                what's happening today.
               </p>
             </div>
 
@@ -686,29 +683,29 @@ const Dashboard = () => {
                             restaurant?.restaurentName ||
                               restaurant?.restaurantName ||
                               restaurant?.name,
-                            "Restaurant"
+                            "Restaurant",
                           );
 
                           const category = getSafeText(
                             restaurant?.category ||
                               restaurant?.city ||
                               restaurant?.location,
-                            "Food Partner"
+                            "Food Partner",
                           );
 
                           const orderCount = getSafeText(
                             restaurant?.orders ||
                               restaurant?.orderCount ||
                               restaurant?.totalOrders,
-                            "0"
+                            "0",
                           );
 
                           const image =
                             typeof restaurant?.image === "string"
                               ? restaurant.image
                               : typeof restaurant?.imageUrl === "string"
-                              ? restaurant.imageUrl
-                              : "/REStaurent/inner-view copy.jpg";
+                                ? restaurant.imageUrl
+                                : "/REStaurent/inner-view copy.jpg";
 
                           return (
                             <div
@@ -717,9 +714,7 @@ const Dashboard = () => {
                             >
                               <span
                                 className={`rank-badge ${
-                                  index % 2 === 0
-                                    ? "rank-orange"
-                                    : "rank-gray"
+                                  index % 2 === 0 ? "rank-orange" : "rank-gray"
                                 }`}
                               >
                                 {index + 1}
@@ -864,7 +859,6 @@ const Dashboard = () => {
               <div className="recent-restaurants-header">
                 <div>
                   <span className="panel-kicker">PARTNER DIRECTORY</span>
-
                   <h2>Recent Restaurants</h2>
                 </div>
 
@@ -872,51 +866,53 @@ const Dashboard = () => {
                   View All
                 </button>
               </div>
-              {/* 
+
               <div className="recent-restaurants-list">
-                {restaurants.map((restaurant, index) => (
-                  <div
-                    className="recent-restaurant-item"
-                    key={index}
-                  >
-                    <img
-                      src={
-                        restaurant.image ||
-                        restaurant.imageUrl ||
-                        "/REStaurent/inner-view copy.jpg"
-                      }
-                      alt={
-                        restaurant.restaurentName ||
-                        restaurant.name ||
-                        "Restaurant"
-                      }
-                      className="restaurant-image"
-                    />
+                {displayedRestaurants.length > 0 ? (
+                  displayedRestaurants.map((restaurant, index) => (
+                    <div
+                      className="recent-restaurant-item"
+                      key={restaurant.restaurantId || index}
+                    >
+                      <img
+                        src={
+                          restaurant.image ||
+                          restaurant.imageUrl ||
+                          "/REStaurent/inner-view copy.jpg"
+                        }
+                        alt={restaurant.restaurantName || "Restaurant"}
+                        className="restaurant-image"
+                        onError={(event) => {
+                          event.currentTarget.src =
+                            "/REStaurent/inner-view copy.jpg";
+                        }}
+                      />
 
-                    <div className="restaurant-details">
-                      <div className="restaurant-details-text">
-                        <h6>
-                          {restaurant.restaurentName ||
-                            restaurant.name ||
-                            "Restaurant"}
-                        </h6>
+                      <div className="restaurant-details">
+                        <div className="restaurant-details-text">
+                          <h6>{restaurant.restaurantName || "Restaurant"}</h6>
 
-                        <p>
-                          {restaurant.city ||
-                            restaurant.location ||
-                            "Location not available"}
-                        </p>
+                          <p>
+                            {restaurant.city ||
+                              restaurant.location ||
+                              "Location not available"}
+                          </p>
 
-                        <span className="status-active">Active</span>
+                          <span className="status-active">Active</span>
+                        </div>
+
+                        <button className="menu-btn" type="button">
+                          <FaEllipsisV />
+                        </button>
                       </div>
-
-                      <button className="menu-btn" type="button">
-                        <FaEllipsisV />
-                      </button>
                     </div>
+                  ))
+                ) : (
+                  <div className="empty-table-state">
+                    No restaurants available.
                   </div>
-                ))}
-              </div> */}
+                )}
+              </div>
             </Card>
           </section>
         </Col>
