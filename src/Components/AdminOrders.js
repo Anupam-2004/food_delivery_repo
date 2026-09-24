@@ -32,6 +32,13 @@ const AdminOrders = () => {
 
   const navigate = useNavigate();
 
+  const getDisplayValue = (value, fallback = "") => {
+    if (value === null || value === undefined) return fallback;
+    if (typeof value !== "object") return value;
+
+    return value._id || value.id || value.name || value.orderStatus || fallback;
+  };
+
   const { user: currentUser } = useSelector((state) => state.auth);
   console.log("Current User:", currentUser); // Debugging line
   // Orders API
@@ -39,8 +46,10 @@ const AdminOrders = () => {
     axios
       .get("http://localhost:8090/api/orders")
       .then((response) => {
-        console.log(response.data);
-        setOrders(response.data);
+        console.log("API Response:", response.data);
+        console.log("Is Array:", Array.isArray(response.data));
+
+        setOrders(Array.isArray(response.data) ? response.data : []);
       })
       .catch((error) => {
         console.log("Failed to fetch orders");
@@ -69,7 +78,7 @@ const AdminOrders = () => {
 
   const handleStatusShow = (order) => {
     setSelectedStatusOrder(order);
-    setNewStatus(order.orderStatus || "processing");
+    setNewStatus(getDisplayValue(order.orderStatus, "processing"));
     setStatusModal(true);
   };
 
@@ -194,7 +203,7 @@ const AdminOrders = () => {
                     </Button>
                   </td>
 
-                  <td>{order.orderStatus}</td>
+                  <td>{getDisplayValue(order.orderStatus, "processing")}</td>
 
                   <td>
                     <Button
@@ -348,11 +357,15 @@ const AdminOrders = () => {
 
                     <p>
                       <strong>User Id:</strong>{" "}
-                      {selectedOrder.items[0]?.productId?.userId}
+                      {getDisplayValue(
+                        selectedOrder.items[0]?.productId?.userId,
+                      )}
                     </p>
                     <p>
                       <strong>RestaurentId:</strong>{" "}
-                      {selectedOrder.items[0]?.productId?.restaurentId}
+                      {getDisplayValue(
+                        selectedOrder.items[0]?.productId?.restaurentId,
+                      )}
                     </p>
                     <p>
                       <strong>Food Type:</strong>{" "}
@@ -397,7 +410,7 @@ const AdminOrders = () => {
                     </p>
                     <p>
                       <strong>user Id:</strong>{" "}
-                      {selectedOrder.addressId?.userId}
+                      {getDisplayValue(selectedOrder.addressId?.userId)}
                     </p>
                     <p>
                       <strong>Address Line 1:</strong>{" "}
@@ -464,7 +477,10 @@ const AdminOrders = () => {
 
               <p>
                 <strong>Current Status:</strong>{" "}
-                {selectedStatusOrder.orderStatus}
+                {getDisplayValue(
+                  selectedStatusOrder.orderStatus,
+                  "processing",
+                )}
               </p>
 
               <label className="mb-2">

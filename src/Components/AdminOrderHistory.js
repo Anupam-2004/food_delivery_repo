@@ -7,7 +7,6 @@ import {
   FaEye,
   FaRedo,
   FaUtensils,
-  FaCreditCard,
   FaReceipt,
   FaPhone,
   FaCheck,

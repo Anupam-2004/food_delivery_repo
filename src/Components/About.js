@@ -8,6 +8,7 @@ import {
   Button,
 } from "react-bootstrap";
 import "./About.css";
+import { useNavigate } from "react-router-dom";
 
 import {
   FaUtensils,
@@ -22,6 +23,7 @@ import {
 import "./About.css";
 
 const About = () => {
+  const navigate=useNavigate();
   return (
     <div className="about-page">
 
@@ -47,7 +49,7 @@ const About = () => {
                 enjoy fast, fresh and reliable delivery right at your doorstep.
               </p>
 
-              <Button className="explore-btn">
+              <Button className="explore-btn" onClick={()=>navigate("/menu")}>
                 <FaUtensils className="me-2" />
                 Explore Food
               </Button>
@@ -295,8 +297,8 @@ const About = () => {
 
           <Row className="g-4">
 
-            <Col md={4}>
-              <div className="step-card">
+            <Col md={4} onClick={()=>navigate("/Restaurents")}>
+              <div className="step-card" >
 
                 <div className="step-number">
                   01
@@ -314,8 +316,8 @@ const About = () => {
             </Col>
 
 
-            <Col md={4}>
-              <div className="step-card">
+            <Col md={4} onClick={()=>navigate("/menu")}>
+              <div className="step-card" >
 
                 <div className="step-number">
                   02
@@ -334,8 +336,8 @@ const About = () => {
             </Col>
 
 
-            <Col md={4}>
-              <div className="step-card">
+            <Col md={4} onClick={()=>navigate("/Orders")}>
+              <div className="step-card" >
 
                 <div className="step-number">
                   03
@@ -377,7 +379,7 @@ const About = () => {
                 today.
               </p>
 
-              <Button className="cta-btn">
+              <Button className="cta-btn" onClick={()=>navigate("/Restaurents")}>
                 Order Now
               </Button>
 

@@ -33,6 +33,26 @@ const AdminProduct = () => {
         alert("Failed to fetch products");
       });
   }, []);
+  const handleDelete = async (id) => {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this product?",
+      );
+  
+      if (!confirmDelete) return;
+  
+      try {
+        await axios.delete(`http://localhost:8090/api/products/${id}`);
+  
+        setProducts(
+          products.filter((products) => products.id !== id),
+        );
+  
+        alert("Product deleted successfully");
+      } catch (error) {
+        console.log(error);
+        alert("Something went wrong");
+      }
+    };
 
   let navigate = useNavigate();
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -100,13 +120,14 @@ const AdminProduct = () => {
 
 
                   <td>
-                    <Button variant="warning" size="sm" className="me-2">
+                    <Button variant="warning" size="sm" className="me-2" onClick={()=>navigate("/")}>
                       <AiFillEdit />
                     </Button>
                   </td>
 
                   <td>
-                    <Button variant="danger" size="sm">
+                    <Button variant="danger" size="sm"
+                     onClick={() => handleDelete(product.id)}>
                       <MdDelete />
                     </Button>
                   </td>

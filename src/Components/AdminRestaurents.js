@@ -77,27 +77,29 @@ const AdminRestaurents = () => {
         <Col md={1}>
           <Sidebar />
         </Col>
-        <Col className="admin_restaurent" md={11}>
-          <h1>Restaurent</h1>
+        <Col md={11}>
+        <h1>Restaurent</h1>
+        </Col>
+        
+          
+      
+      </Row>
+
+      <Row>
+        <Col className="admin_restaurent" md={10}>
+         
           <Breadcrumb>
             <Breadcrumb.Item href="/Dashboard">Dashboard</Breadcrumb.Item>
 
             <Breadcrumb.Item active>Restaurents</Breadcrumb.Item>
           </Breadcrumb>
         </Col>
-      </Row>
-
-      <Row>
-        <Col md={6}>
+        <Col md={2}>
           <Link to={"/AddRestaurent"} className="btn btn-success">
             Add Restaurent
           </Link>
         </Col>
-         <Col md={6}>
-          <Link to={"/AddProduct"} className="btn btn-success">
-            Add product
-          </Link>
-        </Col>
+      
       </Row>
       <Row>
         <Col>

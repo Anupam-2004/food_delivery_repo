@@ -48,72 +48,6 @@ ChartJS.register(
   Legend,
 );
 
-// ======================================================
-// FALLBACK DATA
-// ======================================================
-
-const fallbackRecentOrders = [
-  {
-    id: "#ORD1234",
-    customer: "Rahul Sharma",
-    restaurant: "Spicy Bites",
-    amount: "₹520",
-    status: "Delivered",
-  },
-  {
-    id: "#ORD1235",
-    customer: "Priya Singh",
-    restaurant: "Tasty Treats",
-    amount: "₹350",
-    status: "Preparing",
-  },
-  {
-    id: "#ORD1236",
-    customer: "Amit Kumar",
-    restaurant: "Pizza Palace",
-    amount: "₹680",
-    status: "On The Way",
-  },
-  {
-    id: "#ORD1237",
-    customer: "Neha Verma",
-    restaurant: "Burger House",
-    amount: "₹420",
-    status: "Delivered",
-  },
-];
-
-const fallbackRecentRestaurants = [
-  {
-    id: 1,
-    name: "The Biryani House",
-    location: "Lucknow, Uttar Pradesh",
-    image: "/REStaurent/inner-view copy.jpg",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Cafe Coffee Day",
-    location: "Bangalore, Karnataka",
-    image: "/REStaurent/inner-view copy.jpg",
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Wow! Momos",
-    location: "Delhi, Delhi",
-    image: "/REStaurent/inner-view copy.jpg",
-    status: "Active",
-  },
-  {
-    id: 4,
-    name: "Kenters",
-    location: "Mumbai, Maharashtra",
-    image: "/REStaurent/inner-view copy.jpg",
-    status: "Active",
-  },
-];
-
 const salesBreakdown = [
   {
     label: "Food Orders",
@@ -172,9 +106,8 @@ const Dashboard = () => {
   const [orders, setOrders] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [displayedRestaurants, setDisplayedRestaurants] = useState([]);
   // const[users, setUsers] = useState([]);
-
-  
 
   useEffect(() => {
     if (!currentUser) {
@@ -187,7 +120,6 @@ const Dashboard = () => {
     }
   }, [currentUser, navigate]);
 
-  
   useEffect(() => {
     axios
       .get("http://localhost:8090/api/orders")
@@ -210,22 +142,11 @@ const Dashboard = () => {
       });
   }, []);
 
- 
   useEffect(() => {
     axios
       .get("http://localhost:8090/api/restaurents/count")
       .then((response) => {
         console.log("Restaurant count:", response.data);
-
-        /*
-          Backend response:
-
-          {
-            totalRestaurents: 5
-          }
-
-          So we only store the NUMBER.
-        */
 
         setTotalRestaurants(response.data?.totalRestaurents || 0);
       })
@@ -235,8 +156,6 @@ const Dashboard = () => {
         setTotalRestaurants(0);
       });
   }, []);
-
-  
 
   useEffect(() => {
     axios
@@ -261,16 +180,34 @@ const Dashboard = () => {
       .get("http://localhost:8090/api/auth/alluser")
       .then((response) => {
         console.log("Users:", response.data);
-        setTotalUsers(response.data.length);
+        setTotalUsers(Array.isArray(response.data) ? response.data.length : 0);
       })
       .catch((error) => {
         console.log("Failed to fetch users:", error);
 
-        setTotalUsers(error);
+        setTotalUsers(0);
       });
   }, []);
+  useEffect(() => {
+    axios
+      .get("http://localhost:8090/api/orders/analytics/top-restaurants")
+      .then((response) => {
+        console.log("Top Restaurants:", response.data);
 
-  
+        if (Array.isArray(response.data)) {
+          setDisplayedRestaurants(response.data);
+        } else if (Array.isArray(response.data?.data)) {
+          setDisplayedRestaurants(response.data.data);
+        } else {
+          setDisplayedRestaurants([]);
+        }
+      })
+      .catch((error) => {
+        console.log("Failed to fetch Top Restaurants:", error);
+
+        setDisplayedRestaurants([]);
+      });
+  }, []);
 
   const xLabels = [
     "01 May",
@@ -288,18 +225,12 @@ const Dashboard = () => {
 
   const cancelledData = [40, 55, 48, 65, 58, 72, 60];
 
-  
+  const displayedOrders = Array.isArray(orders) ? orders.slice(0, 5) : [];
 
-  const displayedOrders = orders.length > 0 ? orders.slice(0, 5) : [];
-
-  
-
-  const displayedRestaurants =
-    restaurants.length > 0
-      ? restaurants.slice(0, 4)
-      : fallbackRecentRestaurants;
-
-  
+  // const displayedRestaurants =
+  //   restaurants.length > 0
+  //     ? restaurants.slice(0, 4)
+  //     : " ";
 
   const totalSales = salesBreakdown.reduce((sum, item) => sum + item.value, 0);
 
@@ -334,8 +265,6 @@ const Dashboard = () => {
       },
     },
   };
-
-  
 
   const userStatistics = [
     {
@@ -375,8 +304,6 @@ const Dashboard = () => {
     },
   ];
 
-  
-
   const getCustomerName = (order) => {
     if (order.userId) {
       return `${order.userId.firstName || ""} ${
@@ -387,13 +314,9 @@ const Dashboard = () => {
     return "Customer";
   };
 
-  
-
   const getRestaurantName = (order) => {
     return order.items?.[0]?.restaurentId?.restaurentName || "Restaurant";
   };
-
- 
 
   const getOrderAmount = (order) => {
     if (order.amount) {
@@ -402,41 +325,64 @@ const Dashboard = () => {
 
     const amount =
       order.items?.reduce(
-        (total, item) =>
-          total + Number(item.price || 0) * Number(item.quantity || 0),
+        (total, item) => total + Number(item.price) * Number(item.quantity),
         0,
       ) || 0;
 
     return `₹${amount.toLocaleString("en-IN")}`;
   };
 
-  
-
   const getOrderId = (order) => {
     return order.orderId || order.id || order._id || "N/A";
   };
 
-  
+  // Always return a React-safe primitive.
+  const getSafeText = (value, fallback = "N/A") => {
+    if (value === null || value === undefined || value === "") {
+      return fallback;
+    }
+
+    if (
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean"
+    ) {
+      return String(value);
+    }
+
+    if (typeof value === "object") {
+      return (
+        value.restaurentName ||
+        value.restaurantName ||
+        value.name ||
+        value.category ||
+        value.city ||
+        value.location ||
+        value.title ||
+        value._id ||
+        value.id ||
+        fallback
+      );
+    }
+
+    return fallback;
+  };
+
+  const getOrderStatus = (order) =>
+    getSafeText(order?.orderStatus, "Pending");
 
   if (!currentUser) {
     return null;
   }
 
-  
   return (
     <Container fluid className="dashboard-page">
       <Row className="g-0">
-       
-
         <Col md={1} className="p-0 dashboard-sidebar">
           <Sidebar />
         </Col>
 
-       
-
         <Col md={11} className="dashboard">
-        
-
           <header className="dashboard-header">
             <div>
               <p className="dashboard-eyebrow">ADMIN WORKSPACE</p>
@@ -444,7 +390,7 @@ const Dashboard = () => {
               <h1 className="dashboard-title">Dashboard</h1>
 
               <p className="dashboard-subtitle">
-                Welcome back, <b>{currentUser.firstName}</b>! Here's what's
+                Welcome back, <b>{getSafeText(currentUser?.firstName, "Admin")}</b>! Here's what's
                 happening today.
               </p>
             </div>
@@ -454,8 +400,6 @@ const Dashboard = () => {
               Live overview
             </div>
           </header>
-
-         
 
           <section className="dashboard-section">
             <Row className="dashboard_cards g-3">
@@ -467,10 +411,10 @@ const Dashboard = () => {
                     <FaUsers />
                   </div>
 
-                  <div className="stat-card-body"
-                  onClick={()=>navigate("/Users")}
-                  style={{cursor:"pointer"}}
-                  
+                  <div
+                    className="stat-card-body"
+                    onClick={() => navigate("/Users")}
+                    style={{ cursor: "pointer" }}
                   >
                     <p className="stat-card-title">Total Users</p>
 
@@ -489,7 +433,11 @@ const Dashboard = () => {
                     <FaUtensils />
                   </div>
 
-                  <div className="stat-card-body" onClick={()=>navigate("/AdminRestaurants")} style={{cursor:"pointer"}}>
+                  <div
+                    className="stat-card-body"
+                    onClick={() => navigate("/AdminRestaurants")}
+                    style={{ cursor: "pointer" }}
+                  >
                     <p className="stat-card-title">Total Restaurants</p>
 
                     <h4 className="stat-card-count">{totalRestaurants}</h4>
@@ -507,7 +455,11 @@ const Dashboard = () => {
                     <FaUserPlus />
                   </div>
 
-                  <div className="stat-card-body" onClick={()=>navigate("/AdminOrders")} style={{cursor:"pointer"}}>
+                  <div
+                    className="stat-card-body"
+                    onClick={() => navigate("/AdminOrders")}
+                    style={{ cursor: "pointer" }}
+                  >
                     <p className="stat-card-title">Total Orders</p>
 
                     <h4 className="stat-card-count">{orders.length}</h4>
@@ -525,7 +477,11 @@ const Dashboard = () => {
                     <FaArrowUp />
                   </div>
 
-                  <div className="stat-card-body" onClick={()=>navigate("/Revenue")} style={{cursor:"pointer"}}>
+                  <div
+                    className="stat-card-body"
+                    onClick={() => navigate("/Revenue")}
+                    style={{ cursor: "pointer" }}
+                  >
                     <p className="stat-card-title">Revenue</p>
 
                     <h4 className="stat-card-count">
@@ -651,7 +607,7 @@ const Dashboard = () => {
                           </tr>
                         ) : displayedOrders.length > 0 ? (
                           displayedOrders.map((order, index) => (
-                            <tr key={order._id || order.id || index}>
+                            <tr key={index}>
                               <td>
                                 <span className="order-id">
                                   #{String(getOrderId(order)).slice(-6)}
@@ -677,11 +633,11 @@ const Dashboard = () => {
                               <td>
                                 <span
                                   className={`status-badge ${
-                                    statusClassMap[order.orderStatus] ||
+                                    statusClassMap[getOrderStatus(order)] ||
                                     "status-preparing"
                                   }`}
                                 >
-                                  {order.orderStatus || "Pending"}
+                                  {getOrderStatus(order)}
                                 </span>
                               </td>
                             </tr>
@@ -723,52 +679,83 @@ const Dashboard = () => {
                     </div>
 
                     <div className="top-restaurants-list">
-                      {displayedRestaurants.map((restaurant, index) => (
-                        <div
-                          className="top-restaurant-row"
-                          key={restaurant._id || restaurant.id || index}
-                        >
-                          <span
-                            className={`rank-badge ${
-                              index % 2 === 0 ? "rank-orange" : "rank-gray"
-                            }`}
-                          >
-                            {index + 1}
-                          </span>
+                      {Array.isArray(displayedRestaurants) &&
+                      displayedRestaurants.length > 0 ? (
+                        displayedRestaurants.map((restaurant, index) => {
+                          const restaurantName = getSafeText(
+                            restaurant?.restaurentName ||
+                              restaurant?.restaurantName ||
+                              restaurant?.name,
+                            "Restaurant"
+                          );
 
-                          <img
-                            src={
-                              restaurant.image ||
-                              restaurant.imageUrl ||
-                              "/REStaurent/inner-view copy.jpg"
-                            }
-                            alt={
-                              restaurant.restaurentName ||
-                              restaurant.name ||
-                              "Restaurant"
-                            }
-                            className="top-restaurant-img"
-                          />
+                          const category = getSafeText(
+                            restaurant?.category ||
+                              restaurant?.city ||
+                              restaurant?.location,
+                            "Food Partner"
+                          );
 
-                          <div className="top-restaurant-info">
-                            <p className="top-restaurant-name">
-                              {restaurant.restaurentName ||
-                                restaurant.name ||
-                                "Restaurant"}
-                            </p>
+                          const orderCount = getSafeText(
+                            restaurant?.orders ||
+                              restaurant?.orderCount ||
+                              restaurant?.totalOrders,
+                            "0"
+                          );
 
-                            <p className="top-restaurant-category">
-                              {restaurant.category ||
-                                restaurant.city ||
-                                "Food Partner"}
-                            </p>
-                          </div>
+                          const image =
+                            typeof restaurant?.image === "string"
+                              ? restaurant.image
+                              : typeof restaurant?.imageUrl === "string"
+                              ? restaurant.imageUrl
+                              : "/REStaurent/inner-view copy.jpg";
 
-                          <div className="top-restaurant-orders">
-                            {restaurant.orders || 0} Orders
-                          </div>
+                          return (
+                            <div
+                              className="top-restaurant-row"
+                              key={restaurant?._id || restaurant?.id || index}
+                            >
+                              <span
+                                className={`rank-badge ${
+                                  index % 2 === 0
+                                    ? "rank-orange"
+                                    : "rank-gray"
+                                }`}
+                              >
+                                {index + 1}
+                              </span>
+
+                              <img
+                                src={image}
+                                alt={restaurantName}
+                                className="top-restaurant-img"
+                                onError={(event) => {
+                                  event.currentTarget.src =
+                                    "/REStaurent/inner-view copy.jpg";
+                                }}
+                              />
+
+                              <div className="top-restaurant-info">
+                                <p className="top-restaurant-name">
+                                  {restaurantName}
+                                </p>
+
+                                <p className="top-restaurant-category">
+                                  {category}
+                                </p>
+                              </div>
+
+                              <div className="top-restaurant-orders">
+                                {orderCount} Orders
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="empty-table-state">
+                          No top restaurants available.
                         </div>
-                      ))}
+                      )}
                     </div>
                   </Card.Body>
                 </Card>
@@ -806,8 +793,8 @@ const Dashboard = () => {
                     </div>
 
                     <ul className="sales-legend">
-                      {salesBreakdown.map((item) => (
-                        <li key={item.label}>
+                      {salesBreakdown.map((item, index) => (
+                        <li key={index}>
                           <span
                             className="legend-dot"
                             style={{
@@ -885,12 +872,12 @@ const Dashboard = () => {
                   View All
                 </button>
               </div>
-
+              {/* 
               <div className="recent-restaurants-list">
-                {displayedRestaurants.map((restaurant, index) => (
+                {restaurants.map((restaurant, index) => (
                   <div
                     className="recent-restaurant-item"
-                    key={restaurant._id || restaurant.id || index}
+                    key={index}
                   >
                     <img
                       src={
@@ -929,7 +916,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </Card>
           </section>
         </Col>

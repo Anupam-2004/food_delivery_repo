@@ -159,9 +159,9 @@ const AddRestaurent = () => {
   return (
     <Container>
       <Row>
-        <Col md={1}></Col>
+        <Col md={5}></Col>
 
-        <Col md={11}>
+        <Col md={7}>
           <h1>Add Restaurant</h1>
 
           <Breadcrumb>

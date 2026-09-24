@@ -17,9 +17,7 @@ import {
   Form as BootstrapForm,
 } from "react-bootstrap";
 
-// =========================
-// Validation Schema
-// =========================
+
 const addressSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Name must be at least 2 characters")
@@ -413,7 +411,8 @@ const Address = () => {
         </Col>
 
         <Col className="text-end">
-          <Button onClick={handleShow}>
+          <Button onClick={handleShow}
+          variant="info">
             + Add Address
           </Button>
         </Col>
@@ -428,6 +427,7 @@ const Address = () => {
                 <h5>No Address Found</h5>
 
                 <Button
+                variant="info"
                   className="mt-3"
                   onClick={handleShow}
                 >

@@ -3,6 +3,7 @@ import React from "react";
 // import "react-multi-carousel/lib/styles.css";
 import MultiCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { useNavigate } from "react-router-dom";
 import {
   Col,
   Row,
@@ -261,6 +262,7 @@ const responsive = {
   },
 };
 const Landing = () => {
+  const navigate =useNavigate();
   return (
     <Container fluid>
       <Row>
@@ -501,35 +503,35 @@ const Landing = () => {
         <Col className="footer_list" md={2}>
           <h5>QUICK LINKS</h5>
           <ul>
-            <li>
+            <li  onClick={() => navigate("/landing")}>
               <MdKeyboardArrowRight />
               Home
             </li>
-            <li>
+            <li  onClick={() => navigate("/About")}>
               <MdKeyboardArrowRight />
               About Us
             </li>
-            <li>
+            <li  onClick={() => navigate("/Restaurents")}>
               <MdKeyboardArrowRight />
               Restaurents
             </li>
-            <li>
+            <li  onClick={() => navigate("/menu")}>
               <MdKeyboardArrowRight />
               Menu
             </li>
-            <li>
+            <li  onClick={() => navigate("/About")}>
               <MdKeyboardArrowRight />
               Offers
             </li>
-            <li>
+            <li  onClick={() => navigate("/TrackOrder")}>
               <MdKeyboardArrowRight />
               Track Order
             </li>
-            <li>
+            <li  onClick={() => navigate("/About")}>
               <MdKeyboardArrowRight />
               Becomea Partner
             </li>
-            <li>
+            <li  onClick={() => navigate("/About")}>
               <MdKeyboardArrowRight />
               Contact Us
             </li>

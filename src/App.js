@@ -56,6 +56,7 @@ import RestaurentOrderHistory from "./Components/RestaurentOrderHistory";
 import OwnerDashboard from "./Components/OwnerDashboard";
 import OwnerProducts from "./Components/OwnerProducts";
 import OwnerUsers from "./Components/OwnerUsers";
+// import TrackOrder from "./Components/TrackOrder";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -228,6 +229,7 @@ function App() {
           path="/RestaurentOrderHistory"
           element={<RestaurentOrderHistory />}
         />
+        <Route path="/TrackOrder" element={<TrackOrder/>}/>
       </Routes>
     </div>
   );
