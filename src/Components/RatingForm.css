@@ -1,0 +1,31 @@
+.rating-container {
+  margin-top: 50px;
+}
+
+.rating-card {
+  max-width: 550px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stars {
+  display: flex;
+  gap: 8px;
+  font-size: 35px;
+  cursor: pointer;
+}
+
+.star {
+  color: #ccc;
+  transition: 0.2s;
+}
+
+.star.active {
+  color: #ffc107;
+}
+
+.star:hover {
+  color: #ff9800;
+}

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 
 import Sidebar from "./Sidebar";
@@ -10,13 +11,13 @@ import { Col, Container, Row, Card, Table } from "react-bootstrap";
 
 import {
   FaArrowUp,
-  FaArrowDown,
   FaEllipsisV,
   FaUsers,
-  FaUserCheck,
-  FaUserPlus,
-  FaUserSlash,
   FaUtensils,
+  FaUserPlus,
+  FaUserCheck,
+  FaUserSlash,
+  FaArrowDown,
 } from "react-icons/fa";
 
 import {
@@ -45,8 +46,12 @@ ChartJS.register(
   ArcElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
+
+// ======================================================
+// SALES BREAKDOWN
+// ======================================================
 
 const salesBreakdown = [
   {
@@ -75,15 +80,6 @@ const salesBreakdown = [
   },
 ];
 
-const statusClassMap = {
-  Delivered: "status-delivered",
-  Preparing: "status-preparing",
-  "On The Way": "status-ontheway",
-  Cancelled: "status-cancelled",
-  processing: "status-preparing",
-  pending: "status-preparing",
-};
-
 // ======================================================
 // DASHBOARD
 // ======================================================
@@ -93,21 +89,35 @@ const Dashboard = () => {
 
   const { user: currentUser } = useSelector((state) => state.auth);
 
-  // ====================================================
+  // ======================================================
   // STATES
-  // ====================================================
+  // ======================================================
 
   const [totalUsers, setTotalUsers] = useState(0);
-
   const [totalRestaurants, setTotalRestaurants] = useState(0);
-
-  const [restaurants, setRestaurants] = useState([]);
 
   const [orders, setOrders] = useState([]);
 
-  const [loading, setLoading] = useState(true);
   const [displayedRestaurants, setDisplayedRestaurants] = useState([]);
-  // const[users, setUsers] = useState([]);
+
+  const [overview, setOverview] = useState({
+    labels: [],
+    totalOrders: [],
+    completed: [],
+    cancelled: [],
+  });
+
+  const [salesOverView, setSalesOverView] = useState([]);
+
+  const [revenue, setRevenue] = useState({
+    totalRevenue: 0,
+  });
+
+  const [restaurantId, setRestaurantId] = useState(null);
+
+  // ======================================================
+  // ADMIN AUTH CHECK
+  // ======================================================
 
   useEffect(() => {
     if (!currentUser) {
@@ -115,16 +125,163 @@ const Dashboard = () => {
       return;
     }
 
-    if (!currentUser.roles || currentUser.roles[0] !== "ROLE_ADMIN") {
+    if (
+      !currentUser.roles ||
+      currentUser.roles[0] !== "ROLE_ADMIN"
+    ) {
       navigate("/");
     }
   }, [currentUser, navigate]);
 
+  // ======================================================
+  // RESTAURANT SALES OVERVIEW
+  // ======================================================
+
+  useEffect(() => {
+    if (!restaurantId) {
+      return;
+    }
+
+    axios
+      .get(
+        `http://localhost:8090/api/orders/restaurent/${restaurantId}/sales-overview`
+      )
+      .then((response) => {
+        console.log(
+          "Restaurant Sales Overview:",
+          response.data
+        );
+
+        const data = Array.isArray(response.data)
+          ? response.data
+          : [];
+
+        setOverview({
+          labels: data.map((item) => item?.date || ""),
+          totalOrders: data.map(
+            (item) => Number(item?.totalOrders) || 0
+          ),
+          completed: data.map(
+            (item) => Number(item?.completed) || 0
+          ),
+          cancelled: data.map(
+            (item) => Number(item?.cancelled) || 0
+          ),
+        });
+      })
+      .catch((error) => {
+        console.error(
+          "Restaurant sales overview error:",
+          error
+        );
+
+        setOverview({
+          labels: [],
+          totalOrders: [],
+          completed: [],
+          cancelled: [],
+        });
+      });
+  }, [restaurantId]);
+
+  // ======================================================
+  // SALES OVERVIEW
+  // ======================================================
+
   useEffect(() => {
     axios
-      .get("http://localhost:8090/api/orders")
+      .get(
+        "http://localhost:8090/api/orders/analytics/sales-overview"
+      )
       .then((response) => {
-        console.log("Orders fetched successfully:", response.data);
+        console.log(
+          "Sales Overview:",
+          response.data
+        );
+
+        if (Array.isArray(response.data)) {
+          setSalesOverView(response.data);
+        } else {
+          setSalesOverView([]);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "Sales overview error:",
+          error
+        );
+
+        setSalesOverView([]);
+      });
+  }, []);
+
+  // ======================================================
+  // REVENUE
+  // ======================================================
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://localhost:8090/api/orders/analytics/revenue/monthly"
+      )
+      .then((response) => {
+        console.log(
+          "Revenue Analytics:",
+          response.data
+        );
+
+        setRevenue(response.data || { totalRevenue: 0 });
+      })
+      .catch((error) => {
+        console.error(
+          "Failed to fetch revenue analytics:",
+          error
+        );
+
+        setRevenue({
+          totalRevenue: 0,
+        });
+      });
+  }, []);
+   useEffect(() => {
+    axios
+      .get(
+        "http://localhost:8090/api/orders/analytics/revenue/daily"
+      )
+      .then((response) => {
+        console.log(
+          "Revenue Analytics:",
+          response.data
+        );
+
+        setRevenue(response.data);
+      })
+      .catch((error) => {
+        console.error(
+          "Failed to fetch revenue analytics:",
+          error
+        );
+
+        setRevenue({
+          totalRevenue: 0,
+        });
+      });
+  }, []);
+
+  // ======================================================
+  // RECENT ORDERS
+  // ======================================================
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://localhost:8090/api/orders/analytics/recent-orders"
+      )
+      .then((response) => {
+        console.log(
+          "Orders fetched successfully:",
+          response.data
+        );
 
         if (Array.isArray(response.data)) {
           setOrders(response.data);
@@ -133,119 +290,154 @@ const Dashboard = () => {
         }
       })
       .catch((error) => {
-        console.log("Failed to fetch orders:", error);
+        console.error(
+          "Failed to fetch orders:",
+          error
+        );
 
         setOrders([]);
-      })
-      .finally(() => {
-        setLoading(false);
       });
   }, []);
 
+  // ======================================================
+  // RESTAURANT COUNT
+  // ======================================================
+
   useEffect(() => {
     axios
-      .get("http://localhost:8090/api/restaurents/count")
+      .get(
+        "http://localhost:8090/api/restaurents/count"
+      )
       .then((response) => {
-        console.log("Restaurant count:", response.data);
+        console.log(
+          "Restaurant count:",
+          response.data
+        );
 
-        setTotalRestaurants(response.data?.totalRestaurents || 0);
+        setTotalRestaurants(
+          Number(response.data?.totalRestaurents) || 0
+        );
       })
       .catch((error) => {
-        console.log("Failed to fetch restaurant count:", error);
+        console.error(
+          "Failed to fetch restaurant count:",
+          error
+        );
 
         setTotalRestaurants(0);
       });
   }, []);
 
+  // ======================================================
+  // USERS
+  // ======================================================
+
   useEffect(() => {
     axios
-      .get("http://localhost:8090/api/restaurents")
+      .get(
+        "http://localhost:8090/api/auth/alluser"
+      )
       .then((response) => {
-        console.log("Restaurants:", response.data);
+        console.log(
+          "Users:",
+          response.data
+        );
 
         if (Array.isArray(response.data)) {
-          setRestaurants(response.data);
+          setTotalUsers(response.data.length);
         } else {
-          setRestaurants([]);
+          setTotalUsers(0);
         }
       })
       .catch((error) => {
-        console.log("Failed to fetch restaurants:", error);
-
-        setRestaurants([]);
-      });
-  }, []);
-  useEffect(() => {
-    axios
-      .get("http://localhost:8090/api/auth/alluser")
-      .then((response) => {
-        console.log("Users:", response.data);
-        setTotalUsers(Array.isArray(response.data) ? response.data.length : 0);
-      })
-      .catch((error) => {
-        console.log("Failed to fetch users:", error);
+        console.error(
+          "Failed to fetch users:",
+          error
+        );
 
         setTotalUsers(0);
       });
   }, []);
+
+  // ======================================================
+  // TOP RESTAURANTS
+  // ======================================================
+
   useEffect(() => {
-  axios
-    .get("http://localhost:8090/api/orders/analytics/top-restaurants")
-    .then((response) => {
-      console.log("TOP RESTAURANTS RESPONSE:", response.data);
+    axios
+      .get(
+        "http://localhost:8090/api/orders/analytics/top-restaurants"
+      )
+      .then((response) => {
+        console.log(
+          "TOP RESTAURANTS RESPONSE:",
+          response.data
+        );
 
-      if (Array.isArray(response.data)) {
-        setDisplayedRestaurants(response.data);
-      } else {
+        if (Array.isArray(response.data)) {
+          setDisplayedRestaurants(response.data);
+
+          // Get restaurant ID dynamically
+          if (response.data.length > 0) {
+            const id =
+              response.data[0]?.restaurantId ||
+              response.data[0]?._id ||
+              response.data[0]?.id;
+
+            if (id) {
+              setRestaurantId(id);
+            }
+          }
+        } else {
+          setDisplayedRestaurants([]);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "Failed to fetch Top Restaurants:",
+          error
+        );
+
         setDisplayedRestaurants([]);
-      }
-    })
-    .catch((error) => {
-      console.log("Failed to fetch Top Restaurants:", error);
-      setDisplayedRestaurants([]);
-    });
-}, []);
+      });
+  }, []);
 
-  const xLabels = [
-    "01 May",
-    "05 May",
-    "10 May",
-    "15 May",
-    "20 May",
-    "25 May",
-    "30 May",
-  ];
+  // ======================================================
+  // DISPLAYED ORDERS
+  // ======================================================
 
-  const totalOrdersData = [320, 480, 430, 610, 590, 720, 680];
+  const displayedOrders = Array.isArray(orders)
+    ? orders.slice(0, 5)
+    : [];
 
-  const completedData = [230, 340, 320, 430, 460, 540, 520];
-
-  const cancelledData = [40, 55, 48, 65, 58, 72, 60];
-
-  const displayedOrders = Array.isArray(orders) ? orders.slice(0, 5) : [];
-
-  // const displayedRestaurants =
-  //   restaurants.length > 0
-  //     ? restaurants.slice(0, 4)
-  //     : " ";
-
-  const totalSales = salesBreakdown.reduce((sum, item) => sum + item.value, 0);
+  // ======================================================
+  // DOUGHNUT DATA
+  // ======================================================
 
   const doughnutData = {
-    labels: salesBreakdown.map((item) => item.label),
+    labels: salesBreakdown.map(
+      (item) => item.label
+    ),
 
     datasets: [
       {
-        data: salesBreakdown.map((item) => item.value),
+        data: salesBreakdown.map(
+          (item) => item.value
+        ),
 
-        backgroundColor: salesBreakdown.map((item) => item.color),
+        backgroundColor: salesBreakdown.map(
+          (item) => item.color
+        ),
 
         borderWidth: 0,
-
         cutout: "72%",
       },
     ],
   };
+
+  // ======================================================
+  // DOUGHNUT OPTIONS
+  // ======================================================
 
   const doughnutOptions = {
     responsive: true,
@@ -263,79 +455,19 @@ const Dashboard = () => {
     },
   };
 
-  const userStatistics = [
-    {
-      title: "Total Users",
-      count: totalUsers,
-      icon: <FaUsers />,
-      className: "total-users",
-      up: true,
-      trend: "12.5%",
-    },
+  // ======================================================
+  // SAFE TEXT
+  // ======================================================
 
-    {
-      title: "Active Users",
-      count: totalUsers,
-      icon: <FaUserCheck />,
-      className: "active-users",
-      up: true,
-      trend: "8.2%",
-    },
-
-    {
-      title: "New Users",
-      count: totalUsers,
-      icon: <FaUserPlus />,
-      className: "new-users",
-      up: true,
-      trend: "5.4%",
-    },
-
-    {
-      title: "Blocked Users",
-      count: 0,
-      icon: <FaUserSlash />,
-      className: "blocked-users",
-      up: false,
-      trend: "2.1%",
-    },
-  ];
-
-  const getCustomerName = (order) => {
-    if (order.userId) {
-      return `${order.userId.firstName || ""} ${
-        order.userId.lastName || ""
-      }`.trim();
-    }
-
-    return "Customer";
-  };
-
-  const getRestaurantName = (order) => {
-    return order.items?.[0]?.restaurentId?.restaurentName || "Restaurant";
-  };
-
-  const getOrderAmount = (order) => {
-    if (order.amount) {
-      return `₹${order.amount}`;
-    }
-
-    const amount =
-      order.items?.reduce(
-        (total, item) => total + Number(item.price) * Number(item.quantity),
-        0,
-      ) || 0;
-
-    return `₹${amount.toLocaleString("en-IN")}`;
-  };
-
-  const getOrderId = (order) => {
-    return order.orderId || order.id || order._id || "N/A";
-  };
-
-  // Always return a React-safe primitive.
-  const getSafeText = (value, fallback = "N/A") => {
-    if (value === null || value === undefined || value === "") {
+  const getSafeText = (
+    value,
+    fallback = "N/A"
+  ) => {
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
       return fallback;
     }
 
@@ -365,30 +497,76 @@ const Dashboard = () => {
     return fallback;
   };
 
-  const getOrderStatus = (order) => getSafeText(order?.orderStatus, "Pending");
+  // ======================================================
+  // SALES TOTAL
+  // ======================================================
+
+  const salesTotal = Array.isArray(salesOverView)
+    ? salesOverView.reduce(
+        (sum, item) =>
+          sum + Number(item?.totalOrders || 0),
+        0
+      )
+    : 0;
+
+  // ======================================================
+  // NO USER
+  // ======================================================
 
   if (!currentUser) {
     return null;
   }
 
+  // ======================================================
+  // JSX
+  // ======================================================
+
   return (
-    <Container fluid className="dashboard-page">
+    <Container
+      fluid
+      className="dashboard-page"
+    >
       <Row className="g-0">
-        <Col md={1} className="p-0 dashboard-sidebar">
+
+        {/* ==================================================
+            SIDEBAR
+        ================================================== */}
+
+        <Col
+          md={1}
+          className="p-0 dashboard-sidebar"
+        >
           <Sidebar />
         </Col>
 
-        <Col md={11} className="dashboard">
+        <Col
+          md={11}
+          className="dashboard"
+        >
+
+          {/* ==================================================
+              HEADER
+          ================================================== */}
+
           <header className="dashboard-header">
             <div>
-              <p className="dashboard-eyebrow">ADMIN WORKSPACE</p>
+              <p className="dashboard-eyebrow">
+                ADMIN WORKSPACE
+              </p>
 
-              <h1 className="dashboard-title">Dashboard</h1>
+              <h1 className="dashboard-title">
+                Dashboard
+              </h1>
 
               <p className="dashboard-subtitle">
                 Welcome back,{" "}
-                <b>{getSafeText(currentUser?.firstName, "Admin")}</b>! Here's
-                what's happening today.
+                <b>
+                  {getSafeText(
+                    currentUser?.firstName,
+                    "Admin"
+                  )}
+                </b>
+                ! Here's what's happening today.
               </p>
             </div>
 
@@ -398,121 +576,203 @@ const Dashboard = () => {
             </div>
           </header>
 
+          {/* ==================================================
+              STATISTICS CARDS
+          ================================================== */}
+
           <section className="dashboard-section">
             <Row className="dashboard_cards g-3">
+
               {/* TOTAL USERS */}
 
-              <Col lg={3} md={6} sm={6}>
-                <Card className="dashboard_card stat-card">
+              <Col
+                lg={3}
+                md={6}
+                sm={6}
+              >
+                <Card
+                  className="dashboard_card stat-card"
+                  onClick={() =>
+                    navigate("/Users")
+                  }
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   <div className="stat-icon total-users">
                     <FaUsers />
                   </div>
 
-                  <div
-                    className="stat-card-body"
-                    onClick={() => navigate("/Users")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <p className="stat-card-title">Total Users</p>
+                  <div className="stat-card-body">
+                    <p className="stat-card-title">
+                      Total Users
+                    </p>
 
-                    <h4 className="stat-card-count">{totalUsers}</h4>
+                    <h4 className="stat-card-count">
+                      {totalUsers}
+                    </h4>
 
-                    <span className="stat-card-note">Registered accounts</span>
+                    <span className="stat-card-note">
+                      Registered accounts
+                    </span>
                   </div>
                 </Card>
               </Col>
 
               {/* TOTAL RESTAURANTS */}
 
-              <Col lg={3} md={6} sm={6}>
-                <Card className="dashboard_card stat-card">
+              <Col
+                lg={3}
+                md={6}
+                sm={6}
+              >
+                <Card
+                  className="dashboard_card stat-card"
+                  onClick={() =>
+                    navigate(
+                      "/AdminRestaurants"
+                    )
+                  }
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   <div className="stat-icon active-users">
                     <FaUtensils />
                   </div>
 
-                  <div
-                    className="stat-card-body"
-                    onClick={() => navigate("/AdminRestaurants")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <p className="stat-card-title">Total Restaurants</p>
+                  <div className="stat-card-body">
+                    <p className="stat-card-title">
+                      Total Restaurants
+                    </p>
 
-                    <h4 className="stat-card-count">{totalRestaurants}</h4>
+                    <h4 className="stat-card-count">
+                      {totalRestaurants}
+                    </h4>
 
-                    <span className="stat-card-note">Available partners</span>
+                    <span className="stat-card-note">
+                      Available partners
+                    </span>
                   </div>
                 </Card>
               </Col>
 
               {/* TOTAL ORDERS */}
 
-              <Col lg={3} md={6} sm={6}>
-                <Card className="dashboard_card stat-card">
+              <Col
+                lg={3}
+                md={6}
+                sm={6}
+              >
+                <Card
+                  className="dashboard_card stat-card"
+                  onClick={() =>
+                    navigate("/AdminOrders")
+                  }
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   <div className="stat-icon new-users">
                     <FaUserPlus />
                   </div>
 
-                  <div
-                    className="stat-card-body"
-                    onClick={() => navigate("/AdminOrders")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <p className="stat-card-title">Total Orders</p>
+                  <div className="stat-card-body">
+                    <p className="stat-card-title">
+                      Total Orders
+                    </p>
 
-                    <h4 className="stat-card-count">{orders.length}</h4>
+                    <h4 className="stat-card-count">
+                      {orders.length}
+                    </h4>
 
-                    <span className="stat-card-note">All placed orders</span>
+                    <span className="stat-card-note">
+                      All placed orders
+                    </span>
                   </div>
                 </Card>
               </Col>
 
               {/* REVENUE */}
 
-              <Col lg={3} md={6} sm={6}>
-                <Card className="dashboard_card stat-card">
+              <Col
+                lg={3}
+                md={6}
+                sm={6}
+              >
+                <Card
+                  className="dashboard_card stat-card"
+                  onClick={() =>
+                    navigate("/Revenue")
+                  }
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   <div className="stat-icon blocked-users">
                     <FaArrowUp />
                   </div>
 
-                  <div
-                    className="stat-card-body"
-                    onClick={() => navigate("/Revenue")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <p className="stat-card-title">Revenue</p>
+                  <div className="stat-card-body">
+                    <p className="stat-card-title">
+                      Revenue
+                    </p>
 
                     <h4 className="stat-card-count">
-                      ₹{totalSales.toLocaleString("en-IN")}
+                      ₹
+                      {Number(
+                        revenue?.totalRevenue || 0
+                      )}
                     </h4>
 
-                    <span className="stat-card-note">Current sales total</span>
+                    <span className="stat-card-note">
+                      Current sales total
+                    </span>
                   </div>
                 </Card>
               </Col>
+
             </Row>
           </section>
 
-          {/* ================= ORDER OVERVIEW ================= */}
+          {/* ==================================================
+              ORDER OVERVIEW
+          ================================================== */}
 
           <section className="dashboard-section">
             <Row className="g-3">
+
               {/* LINE CHART */}
 
-              <Col lg={7}>
+              <Col lg={6}>
                 <Card className="panel-card h-100">
+
                   <Card.Header className="panel-header">
                     <div>
-                      <span className="panel-kicker">PERFORMANCE</span>
+                      <span className="panel-kicker">
+                        PERFORMANCE
+                      </span>
 
-                      <h2>Order Overview</h2>
+                      <h2>
+                        Order Overview
+                      </h2>
                     </div>
 
-                    <select className="panel-select" defaultValue="month">
-                      <option value="month">This Month</option>
+                    <select
+                      className="panel-select"
+                      defaultValue="month"
+                    >
+                      <option value="month">
+                        This Month
+                      </option>
 
-                      <option value="week">This Week</option>
+                      <option value="week">
+                        This Week
+                      </option>
 
-                      <option value="year">This Year</option>
+                      <option value="year">
+                        This Year
+                      </option>
                     </select>
                   </Card.Header>
 
@@ -527,24 +787,25 @@ const Dashboard = () => {
                         xAxis={[
                           {
                             scaleType: "point",
-                            data: xLabels,
+                            data: overview.labels,
                           },
                         ]}
                         series={[
                           {
-                            data: totalOrdersData,
+                            data:
+                              overview.totalOrders,
                             label: "Total Orders",
                             color: "#7c3aed",
                           },
-
                           {
-                            data: completedData,
+                            data:
+                              overview.completed,
                             label: "Completed",
                             color: "#16a34a",
                           },
-
                           {
-                            data: cancelledData,
+                            data:
+                              overview.cancelled,
                             label: "Cancelled",
                             color: "#ef4444",
                           },
@@ -561,362 +822,710 @@ const Dashboard = () => {
                       />
                     </Box>
                   </Card.Body>
+
                 </Card>
               </Col>
 
               {/* RECENT ORDERS */}
 
-              <Col lg={5}>
+              <Col lg={6}>
                 <Card className="panel-card h-100">
+
                   <Card.Header className="panel-header">
                     <div>
-                      <span className="panel-kicker">LATEST ACTIVITY</span>
+                      <span className="panel-kicker">
+                        LATEST ACTIVITY
+                      </span>
 
-                      <h2>Recent Orders</h2>
+                      <h2>
+                        Recent Orders
+                      </h2>
                     </div>
 
                     <button
                       className="view-all-btn"
                       type="button"
-                      onClick={() => navigate("/AdminOrders")}
+                      onClick={() =>
+                        navigate(
+                          "/AdminOrders"
+                        )
+                      }
                     >
                       View All
                     </button>
                   </Card.Header>
 
                   <div className="recent-orders-wrapper">
-                    <Table responsive className="orders-table">
+
+                    <Table
+                      responsive
+                      className="orders-table"
+                    >
                       <thead>
                         <tr>
                           <th>Order</th>
-                          <th>Customer</th>
+                          <th>
+                            Restaurant Name
+                          </th>
+                          <th>
+                            Customer
+                          </th>
                           <th>Amount</th>
                           <th>Status</th>
                         </tr>
                       </thead>
 
                       <tbody>
-                        {loading ? (
-                          <tr>
-                            <td colSpan="4" className="empty-table-state">
-                              Loading orders...
-                            </td>
-                          </tr>
-                        ) : displayedOrders.length > 0 ? (
-                          displayedOrders.map((order, index) => (
-                            <tr key={index}>
-                              <td>
-                                <span className="order-id">
-                                  #{String(getOrderId(order)).slice(-6)}
-                                </span>
-                              </td>
 
-                              <td>
-                                <div className="customer-cell">
-                                  <div className="customer-avatar">
-                                    {getCustomerName(order)
-                                      .charAt(0)
-                                      .toUpperCase()}
+                        {displayedOrders.length >
+                        0 ? (
+
+                          displayedOrders.map(
+                            (order, index) => (
+                              <tr
+                                key={
+                                  order?._id ||
+                                  order?.id ||
+                                  index
+                                }
+                              >
+
+                                <td>
+                                  <span className="order-id">
+                                    {getSafeText(
+                                      order?._id ||
+                                        order?.id
+                                    )}
+                                  </span>
+                                </td>
+
+                                <td>
+                                  {getSafeText(
+                                    order
+                                      ?.items?.[0]
+                                      ?.restaurentId
+                                      ?.restaurentName ||
+                                      order
+                                        ?.items?.[0]
+                                        ?.restaurentId
+                                        ?.restaurantName,
+                                    "Restaurant"
+                                  )}
+                                </td>
+
+                                <td>
+                                  <div className="customer-cell">
+
+                                    <div className="customer-avatar">
+                                      {getSafeText(
+                                        order
+                                          ?.userId
+                                          ?.firstName,
+                                        "U"
+                                      )}
+                                    </div>
+
+                                    <span>
+                                      {getSafeText(
+                                        order
+                                          ?.userId
+                                          ?.lastName,
+                                        "Customer"
+                                      )}
+                                    </span>
+
                                   </div>
+                                </td>
 
-                                  <span>{getCustomerName(order)}</span>
-                                </div>
-                              </td>
+                                <td>
+                                  <strong>
+                                    ₹
+                                    {getSafeText(
+                                      order?.totalAmount,
+                                      "0"
+                                    )}
+                                  </strong>
+                                </td>
 
-                              <td>
-                                <strong>{getOrderAmount(order)}</strong>
-                              </td>
+                                <td>
+                                  <span>
+                                    {getSafeText(
+                                      order?.paymentStatus,
+                                      "N/A"
+                                    )}
+                                  </span>
+                                </td>
 
-                              <td>
-                                <span
-                                  className={`status-badge ${
-                                    statusClassMap[getOrderStatus(order)] ||
-                                    "status-preparing"
-                                  }`}
-                                >
-                                  {getOrderStatus(order)}
-                                </span>
-                              </td>
-                            </tr>
-                          ))
+                              </tr>
+                            )
+                          )
+
                         ) : (
+
                           <tr>
-                            <td colSpan="4" className="empty-table-state">
+                            <td
+                              colSpan="5"
+                              className="empty-table-state"
+                            >
                               No orders available.
                             </td>
                           </tr>
+
                         )}
+
                       </tbody>
                     </Table>
+
                   </div>
                 </Card>
               </Col>
+
             </Row>
           </section>
 
-          {/* ================= INSIGHTS ================= */}
+          {/* ==================================================
+              RECENT RESTAURANTS
+          ================================================== */}
 
           <section className="dashboard-section">
-            <Row className="g-3">
-              {/* TOP RESTAURANTS */}
 
-              <Col lg={4}>
-                <Card className="panel-card h-100">
-                  <Card.Body>
-                    <div className="panel-header no-border">
-                      <div>
-                        <span className="panel-kicker">PARTNERS</span>
-
-                        <h2>Top Restaurants</h2>
-                      </div>
-
-                      <button className="view-all-btn" type="button">
-                        View All
-                      </button>
-                    </div>
-
-                    <div className="top-restaurants-list">
-                      {Array.isArray(displayedRestaurants) &&
-                      displayedRestaurants.length > 0 ? (
-                        displayedRestaurants.map((restaurant, index) => {
-                          const restaurantName = getSafeText(
-                            restaurant?.restaurentName ||
-                              restaurant?.restaurantName ||
-                              restaurant?.name,
-                            "Restaurant",
-                          );
-
-                          const category = getSafeText(
-                            restaurant?.category ||
-                              restaurant?.city ||
-                              restaurant?.location,
-                            "Food Partner",
-                          );
-
-                          const orderCount = getSafeText(
-                            restaurant?.orders ||
-                              restaurant?.orderCount ||
-                              restaurant?.totalOrders,
-                            "0",
-                          );
-
-                          const image =
-                            typeof restaurant?.image === "string"
-                              ? restaurant.image
-                              : typeof restaurant?.imageUrl === "string"
-                                ? restaurant.imageUrl
-                                : "/REStaurent/inner-view copy.jpg";
-
-                          return (
-                            <div
-                              className="top-restaurant-row"
-                              key={restaurant?._id || restaurant?.id || index}
-                            >
-                              <span
-                                className={`rank-badge ${
-                                  index % 2 === 0 ? "rank-orange" : "rank-gray"
-                                }`}
-                              >
-                                {index + 1}
-                              </span>
-
-                              <img
-                                src={image}
-                                alt={restaurantName}
-                                className="top-restaurant-img"
-                                onError={(event) => {
-                                  event.currentTarget.src =
-                                    "/REStaurent/inner-view copy.jpg";
-                                }}
-                              />
-
-                              <div className="top-restaurant-info">
-                                <p className="top-restaurant-name">
-                                  {restaurantName}
-                                </p>
-
-                                <p className="top-restaurant-category">
-                                  {category}
-                                </p>
-                              </div>
-
-                              <div className="top-restaurant-orders">
-                                {orderCount} Orders
-                              </div>
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <div className="empty-table-state">
-                          No top restaurants available.
-                        </div>
-                      )}
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-
-              {/* SALES OVERVIEW */}
-
-              <Col lg={4}>
-                <Card className="panel-card h-100">
-                  <Card.Header className="panel-header">
-                    <div>
-                      <span className="panel-kicker">REVENUE MIX</span>
-
-                      <h2>Sales Overview</h2>
-                    </div>
-
-                    <select className="panel-select" defaultValue="month">
-                      <option value="month">This Month</option>
-
-                      <option value="week">This Week</option>
-                    </select>
-                  </Card.Header>
-
-                  <Card.Body className="sales-overview-body">
-                    <div className="doughnut-wrapper">
-                      <Doughnut data={doughnutData} options={doughnutOptions} />
-
-                      <div className="doughnut-center">
-                        <span className="doughnut-total-label">Total</span>
-
-                        <span className="doughnut-total-value">
-                          ₹{totalSales.toLocaleString("en-IN")}
-                        </span>
-                      </div>
-                    </div>
-
-                    <ul className="sales-legend">
-                      {salesBreakdown.map((item, index) => (
-                        <li key={index}>
-                          <span
-                            className="legend-dot"
-                            style={{
-                              backgroundColor: item.color,
-                            }}
-                          />
-
-                          <span className="legend-label">{item.label}</span>
-
-                          <span className="legend-amount">{item.amount}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </Card.Body>
-                </Card>
-              </Col>
-
-              {/* USER STATISTICS */}
-
-              <Col lg={4}>
-                <Card className="panel-card h-100">
-                  <Card.Header className="panel-header">
-                    <div>
-                      <span className="panel-kicker">ACCOUNT HEALTH</span>
-
-                      <h2>User Statistics</h2>
-                    </div>
-
-                    <button className="view-all-btn" type="button">
-                      View All
-                    </button>
-                  </Card.Header>
-
-                  <Card.Body className="user-stats-body">
-                    {userStatistics.map((stat, index) => (
-                      <div className="user-stat-row" key={index}>
-                        <div className={`user-stat-icon ${stat.className}`}>
-                          {stat.icon}
-                        </div>
-
-                        <div className="user-stat-content">
-                          <p>{stat.title}</p>
-
-                          <h3>{stat.count}</h3>
-                        </div>
-
-                        <span
-                          className={`stat-trend ${
-                            stat.up ? "trend-up" : "trend-down"
-                          }`}
-                        >
-                          {stat.up ? <FaArrowUp /> : <FaArrowDown />}{" "}
-                          {stat.trend}
-                        </span>
-                      </div>
-                    ))}
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-          </section>
-
-          {/* ================= RECENT RESTAURANTS ================= */}
-
-          <section className="dashboard-section">
             <Card className="recent-restaurants-card">
+
               <div className="recent-restaurants-header">
+
                 <div>
-                  <span className="panel-kicker">PARTNER DIRECTORY</span>
-                  <h2>Recent Restaurants</h2>
+                  <span className="panel-kicker">
+                    PARTNER DIRECTORY
+                  </span>
+
+                  <h2>
+                    Recent Restaurants
+                  </h2>
                 </div>
 
-                <button className="view-all-btn" type="button">
+                <button
+                  className="view-all-btn"
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      "/AdminRestaurants"
+                    )
+                  }
+                >
                   View All
                 </button>
+
               </div>
 
               <div className="recent-restaurants-list">
-                {displayedRestaurants.length > 0 ? (
-                  displayedRestaurants.map((restaurant, index) => (
-                    <div
-                      className="recent-restaurant-item"
-                      key={restaurant.restaurantId || index}
-                    >
-                      <img
-                        src={
-                          restaurant.image ||
-                          restaurant.imageUrl ||
-                          "/REStaurent/inner-view copy.jpg"
+
+                {displayedRestaurants.length >
+                0 ? (
+
+                  displayedRestaurants.map(
+                    (restaurant, index) => (
+
+                      <div
+                        className="recent-restaurant-item"
+                        key={
+                          restaurant?.restaurantId ||
+                          restaurant?._id ||
+                          restaurant?.id ||
+                          index
                         }
-                        alt={restaurant.restaurantName || "Restaurant"}
-                        className="restaurant-image"
-                        onError={(event) => {
-                          event.currentTarget.src =
-                            "/REStaurent/inner-view copy.jpg";
-                        }}
-                      />
+                      >
 
-                      <div className="restaurant-details">
-                        <div className="restaurant-details-text">
-                          <h6>{restaurant.restaurantName || "Restaurant"}</h6>
+                        <img
+                          src={
+                            restaurant?.image ||
+                            restaurant?.imageUrl ||
+                            "/REStaurent/inner-view copy.jpg"
+                          }
+                          alt={
+                            restaurant?.restaurantName ||
+                            "Restaurant"
+                          }
+                          className="restaurant-image"
+                          onError={(event) => {
+                            event.currentTarget.src =
+                              "/REStaurent/inner-view copy.jpg";
+                          }}
+                        />
 
-                          <p>
-                            {restaurant.city ||
-                              restaurant.location ||
-                              "Location not available"}
-                          </p>
+                        <div className="restaurant-details">
 
-                          <span className="status-active">Active</span>
+                          <div className="restaurant-details-text">
+
+                            <h6>
+                              {restaurant?.restaurantName ||
+                                restaurant?.restaurentName ||
+                                "Restaurant"}
+                            </h6>
+
+                            <p>
+                              {restaurant?.location ||
+                                restaurant?.city ||
+                                "Location not available"}
+                            </p>
+
+                            <span className="status-active">
+                              Active
+                            </span>
+
+                          </div>
+
+                          <button
+                            className="menu-btn"
+                            type="button"
+                          >
+                            <FaEllipsisV />
+                          </button>
+
                         </div>
 
-                        <button className="menu-btn" type="button">
-                          <FaEllipsisV />
-                        </button>
                       </div>
-                    </div>
-                  ))
+
+                    )
+                  )
+
                 ) : (
+
                   <div className="empty-table-state">
                     No restaurants available.
                   </div>
+
                 )}
+
               </div>
+
             </Card>
+
           </section>
+
+          {/* ==================================================
+              BOTTOM SECTION
+          ================================================== */}
+
+          <section className="dashboard-section">
+
+            <Row className="g-3">
+
+              {/* ==================================================
+                  TOP RESTAURANTS
+              ================================================== */}
+
+              <Col lg={4}>
+
+                <Card className="panel-card h-100">
+
+                  <Card.Body>
+
+                    <div className="panel-header no-border">
+
+                      <div>
+                        <span className="panel-kicker">
+                          PARTNERS
+                        </span>
+
+                        <h2>
+                          Top Restaurants
+                        </h2>
+                      </div>
+
+                      <button
+                        className="view-all-btn"
+                        type="button"
+                        onClick={() =>
+                          navigate(
+                            "/AdminRestaurants"
+                          )
+                        }
+                      >
+                        View All
+                      </button>
+
+                    </div>
+
+                    <div className="top-restaurants-list">
+
+                      {displayedRestaurants.length >
+                      0 ? (
+
+                        displayedRestaurants.map(
+                          (restaurant, index) => {
+
+                            const restaurantName =
+                              restaurant?.restaurantName ||
+                              restaurant?.restaurentName ||
+                              "Restaurant";
+
+                            const location =
+                              restaurant?.city ||
+                              restaurant?.location ||
+                              "Location not available";
+
+                            const orderCount =
+                              Number(
+                                restaurant?.totalOrdersCount ||
+                                  0
+                              );
+
+                            const image =
+                              restaurant?.image ||
+                              restaurant?.imageUrl ||
+                              "/REStaurent/inner-view copy.jpg";
+
+                            return (
+                              <div
+                                className="top-restaurant-row"
+                                key={
+                                  restaurant?.restaurantId ||
+                                  restaurant?._id ||
+                                  restaurant?.id ||
+                                  index
+                                }
+                              >
+
+                                <span
+                                  className={`rank-badge ${
+                                    index % 2 === 0
+                                      ? "rank-orange"
+                                      : "rank-gray"
+                                  }`}
+                                >
+                                  {index + 1}
+                                </span>
+
+                                <img
+                                  src={image}
+                                  alt={
+                                    restaurantName
+                                  }
+                                  className="top-restaurant-img"
+                                  onError={(
+                                    event
+                                  ) => {
+                                    event.currentTarget.src =
+                                      "/REStaurent/inner-view copy.jpg";
+                                  }}
+                                />
+
+                                <div className="top-restaurant-info">
+
+                                  <p className="top-restaurant-name">
+                                    {
+                                      restaurantName
+                                    }
+                                  </p>
+
+                                  <p className="top-restaurant-category">
+                                    {location}
+                                  </p>
+
+                                </div>
+
+                                <div className="top-restaurant-orders">
+                                  {orderCount}{" "}
+                                  Orders
+                                </div>
+
+                              </div>
+                            );
+                          }
+                        )
+
+                      ) : (
+
+                        <div className="empty-table-state">
+                          No top restaurants available.
+                        </div>
+
+                      )}
+
+                    </div>
+
+                  </Card.Body>
+
+                </Card>
+
+              </Col>
+
+              {/* ==================================================
+                  SALES OVERVIEW
+              ================================================== */}
+
+              <Col lg={4}>
+
+                <Card className="panel-card h-100">
+
+                  <Card.Header className="panel-header">
+
+                    <div>
+                      <span className="panel-kicker">
+                        REVENUE MIX
+                      </span>
+
+                      <h2>
+                        Sales Overview
+                      </h2>
+                    </div>
+
+                    <select
+                      className="panel-select"
+                      defaultValue="month"
+                    >
+                      <option value="month">
+                        This Month
+                      </option>
+
+                      <option value="week">
+                        This Week
+                      </option>
+                    </select>
+
+                  </Card.Header>
+
+                  <Card.Body className="sales-overview-body">
+
+                    <div className="doughnut-wrapper">
+
+                      <Doughnut
+                        data={doughnutData}
+                        options={
+                          doughnutOptions
+                        }
+                      />
+
+                      <div className="doughnut-center">
+
+                        <span className="doughnut-total-label">
+                          Total
+                        </span>
+
+                        <span className="doughnut-total-value">
+                          {salesTotal}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                    <ul className="sales-legend">
+
+                      {salesOverView.length >
+                      0 ? (
+
+                        salesOverView.map(
+                          (item, index) => (
+
+                            <li
+                              key={
+                                item?._id ||
+                                index
+                              }
+                            >
+
+                              <span
+                                className="legend-dot"
+                                style={{
+                                  backgroundColor:
+                                    salesBreakdown[
+                                      index %
+                                        salesBreakdown.length
+                                    ].color,
+                                }}
+                              />
+
+                              <span className="legend-label">
+                                {getSafeText(
+                                  item?.timeline,
+                                  "Sales"
+                                )}
+                              </span>
+
+                              <span className="legend-amount">
+                                {Number(
+                                  item?.totalOrders ||
+                                    0
+                                )}{" "}
+                                Orders
+                              </span>
+
+                            </li>
+
+                          )
+                        )
+
+                      ) : (
+
+                        <li>
+                          <span className="legend-label">
+                            No sales data available
+                          </span>
+                        </li>
+
+                      )}
+
+                    </ul>
+
+                  </Card.Body>
+
+                </Card>
+
+              </Col>
+
+              {/* ==================================================
+                  USER STATISTICS
+              ================================================== */}
+
+              <Col lg={4}>
+
+                <Card className="panel-card h-100">
+
+                  <Card.Header className="panel-header">
+
+                    <div>
+                      <span className="panel-kicker">
+                        ACCOUNT HEALTH
+                      </span>
+
+                      <h2>
+                        User Statistics
+                      </h2>
+                    </div>
+
+                    <button
+                      className="view-all-btn"
+                      type="button"
+                      onClick={() =>
+                        navigate("/Users")
+                      }
+                    >
+                      View All
+                    </button>
+
+                  </Card.Header>
+
+                  <Card.Body className="user-stats-body">
+
+                    {/* TOTAL USERS */}
+
+                    <div className="user-stat-row">
+
+                      <div className="user-stat-icon total-users">
+                        <FaUsers />
+                      </div>
+
+                      <div className="user-stat-content">
+
+                        <p>
+                          Total Users
+                        </p>
+
+                        <h3>
+                          {totalUsers}
+                        </h3>
+
+                      </div>
+
+                      <span className="stat-trend trend-up">
+                        <FaArrowUp /> 12.5%
+                      </span>
+
+                    </div>
+
+                    {/* ACTIVE USERS */}
+
+                    <div className="user-stat-row">
+
+                      <div className="user-stat-icon active-users">
+                        <FaUserCheck />
+                      </div>
+
+                      <div className="user-stat-content">
+
+                        <p>
+                          Active Users
+                        </p>
+
+                        <h3>
+                          {totalUsers}
+                        </h3>
+
+                      </div>
+
+                      <span className="stat-trend trend-up">
+                        <FaArrowUp /> 8.2%
+                      </span>
+
+                    </div>
+
+                    {/* NEW USERS */}
+
+                    <div className="user-stat-row">
+
+                      <div className="user-stat-icon new-users">
+                        <FaUserPlus />
+                      </div>
+
+                      <div className="user-stat-content">
+
+                        <p>
+                          New Users
+                        </p>
+
+                        <h3>
+                          {totalUsers}
+                        </h3>
+
+                      </div>
+
+                      <span className="stat-trend trend-up">
+                        <FaArrowUp /> 5.4%
+                      </span>
+
+                    </div>
+
+                    {/* BLOCKED USERS */}
+
+                    <div className="user-stat-row">
+
+                      <div className="user-stat-icon blocked-users">
+                        <FaUserSlash />
+                      </div>
+
+                      <div className="user-stat-content">
+
+                        <p>
+                          Blocked Users
+                        </p>
+
+                        <h3>
+                          0
+                        </h3>
+
+                      </div>
+
+                      <span className="stat-trend trend-down">
+                        <FaArrowDown /> 2.1%
+                      </span>
+
+                    </div>
+
+                  </Card.Body>
+
+                </Card>
+
+              </Col>
+
+            </Row>
+
+          </section>
+
         </Col>
+
       </Row>
+
     </Container>
   );
 };

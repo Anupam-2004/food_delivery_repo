@@ -56,7 +56,9 @@ import RestaurentOrderHistory from "./Components/RestaurentOrderHistory";
 import OwnerDashboard from "./Components/OwnerDashboard";
 import OwnerProducts from "./Components/OwnerProducts";
 import OwnerUsers from "./Components/OwnerUsers";
-// import TrackOrder from "./Components/TrackOrder";
+import RatingForm from "./Components/RatingForm";
+import RateForm from "./Components/RateForm";
+
 
 function App() {
   const [show, setShow] = useState(false);
@@ -230,6 +232,12 @@ function App() {
           element={<RestaurentOrderHistory />}
         />
         <Route path="/TrackOrder" element={<TrackOrder/>}/>
+        <Route path="/RatingForm" element={<RatingForm/>}/>
+        <Route path="/RateForm" element={<RateForm/>}/>
+
+
+       
+
       </Routes>
     </div>
   );

@@ -1,0 +1,122 @@
+.rating-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f7fb;
+  padding: 30px;
+}
+.rating-card {
+  width: 100%;
+  max-width: 650px;
+  border: none;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+} /* Header */
+.rating-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 18px;
+}
+.rating-header h3 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 600;
+  color: #222;
+}
+.rating-header p {
+  margin: 5px 0 0;
+  color: #888;
+  font-size: 14px;
+} /* Form */
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+} /* Input */
+.custom-input {
+  min-height: 45px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  font-size: 15px;
+  padding: 10px 13px;
+  transition: 0.2s;
+}
+.custom-input:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+} /* Disabled input */
+.custom-input:disabled {
+  background-color: #f7f7f8;
+  color: #555;
+  cursor: not-allowed;
+} /* Review */
+.review-input {
+  resize: none;
+  min-height: 120px;
+} /* Edit Button */
+.edit-btn {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffe69c;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-weight: 500;
+}
+.edit-btn:hover {
+  background: #ffc107;
+  color: #fff;
+  border-color: #ffc107;
+} /* Buttons */
+.button-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+.save-btn {
+  background: #198754;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 500;
+}
+.save-btn:hover {
+  background: #157347;
+}
+.cancel-btn {
+  background: #6c757d;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 500;
+}
+.cancel-btn:hover {
+  background: #5c636a;
+} /* Mobile */
+@media (max-width: 576px) {
+  .rating-container {
+    padding: 15px;
+  }
+  .rating-header {
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .rating-header h3 {
+    font-size: 21px;
+  }
+  .button-container {
+    flex-direction: column;
+  }
+  .save-btn,
+  .cancel-btn {
+    width: 100%;
+  }
+}
