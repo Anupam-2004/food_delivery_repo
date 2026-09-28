@@ -12,10 +12,12 @@ import "./AdminInvoice.css";
 
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AdminInvoice = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const { user: currentUser } = useSelector((state) => state.auth);
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -55,13 +57,18 @@ const AdminInvoice = () => {
       </Container>
     );
   }
-  const restaurant = order.items?.[0]?.restaurentId;
+
+  const restaurant = order.items?.[0]?.restaurentId || {};
+  const customerAddress = order.addressId || {};
+  const customerName = customerAddress.name || "Customer";
 
   const handlePrint = () => {
     window.print();
   };
   const handleBack = () => {
-    navigate("/AdminOrders");
+    navigate(
+      currentUser?.roles?.[0] === "ROLE_OWNER" ? "/OwnerOrders" : "/AdminOrders"
+    );
   };
   const handleDownloadPDF = () => {
     // Implement PDF download functionality here
@@ -132,22 +139,23 @@ const AdminInvoice = () => {
                 <div className="info-box">
                   <h6>BILL TO</h6>
 
-                  <h5>{order.addressId.name}</h5>
+                  <h5>{customerName}</h5>
 
                   <p>
-                    <strong>Phone:</strong> {order.addressId.mobile}
+                    <strong>Phone:</strong> {customerAddress.mobile || "N/A"}
                   </p>
 
                   <p>
-                    <strong>Email:</strong> {order.addressId.email}
+                    <strong>Email:</strong> {customerAddress.email || "N/A"}
                   </p>
 
                   <p>
-                    <strong>Address:</strong> {order.addressId.addressLine1}
-                    {order.addressId.addressLine2}, {order.addressId.city},{" "}
-                    {order.addressId.state}
-                    {" - "}
-                    {order.addressId.pin}
+                    <strong>Address:</strong>{" "}
+                    {customerAddress.addressLine1 || ""}
+                    {customerAddress.addressLine2 ? `, ${customerAddress.addressLine2}` : ""}
+                    {customerAddress.city ? `, ${customerAddress.city}` : ""}
+                    {customerAddress.state ? `, ${customerAddress.state}` : ""}
+                    {customerAddress.pin ? ` - ${customerAddress.pin}` : ""}
                   </p>
                 </div>
               </Col>

@@ -59,7 +59,6 @@ import OwnerUsers from "./Components/OwnerUsers";
 import RatingForm from "./Components/RatingForm";
 import RateForm from "./Components/RateForm";
 
-
 function App() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -208,36 +207,29 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Orders" element={<Orders />} />
         <Route path="/AdminOrders" element={<AdminOrders />} />
-        {/* <Route path="/Products" element={<Products />} /> */}
+       
         <Route path="/AdminProducts" element={<AdminProducts />} />
         <Route path="/OwnerOrders" element={<OwnerOrders />} />
         <Route path="/Users" element={<Users />} />
         <Route path="/Account" element={<Account />} />
         <Route path="/cart" element={<AddCart />} />
         <Route path="/Address" element={<Address />} />
-        <Route
-          path="/RestaurentOrder"
-          element={<RestaurentOrder />}
-        />
+        <Route path="/RestaurentOrder" element={<RestaurentOrder />} />
         <Route path="/track-order/:orderId" element={<TrackOrder />} />
         <Route path="/AdminInvoice/:orderId" element={<AdminInvoice />} />
         <Route path="/OrdersHistory" element={<OrdersHistory />} />
         <Route path="/UserOrdersHistory" element={<UserOrdersHistory />} />
         <Route path="/AdminOrderHistory" element={<AdminOrderHistory />} />
-         <Route path="/OwnerDashboard" element={<OwnerDashboard/>} />
-         <Route path="/OwnerProducts" element={<OwnerProducts/>} />
-         <Route path="/OwnerUsers" element={<OwnerUsers/>} />
+        <Route path="/OwnerDashboard" element={<OwnerDashboard />} />
+        <Route path="/OwnerProducts" element={<OwnerProducts />} />
+        <Route path="/OwnerUsers" element={<OwnerUsers />} />
         <Route
           path="/RestaurentOrderHistory"
           element={<RestaurentOrderHistory />}
         />
-        <Route path="/TrackOrder" element={<TrackOrder/>}/>
-        <Route path="/RatingForm" element={<RatingForm/>}/>
-        <Route path="/RateForm" element={<RateForm/>}/>
-
-
-       
-
+        <Route path="/TrackOrder" element={<TrackOrder />} />
+       <Route path="/RatingForm/:productId" element={<RatingForm />} />
+        <Route path="/RateForm" element={<RateForm />} />
       </Routes>
     </div>
   );

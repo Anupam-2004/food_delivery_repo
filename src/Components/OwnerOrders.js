@@ -152,7 +152,12 @@ const OwnerOrders = () => {
                   </td>
 
                   <td>
-                    <Button variant="danger">
+                    <Button
+                      variant="danger"
+                      onClick={() =>
+                        navigate(`/AdminInvoice/${order.id || order._id}`)
+                      }
+                    >
                       <FaFilePdf />
                     </Button>
                   </td>

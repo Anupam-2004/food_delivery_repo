@@ -1,6 +1,6 @@
-
 import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Button, Table, Badge } from "react-bootstrap";
+
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -37,6 +37,8 @@ import {
 import { Select, MenuItem } from "@mui/material";
 import { MdRestaurantMenu } from "react-icons/md";
 
+/* ---------------- FALLBACK REVIEWS ---------------- */
+
 const fallbackReviews = [
   {
     name: "Rahul Sharma",
@@ -67,14 +69,20 @@ const fallbackReviews = [
 const OwnerDashboard = () => {
   const navigate = useNavigate();
 
+  /* ---------------- CURRENT USER ---------------- */
+
   const { user: currentUser } = useSelector((state) => state.auth);
 
-  const [totalOrders, setTotalOrders] = useState(0);
+  const userId = currentUser?.id || currentUser?._id;
+
+  /* ---------------- STATES ---------------- */
+
   const [restaurent, setRestaurent] = useState(null);
   const [restaurantId, setRestaurantId] = useState("");
 
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+
   const [topSellingItems, setTopSellingItems] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -82,9 +90,14 @@ const OwnerDashboard = () => {
   const [ordersLoading, setOrdersLoading] = useState(false);
 
   const [earningPeriod, setEarningPeriod] = useState("monthly");
+
   const [revenueData, setRevenueData] = useState(null);
 
-  const userId = currentUser?.id || currentUser?._id;
+  const [review, setReview] = useState(null);
+
+  const [recentReview, setRecentReview] = useState(fallbackReviews);
+
+  /* ---------------- GET RESTAURANT ---------------- */
 
   useEffect(() => {
     if (!userId) {
@@ -95,15 +108,15 @@ const OwnerDashboard = () => {
     axios
       .get(`http://localhost:8090/api/restaurents/user/${userId}`)
       .then((response) => {
-        const restaurantData = Array.isArray(response.data)
+        const data = Array.isArray(response.data)
           ? response.data[0]
           : response.data;
 
-        if (restaurantData) {
-          const id = restaurantData._id || restaurantData.id || "";
+        if (data) {
+          const id = data._id || data.id || "";
 
           setRestaurantId(id);
-          setRestaurent(restaurantData);
+          setRestaurent(data);
         } else {
           setRestaurantId("");
           setRestaurent(null);
@@ -111,6 +124,7 @@ const OwnerDashboard = () => {
       })
       .catch((error) => {
         console.error("Failed to fetch restaurant:", error);
+
         setRestaurantId("");
         setRestaurent(null);
       })
@@ -118,6 +132,8 @@ const OwnerDashboard = () => {
         setLoading(false);
       });
   }, [userId]);
+
+  /* ---------------- GET PRODUCTS ---------------- */
 
   useEffect(() => {
     if (!restaurantId) {
@@ -128,18 +144,15 @@ const OwnerDashboard = () => {
     setProductsLoading(true);
 
     axios
-      .get(
-        `http://localhost:8090/api/products/restaurant/${restaurantId}`
-      )
+      .get(`http://localhost:8090/api/products/restaurant/${restaurantId}`)
       .then((response) => {
-        const productData = Array.isArray(response.data)
-          ? response.data
-          : [];
+        const data = Array.isArray(response.data) ? response.data : [];
 
-        setProducts(productData);
+        setProducts(data);
       })
       .catch((error) => {
         console.error("Failed to fetch products:", error);
+
         setProducts([]);
       })
       .finally(() => {
@@ -147,36 +160,34 @@ const OwnerDashboard = () => {
       });
   }, [restaurantId]);
 
+  /* ---------------- GET RESTAURANT ORDERS ---------------- */
+
   useEffect(() => {
     if (!restaurantId) {
       setOrders([]);
-      setTotalOrders(0);
       return;
     }
 
     setOrdersLoading(true);
 
     axios
-      .get(
-        `http://localhost:8090/api/orders/restaurent/${restaurantId}`
-      )
+      .get(`http://localhost:8090/api/orders/restaurent/${restaurantId}`)
       .then((response) => {
-        const orderData = Array.isArray(response.data)
-          ? response.data
-          : [];
+        const data = Array.isArray(response.data) ? response.data : [];
 
-        setOrders(orderData);
-        setTotalOrders(orderData.length);
+        setOrders(data);
       })
       .catch((error) => {
         console.error("Failed to fetch orders:", error);
+
         setOrders([]);
-        setTotalOrders(0);
       })
       .finally(() => {
         setOrdersLoading(false);
       });
   }, [restaurantId]);
+
+  /* ---------------- TOP SELLING PRODUCTS ---------------- */
 
   useEffect(() => {
     if (!restaurantId) {
@@ -186,24 +197,22 @@ const OwnerDashboard = () => {
 
     axios
       .get(
-        `http://localhost:8090/api/orders/restaurent/${restaurantId}/topProducts`
+        `http://localhost:8090/api/orders/restaurent/${restaurantId}/topProducts`,
       )
       .then((response) => {
-        const topProducts = Array.isArray(response.data)
-          ? response.data
-          : [];
+        const data = Array.isArray(response.data) ? response.data : [];
 
-        setTopSellingItems(topProducts.slice(0, 5));
+        setTopSellingItems(data.slice(0, 5));
       })
       .catch((error) => {
-        console.warn(
-          "Top selling API not available. Using products instead:",
-          error
-        );
+        console.warn("Top products API error:", error);
 
+        // If API fails, show products
         setTopSellingItems(products.slice(0, 5));
       });
   }, [restaurantId, products]);
+
+  /* ---------------- REVENUE ---------------- */
 
   useEffect(() => {
     if (!restaurantId) {
@@ -223,20 +232,24 @@ const OwnerDashboard = () => {
 
     axios
       .get(
-        `http://localhost:8090/api/orders/restaurent/${restaurantId}/revenue/${endpoint}`
+        `http://localhost:8090/api/orders/restaurent/${restaurantId}/revenue/${endpoint}`,
       )
       .then((response) => {
         setRevenueData(response.data);
       })
       .catch((error) => {
-        console.warn(
-          `Failed to fetch ${earningPeriod} revenue:`,
-          error
-        );
+        console.warn("Revenue API error:", error);
 
         setRevenueData(null);
       });
   }, [restaurantId, earningPeriod]);
+
+  /* ---------------- RECENT REVIEWS ---------------- */
+
+  // Temporary fallback reviews
+  // You can connect your review API here later.
+
+  /* ---------------- IMAGE URL ---------------- */
 
   const getImageUrl = (images) => {
     const image = Array.isArray(images) ? images[0] : images;
@@ -252,16 +265,33 @@ const OwnerDashboard = () => {
     return `http://localhost:8090/upload/${image}`;
   };
 
+  /* ---------------- TOTAL REVENUE ---------------- */
+
+  const totalOrders = orders.length;
+
   const totalRevenue = orders.reduce((total, order) => {
     return total + Number(order.totalAmount || 0);
   }, 0);
 
+  /* ---------------- COMMISSION ---------------- */
+
   const commission = Math.round(totalRevenue * 0.1);
 
-  const netEarnings = Math.max(
-    totalRevenue - commission,
-    0
-  );
+  /* ---------------- NET EARNINGS ---------------- */
+
+  const netEarnings = Math.max(totalRevenue - commission, 0);
+
+  /* ---------------- RECENT ORDERS ---------------- */
+
+  // IMPORTANT:
+  // orders already contains only this restaurant's orders
+
+  const recentOrders = orders
+    .slice()
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
+
+  /* ---------------- STATUS ---------------- */
 
   const getStatusVariant = (status) => {
     switch (status?.toLowerCase()) {
@@ -292,15 +322,23 @@ const OwnerDashboard = () => {
     }
   };
 
+  /* ---------------- LOGIN CHECK ---------------- */
+
   if (!currentUser) {
     return null;
   }
 
+  /* ---------------- CHART LABELS ---------------- */
+
   const chartLabels = {
     daily: ["1", "5", "10", "15", "20", "25", "30"],
+
     monthly: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+
     yearly: ["2022", "2023", "2024", "2025", "2026"],
   };
+
+  /* ---------------- NAVIGATION ---------------- */
 
   const goToOrders = () => {
     if (restaurantId) {
@@ -322,15 +360,19 @@ const OwnerDashboard = () => {
     }
   };
 
+  /* ================================================= */
+  /*                    UI START                       */
+  /* ================================================= */
+
   return (
     <div className="owner-dashboard">
+      {/* ================= SIDEBAR ================= */}
+
       <div className="owner-sidebar">
         <div className="sidebar-logo">
           <FaUtensils />
 
-          <span>
-            {restaurent?.restaurentName || "My Restaurant"}
-          </span>
+          <span>{restaurent?.restaurentName || "My Restaurant"}</span>
         </div>
 
         <div className="owner-profile">
@@ -342,8 +384,7 @@ const OwnerDashboard = () => {
 
           <div>
             <h6>
-              {currentUser?.firstName || ""}{" "}
-              {currentUser?.lastName || ""}
+              {currentUser?.firstName || ""} {currentUser?.lastName || ""}
             </h6>
 
             <small>Restaurant Owner</small>
@@ -351,10 +392,7 @@ const OwnerDashboard = () => {
         </div>
 
         <ul className="sidebar-menu">
-          <li
-            className="active"
-            onClick={() => navigate("/OwnerDashboard")}
-          >
+          <li className="active" onClick={() => navigate("/OwnerDashboard")}>
             <FaStore />
             <span>Dashboard</span>
           </li>
@@ -416,23 +454,20 @@ const OwnerDashboard = () => {
         </ul>
 
         <div className="sidebar-bottom">
-          <div onClick={() => navigate("/")}>
-            🚪 Logout
-          </div>
+          <div onClick={() => navigate("/")}>🚪 Logout</div>
         </div>
       </div>
 
+      {/* ================= MAIN ================= */}
+
       <div className="owner-main">
+        {/* ================= HEADER ================= */}
+
         <div className="owner-header">
           <div>
-            <h2>
-              Welcome back,{" "}
-              {currentUser?.firstName || "Owner"} 👋
-            </h2>
+            <h2>Welcome back, {currentUser?.firstName || "Owner"} 👋</h2>
 
-            <p>
-              Here's what's happening with your restaurant today.
-            </p>
+            <p>Here's what's happening with your restaurant today.</p>
           </div>
 
           <div className="owner-header-right">
@@ -449,76 +484,83 @@ const OwnerDashboard = () => {
           </div>
         </div>
 
+        {/* ================= SUMMARY ================= */}
+
         <Row className="g-3 mb-4 summary-row">
           <Col xl={4} md={6}>
-            <Card className="summary-card">
+            <Card
+              className="summary-card"
+              onClick={() => navigate("/OwnerOrders")}
+              style={{
+                cursor: "pointer",
+              }}
+            >
               <div className="summary-icon summary-purple">
                 <FaShoppingBag />
               </div>
 
-              <div
-                className="summary-body"
-                onClick={goToOrders}
-                style={{ cursor: "pointer" }}
-              >
+              <div className="summary-body">
                 <p>Total Orders</p>
+
                 <h3>{totalOrders}</h3>
               </div>
             </Card>
           </Col>
 
           <Col xl={4} md={6}>
-            <Card className="summary-card">
+            <Card
+              className="summary-card"
+              onClick={() => navigate("/OwnerRevenue")}
+              style={{
+                cursor: "pointer",
+              }}
+            >
               <div className="summary-icon summary-green">
                 <FaRupeeSign />
               </div>
 
-              <div
-                className="summary-body"
-                onClick={() => navigate("/OwnerRevenue")}
-                style={{ cursor: "pointer" }}
-              >
+              <div className="summary-body">
                 <p>Total Revenue</p>
 
-                <h3>
-                  ₹{totalRevenue.toLocaleString("en-IN")}
-                </h3>
+                <h3>₹{totalRevenue.toLocaleString("en-IN")}</h3>
               </div>
             </Card>
           </Col>
 
           <Col xl={4} md={6}>
-            <Card className="summary-card">
+            <Card
+              className="summary-card"
+              onClick={() => navigate("/OwnerReviews")}
+              style={{
+                cursor: "pointer",
+              }}
+            >
               <div className="summary-icon summary-blue">
                 <FaStar />
               </div>
 
-              <div
-                className="summary-body"
-                onClick={() => navigate("/OwnerReviews")}
-                style={{ cursor: "pointer" }}
-              >
+              <div className="summary-body">
                 <p>Average Rating</p>
 
                 <h3>
-                  4.5{" "}
-                  <FaStar className="rating-star" />
+                  {review?.rating || "4.5"} <FaStar className="rating-star" />
                 </h3>
               </div>
             </Card>
           </Col>
         </Row>
 
+        {/* ================= TOP ITEMS + EARNINGS ================= */}
+
         <Row className="g-3 mb-4">
+          {/* TOP SELLING ITEMS */}
+
           <Col lg={6}>
             <Card className="panel-card h-100">
               <div className="panel-header">
                 <span>Top Selling Items</span>
 
-                <button
-                  className="view-all-btn"
-                  onClick={goToProducts}
-                >
+                <button className="view-all-btn" onClick={goToProducts}>
                   View All
                 </button>
               </div>
@@ -526,18 +568,10 @@ const OwnerDashboard = () => {
               <div className="panel-body">
                 {topSellingItems.length > 0 ? (
                   topSellingItems.map((item, index) => (
-                    <div
-                      className="top-item-row"
-                      key={
-                       
-                        index
-                      }
-                    >
+                    <div className="top-item-row" key={item._id || index}>
                       <span
                         className={`rank-badge ${
-                          index === 0
-                            ? "rank-orange"
-                            : "rank-gray"
+                          index === 0 ? "rank-orange" : "rank-gray"
                         }`}
                       >
                         {index + 1}
@@ -545,11 +579,7 @@ const OwnerDashboard = () => {
 
                       <img
                         src={getImageUrl(item.images)}
-                        alt={
-                          item.foodName ||
-                         
-                          "Food"
-                        }
+                        alt={item.foodName || "Food"}
                         style={{
                           width: "60px",
                           height: "60px",
@@ -560,20 +590,15 @@ const OwnerDashboard = () => {
 
                       <div className="top-item-info">
                         <p className="top-item-name">
-                          {item.foodName ||
-                          
-                            "Food"}
+                          {item.foodName || "Food"}
                         </p>
 
                         <p className="top-item-meta">
-                          {item.category ||
-                            "Food Item"}
+                          {item.category || "Food Item"}
                         </p>
                       </div>
 
-                      <div className="top-item-price">
-                        ₹{item.price || 0}
-                      </div>
+                      <div className="top-item-price">₹{item.price || 0}</div>
                     </div>
                   ))
                 ) : (
@@ -587,6 +612,8 @@ const OwnerDashboard = () => {
             </Card>
           </Col>
 
+          {/* EARNINGS SUMMARY */}
+
           <Col lg={6}>
             <Card className="panel-card h-100">
               <div className="panel-header">
@@ -595,26 +622,18 @@ const OwnerDashboard = () => {
                 <Select
                   size="small"
                   value={earningPeriod}
-                  onChange={(e) =>
-                    setEarningPeriod(e.target.value)
-                  }
+                  onChange={(e) => setEarningPeriod(e.target.value)}
                   sx={{
                     minWidth: 120,
                     height: 35,
                     fontSize: 13,
                   }}
                 >
-                  <MenuItem value="daily">
-                    Daily
-                  </MenuItem>
+                  <MenuItem value="daily">Daily</MenuItem>
 
-                  <MenuItem value="monthly">
-                    Monthly
-                  </MenuItem>
+                  <MenuItem value="monthly">Monthly</MenuItem>
 
-                  <MenuItem value="yearly">
-                    Yearly
-                  </MenuItem>
+                  <MenuItem value="yearly">Yearly</MenuItem>
                 </Select>
               </div>
 
@@ -627,13 +646,12 @@ const OwnerDashboard = () => {
                   <div className="earnings-content">
                     <p>Total Earnings</p>
 
-                    <h3>
-                      ₹{totalRevenue.toLocaleString("en-IN")}
-                    </h3>
+                    <h3>₹{totalRevenue.toLocaleString("en-IN")}</h3>
                   </div>
 
                   <span className="summary-trend trend-up">
-                    <FaArrowUp /> 18.5%
+                    <FaArrowUp />
+                    18.5%
                   </span>
                 </div>
 
@@ -645,13 +663,12 @@ const OwnerDashboard = () => {
                   <div className="earnings-content">
                     <p>Commission / Fees</p>
 
-                    <h3>
-                      ₹{commission.toLocaleString("en-IN")}
-                    </h3>
+                    <h3>₹{commission.toLocaleString("en-IN")}</h3>
                   </div>
 
                   <span className="summary-trend trend-down">
-                    <FaArrowDown /> 3.2%
+                    <FaArrowDown />
+                    3.2%
                   </span>
                 </div>
 
@@ -663,13 +680,12 @@ const OwnerDashboard = () => {
                   <div className="earnings-content">
                     <p>Net Earnings</p>
 
-                    <h3>
-                      ₹{netEarnings.toLocaleString("en-IN")}
-                    </h3>
+                    <h3>₹{netEarnings.toLocaleString("en-IN")}</h3>
                   </div>
 
                   <span className="summary-trend trend-up">
-                    <FaArrowUp /> 16.3%
+                    <FaArrowUp />
+                    16.3%
                   </span>
                 </div>
               </div>
@@ -677,9 +693,12 @@ const OwnerDashboard = () => {
           </Col>
         </Row>
 
+        {/* ================= QUICK ACTIONS ================= */}
+
         <div className="section-title">
           <div>
             <h4>Quick Actions</h4>
+
             <p>Manage your restaurant quickly</p>
           </div>
         </div>
@@ -694,15 +713,11 @@ const OwnerDashboard = () => {
 
                 <h5>Add Restaurant</h5>
 
-                <p>
-                  Add your restaurant information and details.
-                </p>
+                <p>Add your restaurant information and details.</p>
 
                 <Button
                   variant="outline-danger"
-                  onClick={() =>
-                    navigate("/AddRestaurent")
-                  }
+                  onClick={() => navigate("/AddRestaurent")}
                 >
                   Add Restaurant
                   <FaArrowRight className="ms-2" />
@@ -720,15 +735,11 @@ const OwnerDashboard = () => {
 
                 <h5>Add Product</h5>
 
-                <p>
-                  Add new food items to your restaurant menu.
-                </p>
+                <p>Add new food items to your restaurant menu.</p>
 
                 <Button
                   variant="outline-danger"
-                  onClick={() =>
-                    navigate("/AddProduct")
-                  }
+                  onClick={() => navigate("/AddProduct")}
                 >
                   Add Product
                   <FaArrowRight className="ms-2" />
@@ -746,14 +757,9 @@ const OwnerDashboard = () => {
 
                 <h5>View Products</h5>
 
-                <p>
-                  View, edit and manage your added products.
-                </p>
+                <p>View, edit and manage your added products.</p>
 
-                <Button
-                  variant="outline-danger"
-                  onClick={goToProducts}
-                >
+                <Button variant="outline-danger" onClick={goToProducts}>
                   View Products
                   <FaArrowRight className="ms-2" />
                 </Button>
@@ -761,6 +767,8 @@ const OwnerDashboard = () => {
             </Card>
           </Col>
         </Row>
+
+        {/* ================= EARNINGS ANALYTICS ================= */}
 
         <Row className="mb-4">
           <Col lg={12}>
@@ -771,26 +779,18 @@ const OwnerDashboard = () => {
                 <Select
                   size="small"
                   value={earningPeriod}
-                  onChange={(e) =>
-                    setEarningPeriod(e.target.value)
-                  }
+                  onChange={(e) => setEarningPeriod(e.target.value)}
                   sx={{
                     minWidth: 120,
                     height: 35,
                     fontSize: 13,
                   }}
                 >
-                  <MenuItem value="daily">
-                    Daily
-                  </MenuItem>
+                  <MenuItem value="daily">Daily</MenuItem>
 
-                  <MenuItem value="monthly">
-                    Monthly
-                  </MenuItem>
+                  <MenuItem value="monthly">Monthly</MenuItem>
 
-                  <MenuItem value="yearly">
-                    Yearly
-                  </MenuItem>
+                  <MenuItem value="yearly">Yearly</MenuItem>
                 </Select>
               </div>
 
@@ -799,53 +799,24 @@ const OwnerDashboard = () => {
                   <div>
                     <p>Total Earnings</p>
 
-                    <h3>
-                      ₹{totalRevenue.toLocaleString("en-IN")}
-                    </h3>
+                    <h3>₹{totalRevenue.toLocaleString("en-IN")}</h3>
                   </div>
 
                   <span className="summary-trend trend-up">
-                    <FaArrowUp /> 18.5%
+                    <FaArrowUp />
+                    18.5%
                   </span>
                 </div>
 
                 <div className="earning-chart">
-                  <svg
-                    viewBox="0 0 600 230"
-                    width="100%"
-                    height="230"
-                  >
-                    <line
-                      x1="0"
-                      y1="40"
-                      x2="600"
-                      y2="40"
-                      stroke="#eee"
-                    />
+                  <svg viewBox="0 0 600 230" width="100%" height="230">
+                    <line x1="0" y1="40" x2="600" y2="40" stroke="#eee" />
 
-                    <line
-                      x1="0"
-                      y1="90"
-                      x2="600"
-                      y2="90"
-                      stroke="#eee"
-                    />
+                    <line x1="0" y1="90" x2="600" y2="90" stroke="#eee" />
 
-                    <line
-                      x1="0"
-                      y1="140"
-                      x2="600"
-                      y2="140"
-                      stroke="#eee"
-                    />
+                    <line x1="0" y1="140" x2="600" y2="140" stroke="#eee" />
 
-                    <line
-                      x1="0"
-                      y1="190"
-                      x2="600"
-                      y2="190"
-                      stroke="#eee"
-                    />
+                    <line x1="0" y1="190" x2="600" y2="190" stroke="#eee" />
 
                     <path
                       d="M0 160 Q70 80 140 130 T280 80 T420 105 T600 45"
@@ -870,13 +841,9 @@ const OwnerDashboard = () => {
                   </svg>
 
                   <div className="earning-labels">
-                    {chartLabels[earningPeriod].map(
-                      (item) => (
-                        <span key={item}>
-                          {item}
-                        </span>
-                      )
-                    )}
+                    {chartLabels[earningPeriod].map((item) => (
+                      <span key={item}>{item}</span>
+                    ))}
                   </div>
                 </div>
 
@@ -901,20 +868,19 @@ const OwnerDashboard = () => {
           </Col>
         </Row>
 
+        {/* ================= RECENT PRODUCTS ================= */}
+
         <div className="section-title">
           <div>
             <h4>Recently Added Products</h4>
+
             <p>Your latest menu items</p>
           </div>
         </div>
 
         <Card className="table-card mb-4">
           <Card.Body className="p-0">
-            <Table
-              responsive
-              hover
-              className="mb-0"
-            >
+            <Table responsive hover className="mb-0">
               <thead>
                 <tr>
                   <th>#</th>
@@ -930,105 +896,69 @@ const OwnerDashboard = () => {
 
               <tbody>
                 {products.length > 0 ? (
-                  products
-                    .slice(0, 5)
-                    .map((product, index) => (
-                      <tr
-                        key={
-                          product._id ||
-                          product.id ||
-                          index
-                        }
-                      >
-                        <td>{index + 1}</td>
+                  products.slice(0, 5).map((product, index) => (
+                    <tr key={product._id || index}>
+                      <td>{index + 1}</td>
 
-                        <td>
-                          <img
-                            src={getImageUrl(
-                              product.images
-                            )}
-                            alt={
-                              product.foodName ||
-                              product.productName ||
-                              "Food"
-                            }
-                            style={{
-                              width: "60px",
-                              height: "60px",
-                              objectFit: "cover",
-                              borderRadius: "8px",
-                            }}
-                          />
-                        </td>
+                      <td>
+                        <img
+                          src={getImageUrl(product.images)}
+                          alt={product.foodName || "Food"}
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            objectFit: "cover",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      </td>
 
-                        <td>
-                          <strong>
-                            {product.foodName ||
-                              product.productName ||
-                              "Food"}
-                          </strong>
-                        </td>
+                      <td>
+                        <strong>
+                          {product.foodName || product.productName || "Food"}
+                        </strong>
+                      </td>
 
-                        <td>
-                          {product.category || "-"}
-                        </td>
+                      <td>{product.category || "-"}</td>
 
-                        <td>
-                          <Badge
-                            bg={
-                              product.foodType
-                                ?.toLowerCase()
-                                .includes("veg")
-                                ? "success"
-                                : "danger"
-                            }
-                          >
-                            {product.foodType || "-"}
-                          </Badge>
-                        </td>
+                      <td>
+                        <Badge
+                          bg={
+                            product.foodType?.toLowerCase().includes("veg")
+                              ? "success"
+                              : "danger"
+                          }
+                        >
+                          {product.foodType || "-"}
+                        </Badge>
+                      </td>
 
-                        <td>
-                          ₹{product.price || 0}
-                        </td>
+                      <td>₹{product.price || 0}</td>
 
-                        <td>
-                          <Badge
-                            bg={
-                              product.active
-                                ? "success"
-                                : "secondary"
-                            }
-                          >
-                            {product.active
-                              ? "Active"
-                              : "Inactive"}
-                          </Badge>
-                        </td>
+                      <td>
+                        <Badge bg={product.active ? "success" : "secondary"}>
+                          {product.active ? "Active" : "Inactive"}
+                        </Badge>
+                      </td>
 
-                        <td>
-                          <Button
-                            size="sm"
-                            variant="outline-primary"
-                            onClick={() =>
-                              navigate(
-                                `/EditProduct/${
-                                  product._id ||
-                                  product.id
-                                }`
-                              )
-                            }
-                          >
-                            <FaEdit />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
+                      <td>
+                        <Button
+                          size="sm"
+                          variant="outline-primary"
+                          onClick={() =>
+                            navigate(
+                              `/EditProduct/${product._id || product.id}`,
+                            )
+                          }
+                        >
+                          <FaEdit />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="8"
-                      className="text-center py-4"
-                    >
+                    <td colSpan="8" className="text-center py-4">
                       {productsLoading
                         ? "Loading products..."
                         : "No products available"}
@@ -1040,103 +970,78 @@ const OwnerDashboard = () => {
           </Card.Body>
         </Card>
 
+        {/* ================= RECENT REVIEWS ================= */}
+
         <div className="section-title">
           <div>
             <h4>Recent Reviews</h4>
 
-            <p>
-              What your customers are saying
-            </p>
+            <p>What your customers are saying</p>
           </div>
 
           <button
             className="view-all-btn"
-            onClick={() =>
-              navigate("/OwnerReviews")
-            }
+            onClick={() => navigate("/OwnerReviews")}
           >
             View All Reviews
           </button>
         </div>
 
         <Row className="g-3 mb-4">
-          {fallbackReviews.map(
-            (review, index) => (
-              <Col
-                lg={4}
-                md={6}
-                key={index}
-              >
-                <Card className="review-card">
-                  <Card.Body>
-                    <div className="review-top">
-                      <div
-                        className="review-avatar"
-                        style={{
-                          backgroundColor:
-                            review.color,
-                        }}
-                      >
-                        {review.name.charAt(0)}
-                      </div>
-
-                      <div className="review-meta">
-                        <h6>
-                          {review.name}
-                        </h6>
-
-                        <small>
-                          {review.date}
-                        </small>
-                      </div>
-
-                      <div className="review-food">
-                        {review.emoji}
-                      </div>
+          {recentReview.map((reviewItem, index) => (
+            <Col lg={4} md={6} key={index}>
+              <Card className="review-card">
+                <Card.Body>
+                  <div className="review-top">
+                    <div
+                      className="review-avatar"
+                      style={{
+                        backgroundColor: reviewItem.color,
+                      }}
+                    >
+                      {reviewItem.name.charAt(0)}
                     </div>
 
-                    <div className="review-stars">
-                      {Array.from({
-                        length: 5,
-                      }).map((_, i) =>
-                        i < review.rating ? (
-                          <FaStar
-                            key={i}
-                            className="star-filled"
-                          />
-                        ) : (
-                          <FaRegStar
-                            key={i}
-                            className="star-empty"
-                          />
-                        )
-                      )}
+                    <div className="review-meta">
+                      <h6>{reviewItem.name}</h6>
+
+                      <small>{reviewItem.date}</small>
                     </div>
 
-                    <p className="review-text">
-                      {review.text}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-            )
-          )}
+                    <div className="review-food">{reviewItem.emoji}</div>
+                  </div>
+
+                  <div className="review-stars">
+                    {Array.from({
+                      length: 5,
+                    }).map((_, i) =>
+                      i < reviewItem.rating ? (
+                        <FaStar key={i} className="star-filled" />
+                      ) : (
+                        <FaRegStar key={i} className="star-empty" />
+                      ),
+                    )}
+                  </div>
+
+                  <p className="review-text">{reviewItem.text}</p>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
         </Row>
+
+        {/* ================= RECENT ORDERS ================= */}
 
         <div className="section-title">
           <div>
-            <h4>
-              Manage Recent Orders
-            </h4>
+            <h4>Manage Recent Orders</h4>
 
-            <p>
-              Latest orders from your restaurant
-            </p>
+            <p>Latest orders from your restaurant</p>
           </div>
 
           <Button
             variant="outline-danger"
-            onClick={goToOrders}
+            onClick={() => navigate("/OwnerOrders")}
           >
             View All Orders
             <FaArrowRight className="ms-2" />
@@ -1145,11 +1050,7 @@ const OwnerDashboard = () => {
 
         <Card className="table-card mb-4">
           <Card.Body className="p-0">
-            <Table
-              responsive
-              hover
-              className="mb-0"
-            >
+            <Table responsive hover className="mb-0">
               <thead>
                 <tr>
                   <th>Order ID</th>
@@ -1163,120 +1064,95 @@ const OwnerDashboard = () => {
               </thead>
 
               <tbody>
-                {orders.length > 0 ? (
-                  orders
-                    .slice(0, 5)
-                    .map((order) => {
-                      const orderId =
-                        order._id ||
-                        order.id;
+                {recentOrders.length > 0 ? (
+                  recentOrders.map((recentOrder, index) => {
+                    const orderId = recentOrder._id || recentOrder.id || index;
 
-                      const firstItem =
-                        order.items?.[0];
+                    const restaurantName =
+                      recentOrder.items?.[0]?.restaurentId?.restaurentName ||
+                      recentOrder.items?.[0]?.restaurantId?.restaurantName ||
+                      restaurent?.restaurentName ||
+                      "My Restaurant";
 
-                      const restaurantName =
-                        firstItem?.restaurentId
-                          ?.restaurentName ||
-                        restaurent?.restaurentName ||
-                        "My Restaurant";
+                    const customerName =
+                      `${recentOrder.userId?.firstName || ""} ${
+                        recentOrder.userId?.lastName || ""
+                      }`.trim() || "Unknown Customer";
 
-                      return (
-                        <tr key={orderId}>
-                          <td>
-                            <strong>
-                              #{orderId}
-                            </strong>
-                          </td>
+                    return (
+                      <tr key={orderId}>
+                        {/* ORDER ID */}
 
-                          <td>
-                            <strong>
-                              {restaurantName}
-                            </strong>
-                          </td>
+                        <td>
+                          <strong>#{orderId}</strong>
+                        </td>
 
-                          <td>
-                            {order.userId
-                              ?.firstName ||
-                              "Unknown"}{" "}
-                            {order.userId
-                              ?.lastName ||
-                              ""}
-                          </td>
+                        {/* RESTAURANT */}
 
-                          <td>
-                            {order.items?.length > 0
-                              ? order.items.map(
-                                  (
-                                    item,
-                                    index
-                                  ) => (
-                                    <div
-                                      key={
-                                        index
-                                      }
-                                    >
-                                      {item.foodName ||
-                                        item.name ||
-                                        item
-                                          .productId
-                                          ?.foodName ||
-                                        "Food"}{" "}
-                                      ×{" "}
-                                      {item.quantity ||
-                                        1}
-                                    </div>
-                                  )
-                                )
-                              : "No items"}
-                          </td>
+                        <td>
+                          <strong>{restaurantName}</strong>
+                        </td>
 
-                          <td>
-                            ₹
-                            {Number(
-                              order.totalAmount ||
-                                0
-                            ).toLocaleString(
-                              "en-IN"
-                            )}
-                          </td>
+                        {/* CUSTOMER */}
 
-                          <td>
-                            <Badge
-                              bg={getStatusVariant(
-                                order.orderStatus
-                              )}
-                            >
-                              {order.orderStatus ||
-                                "Unknown"}
-                            </Badge>
-                          </td>
+                        <td>{customerName}</td>
 
-                          <td>
-                            <Button
-                              size="sm"
-                              variant="outline-warning"
-                              onClick={() =>
-                                navigate(
-                                  `/OrderDetails/${orderId}`
-                                )
-                              }
-                            >
-                              <FaEye className="me-1" />
-                              View
-                            </Button>
-                          </td>
-                        </tr>
-                      );
-                    })
+                        {/* ITEMS */}
+
+                        <td>
+                          {recentOrder.items?.length > 0
+                            ? recentOrder.items.map((item, itemIndex) => (
+                                <div key={item._id || itemIndex}>
+                                  {item.productId?.foodName ||
+                                    item.foodName ||
+                                    item.name ||
+                                    "Food"}
+
+                                  {" × "}
+
+                                  {item.quantity || 1}
+                                </div>
+                              ))
+                            : "No items"}
+                        </td>
+
+                        {/* AMOUNT */}
+
+                        <td>
+                          ₹
+                          {Number(recentOrder.totalAmount || 0).toLocaleString(
+                            "en-IN",
+                          )}
+                        </td>
+
+                        {/* STATUS */}
+
+                        <td>
+                          <Badge bg={getStatusVariant(recentOrder.orderStatus)}>
+                            {recentOrder.orderStatus || "Unknown"}
+                          </Badge>
+                        </td>
+
+                        {/* ACTION */}
+
+                        <td>
+                          <Button
+                            size="sm"
+                            variant="outline-warning"
+                            onClick={() => navigate(`/OrderDetails/${orderId}`)}
+                          >
+                            <FaEye className="me-1" />
+                            View
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
-                    <td
-                      colSpan="7"
-                      className="text-center py-4"
-                    >
-                      {loading ||
-                      ordersLoading
-                        ? "Loading dashboard data..."
+                    <td colSpan="7" className="text-center py-4">
+                      {ordersLoading
+                        ? "Loading recent orders..."
                         : "No orders available"}
                     </td>
                   </tr>
